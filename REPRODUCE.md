@@ -169,3 +169,33 @@ python3 scripts/final_assembly.py        # 22.823536 / 454
 python3 scripts/polish.py                # P2 (long; bg)
 python3 scripts/pressure_settle.py       # cent engine v2 (selftest-gated)
 ```
+
+    
+    ## A11. Run 19: discovery engines + the 8 discovery wheels
+    
+    ```bash
+    # restore from the GitHub repo after a recycle (idempotent):
+    python3 scripts/restore_from_repo.py
+    # the discovery stack:
+    python3 scripts/pressure_settle.py     # substrate selftest (FD + pinwheel)
+    python3 scripts/oracle_basin.py        # the E1/E2/E3 oracle study
+    python3 scripts/lm_exactify.py         # exactification selftest
+    python3 scripts/cent_discovery.py      # engine v3 selftest (rediscovery)
+    python3 scripts/cent_campaign19.py     # 23-root campaign (bg OK)
+    python3 scripts/wheel_expand.py        # W38-W45 into the compiler
+    python3 scripts/apply_campaign19.py    # apply finds (no-op if none)
+    ```
+    
+
+## A12. Run 20: the roots framework
+
+```bash
+python3 scripts/root_probe.py        # near-miss diagnosis
+python3 scripts/boundary_scan.py     # RSA prior fine scan (bg OK)
+python3 scripts/engine_variants.py   # L/T/H variant selftests
+python3 scripts/lattice_scan.py      # lattice/LT prior scan (bg OK)
+python3 scripts/fine_probe.py        # the stall law at fine deltas
+python3 scripts/template_sweep.py    # structured templates (bg OK)
+python3 scripts/root_analysis.py     # score arithmetic + ratios
+python3 scripts/run20_docs.py        # ledger + docs
+```
