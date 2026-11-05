@@ -87,3 +87,47 @@ round-trip stability with ~2e-9 clearance). Every mathematical claim in
 the Leech layer is machine-verified with exact integer computation; no
 floats anywhere in the lattice math. Λ16's kissing number 7320 is cited
 (SPLAG), not verified — marked as such everywhere it appears.
+
+
+# Run 18 (2026-11-05): snapshot as system of record + cent v12_2
+
+**The project now has a GitHub snapshot of record:**
+https://github.com/DigitalEuan/squares_in_squares — it carries everything
+done so far and the most up-to-date `submission.csv` (scores 22.823536,
+454/1000 — the current frontier). After this sandbox's recycles the
+snapshot is the replay source: restore `workspace/` + `scripts/` from it,
+re-fetch the register certs (`python3 scripts/fetch_atlas.py`), then
+`import_atlas` + `cascade3` + `closure_apply` + `final_assembly` to
+rebuild the frontier (verified twice this run).
+
+Files the snapshot is missing (user can add from local iterations):
+- `workspace/sources/atlas/lists/certs/` — 324 register certificate files
+  (only best.json survived; `fetch_atlas.py` re-fetches them live);
+- run-16/17 `*_outcomes.json` ledgers (this download/ carries them);
+- `cent_compiler_v12_2` WITH the extension (see
+  `cent_compiler_v12_2_ext.zip` — W36/W37 wheels + the wheels.py
+  rational-power parser fix).
+
+## cent_compiler v12_2 extension (user ask 3)
+
+Fetched from the GLM repo. Extended (workspace/cent_compiler_v12_2,
+delivered as `cent_compiler_v12_2_ext.zip`):
+- **W36** Numerical SAT Substrate (NumPy) and **W37** Viscoelastic
+  Settling (SciPy) as proper wheels (monomial laws, 4 cases each with
+  negative controls, dimensions, junctions) — 33 wheels total;
+- junctions/non-identities moved into `wheels/index.json` (the loader
+  only reads those — per-wheel arrays are silently ignored);
+- **upstream parser fix**: `wheels.py` rejected rational `^(1/2)`-style
+  powers, so `case_table()` crashed on the native corpus (W21/W24/W25/
+  W29/W34); now all 127 rows run.
+
+## Pressure-Settling Engine v2 (pressure_settle.py)
+
+Compiled from W36+W37 (the run-6 pattern). Exact analytic gradient
+through the SAT stack (FD-verified < 1e-8, gated in the self-test),
+pressure ramp, crystalline seeds, symmetry-breaking kicks. Outcome:
+**honest negative** — it clears gradient-exactness but not the two
+feasible containers; per the run-6 rule the campaign aborted. Reading:
+local dynamics cannot cross the rearrangement gap into tilted banded
+architectures; the engine's natural role is local refinement (polish),
+not discovery. Full details: `run18_outcomes.json`.
