@@ -209,3 +209,12 @@ python3 scripts/wheel_census.py      # Q2: 41 vs 45 reconciliation
 python3 scripts/positive_control.py  # corrected control (phantom fix)
 python3 scripts/clue_ledger.py       # Q3: 7-channel clue ledger
 ```
+
+## A14. Run 22: soft relaxation
+
+```bash
+python3 scripts/soft_relax.py   # v2 hybrid; ~10 min; controls + roots
+# v1 comparison output is preserved at
+# workspace/push/soft_relax_v1_sa.json
+```
+
