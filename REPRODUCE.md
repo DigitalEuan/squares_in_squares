@@ -199,3 +199,13 @@ python3 scripts/template_sweep.py    # structured templates (bg OK)
 python3 scripts/root_analysis.py     # score arithmetic + ratios
 python3 scripts/run20_docs.py        # ledger + docs
 ```
+
+
+## A13. Run 21: boundary demo + wheels census + clue ledger
+
+```bash
+python3 scripts/boundary_demo.py     # Q1: cross the grid boundary (~40 min)
+python3 scripts/wheel_census.py      # Q2: 41 vs 45 reconciliation
+python3 scripts/positive_control.py  # corrected control (phantom fix)
+python3 scripts/clue_ledger.py       # Q3: 7-channel clue ledger
+```
