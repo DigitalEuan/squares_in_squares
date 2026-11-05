@@ -157,3 +157,15 @@ python3 scripts/gobel6.py             # two-band family: 0 records (honest)
 python3 scripts/polish.py             # P2 fine polish (pending)
 ```
 
+## A10. Run 18: snapshot recovery + cent extension
+
+```bash
+# snapshot restore (after a recycle): clone DigitalEuan/squares_in_squares,
+# rsync scripts/ workspace/ json/ into the project, then:
+python3 scripts/fetch_atlas.py            # re-fetch the 324 register certs
+python3 scripts/import_atlas.py          # 76 applied, 0.050264
+python3 scripts/cascade3.py && python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py        # 22.823536 / 454
+python3 scripts/polish.py                # P2 (long; bg)
+python3 scripts/pressure_settle.py       # cent engine v2 (selftest-gated)
+```
