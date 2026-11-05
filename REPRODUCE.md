@@ -1,75 +1,79 @@
 # REPRODUCE.md — exact reproduction guide
 
-Everything runs from the repository root (`my-project/`). Python 3.12
-with numpy + sympy; node (or bun) with the `docx` package for the report
-step. Total time for the offline verification chain: ~15 minutes.
+Everything runs from the repository root. Python 3.12 with numpy (sympy
+only for the certificate scripts); node (or bun) with the `docx` package
+for the report step. All scripts resolve their own paths from the repo
+location (fixed in Run 13 — no machine-specific paths remain). Offline
+verification chain: ~15 minutes.
 
 ## A. Verify the delivered state (offline, deterministic)
 
-These commands re-verify every shipped artifact exactly as it stands.
-Nothing is rebuilt; every check must pass.
-
 ```bash
 # 0. verifier self-tests (SAT engine, grid packings, overlap detection)
-python3 scripts/packlib.py
-#    -> "self-tests passed"
+python3 scripts/packlib.py                  # -> "self-tests passed"
 
-# 1. submission.csv round-trip: 500500 rows, ids 0..500499, every packing
+# 1. submission round-trip: 500,500 rows, ids 0..500499, every packing
 #    re-verified from the file on disk, independent score recomputation
-python3 scripts/final_assembly.py        # re-reads table, re-writes + re-verifies
-python3 scripts/score_submission.py
-#    -> SCORE = 22.887471, grid ceiling = 28.937670, overlap failures: none
-#    (frontier as of run 10: 448/1000 beat grid; reproduce runs 9+10 first —
-#     scripts/gobel2.py then scripts/gobel3.py + propagation (cascade3,
-#     closure_apply) + final_assembly — to regenerate that frontier)
+python3 scripts/final_assembly.py
+python3 scripts/score_submission.py workspace/submission/submission.csv
+#    -> SCORE = 22.823536, grid ceiling = 28.937670, overlap failures: none,
+#       454/1000 beat grid (the run-13 frontier)
 
 # 2. Golay code + Leech lattice: 28 assertions, integer-exact (~4 min)
-python3 scripts/leech_core.py
-#    -> "SUMMARY: 28/28 VERIFIED"; writes download/leech_core.json
+python3 scripts/leech_core.py               # -> "SUMMARY: 28/28 VERIFIED"
 
 # 3. octad calculus: 14 assertions (~1 min)
-python3 scripts/octad_moves.py
-#    -> "SUMMARY: 14/14 VERIFIED"; writes download/octad_moves.json
+python3 scripts/octad_moves.py              # -> "SUMMARY: 14/14 VERIFIED"
 
-# 4. grid → number-field → laminated-tower mapping (needs 1-3's outputs)
-python3 scripts/leech_map.py
-#    -> coverage 870/1000 = 87.0%; spearman(level, improvement) = +0.79
+# 4. grid -> number-field -> laminated-tower mapping
+python3 scripts/leech_map.py                # -> coverage 88.9%; spearman +0.79
 
-# 5. rotated-block program: full 7-angle sweep + certificate census
-python3 scripts/theta225_push.py
-#    -> 271 verified members; certificates 54 -> 280;
-#       Level-0: 130 puzzles, 10 reachable by the family, 0 converted;
-#       extended range: 29 candidates past the bound gate, 0 improvements
-#    writes download/run5_push.json, theta_quartic_members.json
-
-# 6. figures (English labels)
-python3 scripts/figures.py     # -> "ALL 5 FIGURES OK", download/fig/*.png
+# 5. figures (English labels)
+python3 scripts/figures.py                  # -> "ALL 5 FIGURES OK"
 ```
 
-Expected invariant: steps 1 and 5 leave `table.json`, `submission.csv`
-and the score unchanged (22.887471, the run-10 frontier) — the pipeline
-is idempotent at the delivered frontier. To rebuild the frontier itself
-(not just re-verify it), run in order after the self-tests:
-scripts/gobel2.py (run 9), scripts/gobel3.py (run 10 wave A),
-scripts/cascade3.py + scripts/closure_apply.py (propagation to
-fixpoint), then final_assembly.py again.
+Expected invariant: these steps leave `table.json`, `submission.csv` and
+the score unchanged (22.823536) — the pipeline is idempotent at the
+delivered frontier.
 
-## A2. Run 11 precision architecture (map + certificates)
+## B. Rebuild the run-13 frontier from the run-12 table
+
+The delivered `table.json` already contains every improvement. To replay
+this session's pushes in order (e.g. after re-importing a fresher source
+snapshot):
 
 ```bash
-python3 scripts/leech_map.py          # re-architected map on the frontier
-python3 scripts/angle_first.py        # Stage-A angle inventory + controls
-python3 scripts/cert_extend.py        # 889 new certificates (idempotent-safe:
-                                      # truncate galois_certificates.json to
-                                      # 280 first if re-running)
-# Lean (the reverse direction; resumable, incremental):
-cd workspace/lean/tct_squares && /home/z/.elan/bin/lake build
-python3 scripts/cert_repro.py         # uploaded certificate reproduction
+# 1. community register import (packlib-gated, attributed)
+python3 scripts/import_atlas.py
+#    -> 76 applied, direct gain 0.050264; writes workspace/push/atlas_import.json
+#    source snapshot: workspace/sources/atlas/lists/ (best.json + certs/)
+
+# 2. propagation to fixpoint — ORDER MATTERS (any table change triggers both)
+python3 scripts/cascade3.py                 # L-extension band chains
+python3 scripts/closure_apply.py            # removal closure, iterate to fixpoint
+#    -> chains: 33 conversions (gain 0.013671); closure: clean at fixpoint
+
+# 3. architecture test (pure arithmetic + packlib gate)
+python3 scripts/gobel4.py
+#    -> 503 near-miss targets swept, 0 representations below grid (honest negative)
+
+# 4. analysis instrument
+python3 scripts/gap_analysis.py             # -> workspace/push/gap_analysis.json
+
+# 5. rebuild + verify the submission
+python3 scripts/final_assembly.py
 ```
 
-`## B. Rebuild the mathematical layers from scratch (offline)`
+To replay the historical construction runs (9–10) on any table:
 
-The lattice layer needs nothing but the scripts:
+```bash
+python3 scripts/gobel2.py    # full G(a1,a2,b,c) sweep + apply (ledger: download/)
+python3 scripts/gobel3.py    # clipped G(a1,a2,b,c,t) + pocket-fill wave B
+python3 scripts/cascade3.py && python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py
+```
+
+## C. Rebuild the mathematical layers from scratch (offline)
 
 ```bash
 python3 scripts/leech_core.py     # QR factor search -> Golay -> Leech:
@@ -83,59 +87,73 @@ python3 scripts/octad_moves.py    # Steiner 253/77/21/5/1, octad calculus
                                   # covering radius exactly 4
 ```
 
-Both scripts recompute everything from first principles (no lookup
-tables); run them twice and the outputs are byte-identical.
+Both recompute everything from first principles; run twice and the outputs
+are byte-identical.
 
-## C. Rebuild the packing pipeline (mostly offline; two web steps)
-
-Historical order (the delivered workspace already contains the outputs
-of every step; re-running applies the same idempotent updates):
+## D. Historical pipeline (run-by-run, mostly offline)
 
 ```bash
 python3 scripts/parse_all_svgs.py   # survey SVGs (workspace/svgs) -> records
-python3 scripts/parse_kingbird.py   # WEB: live catalogue mirror; needs
-                                    # network; caches /tmp/kingbird.json
-python3 scripts/level_audit.py      # needs /tmp/kingbird.json from above;
-                                    # writes /tmp/level_report.json
-python3 scripts/build_table.py      # stores -> table.json
-python3 scripts/gobel_squares.py    # Göbel 45° family sweep + apply
+python3 scripts/parse_kingbird.py   # WEB: Ellsworth catalogue mirror
+python3 scripts/level_audit.py      # field-identification standard (2e-8)
+python3 scripts/build_table.py      # records -> table.json
+python3 scripts/gobel_squares.py    # Göbel 45 deg family sweep + apply
 python3 scripts/galois_certs.py     # certificates + theta-30 members
-                                    # (needs /tmp/level_report.json)
-python3 scripts/cascade3.py         # chain3 family (see script header)
+python3 scripts/cascade3.py         # chain3 family
 python3 scripts/closure_apply.py    # removal closure to fixpoint
-python3 scripts/theta_family.py    # 7-angle feasibility map + 45° minimum
-python3 scripts/theta225_push.py    # Run 5 final sweep + certificates
+python3 scripts/theta_family.py     # 7-angle feasibility map + 45 deg minimum
+python3 scripts/theta225_push.py    # run-5 final sweep + certificates
 python3 scripts/final_assembly.py   # table -> submission.csv + round-trip
 ```
 
 Notes and honest caveats:
 
-- `parse_kingbird.py` fetches the *live* maintained catalogue mirror; the
-  web copy drifts over time. The repo ships the parsed values that were
-  current at archive time (4 records with states, embedded in
-  extended_table_5000.json as `catalogue:kingbird`).
-- `level_audit.py` / `galois_certs.py` have a transient `/tmp` dependency
-  (kingbird.json, level_report.json). For a cold start, run them in the
-  order shown in section C.
-- `scripts/theta225_push.py` reads `download/leech_map.json` (step A.4)
-  for the Level-0 list — run leech_map.py first.
+- `parse_kingbird.py` fetches the *live* catalogue; the web copy drifts.
+  The repo ships the parsed values current at archive time (embedded in
+  `workspace/submission/extended_table_5000.json` as `catalogue:kingbird`).
+  The catalogue is **not** the frontier any more — see `STATUS.md` §6.
+- `theta225_push.py` reads the `leech_map` output for its Level-0 list —
+  run `leech_map.py` first.
+- The web steps (kingbird fetch) and the Lean build are the only
+  non-offline stages; everything else is deterministic.
 
-## D. The report (English, Run 5 edition)
+## E. The report (English edition)
 
 ```bash
-python3 scripts/figures.py                 # figures (English labels)
+python3 scripts/figures.py                 # figures
 node scripts/gen_report_en.js              # docx (needs `docx` npm package)
-python3 skills/docx/scripts/add_toc_placeholders.py \
-        "download/Leech_Lattice_and_Square_Packing_Report.docx" --auto
-python3 scripts/patch_footers.py           # Roman/arabic footer field patch*
+python3 scripts/patch_footers.py           # ROMAN/arabic page-field patch
 ```
 
-\* patch_footers.py targets the Chinese Run-4 edition by default; for the
-English report, apply the same PAGE-field patch to
-Leech_Lattice_and_Square_Packing_Report.docx (ROMAN front matter, arabic
-body) — the shipped PDF already has it.
+`scripts/gen_report.js` is the Run-4 Chinese edition, kept for the record.
 
-(The docx skill lives under skills/docx/; if you repackage without it,
-skip the add_toc_placeholders step — the TOC then has no placeholder
-entries until Word updates the field. scripts/gen_report.js is the
-Run-4 Chinese edition, kept for the historical record.)
+## F. Lean layer
+
+```bash
+cd workspace/lean/tct_squares && lake build   # needs elan + mathlib cache
+python3 scripts/cert_repro.py                 # certificate reproduction
+```
+
+See `workspace/lean/tct_squares/SORRY_LEDGER.md` for the exact gap list
+(2 of 3 sorries have candidate closures in source; `s11_optimal_value` is
+deliberate — the combinatorial-geometry wall).
+
+====
+
+
+
+## A9. Run 17: recycle recovery + research resume
+
+```bash
+python3 scripts/fetch_atlas.py        # live register fetch (weekly P3 watch)
+python3 scripts/import_atlas.py       # 76 applied, gain 0.050264
+python3 scripts/cascade3.py && python3 scripts/closure_apply.py
+python3 scripts/gobel2.py             # reimplemented run-9 G(a1,a2,b,c): 83 applied
+python3 scripts/gobel3.py             # reimplemented run-10 clipped: 13 applied
+python3 scripts/cascade3.py && python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py     # 22.823536, 454/1000 (lost frontier restored)
+python3 scripts/gobel5.py             # seed map: 8489 near-misses, 159 at gap 0
+python3 scripts/gobel6.py             # two-band family: 0 records (honest)
+python3 scripts/polish.py             # P2 fine polish (pending)
+```
+
