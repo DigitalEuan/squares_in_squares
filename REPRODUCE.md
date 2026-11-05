@@ -210,6 +210,7 @@ python3 scripts/positive_control.py  # corrected control (phantom fix)
 python3 scripts/clue_ledger.py       # Q3: 7-channel clue ledger
 ```
 
+
 ## A14. Run 22: soft relaxation
 
 ```bash
@@ -218,3 +219,11 @@ python3 scripts/soft_relax.py   # v2 hybrid; ~10 min; controls + roots
 # workspace/push/soft_relax_v1_sa.json
 ```
 
+
+## A15. Run 23: submission audit + tightest ladder sweep
+
+```bash
+python3 scripts/sweep23.py    # ~28 min: Part 0 audit + 36-cell ladder + apply
+python3 scripts/audit23.py    # optional: fact-base audit, pass 1
+python3 scripts/audit23b.py   # optional: fact-base audit, pass 2
+```
