@@ -266,3 +266,15 @@ python3 scripts/closure_apply.py
 python3 scripts/final_assembly.py       # rebuilds submission.csv
 python3 scripts/deliver26.py            # this run's deliverables
 ```
+
+
+## A19. Run 27: P4 root-conversion instrument
+
+```bash
+python3 scripts/cascade3.py        # fixpoint channel (0 expected)
+python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py
+python3 scripts/root_audit.py      # the P4 instrument (new)
+python3 scripts/import_atlas.py    # weekly watch (idempotent)
+python3 scripts/deliver27.py       # this run's deliverables
+```
