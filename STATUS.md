@@ -3,11 +3,9 @@
 This is the "everything in one place" document. Since run 32 it carries
 two things per the standing operations rule:
 
-1. **A duplication of the current README information** (§1) — the
-   headline numbers and the score engine, refreshed together with the
-   README every run. The README is the source of the wording; this file
-   re-states it so the system's state is readable in one place. The
-   sync is checked mechanically: `deliverNN.py` fails if the headline
+1. **The current README information** (§1) — The README is not current or updated; this file
+   records it so the system's state is readable in one place. The
+   sync is checked mechanically: `deliverNN.py` will fail as the headline
    numbers here disagree with the live table or the README.
 2. **The system description** (§2) — how the system operates, and what
    information comes from where: every artifact class in the repository
