@@ -286,3 +286,11 @@ python3 scripts/deliver27.py       # this run's deliverables
 python3 scripts/sat_review.py        # the SAT-data instrument (new)
 python3 scripts/deliver28.py         # this run's deliverables
 ```
+
+
+## A21. Run 29: the SAT measure (TAX/NRCI)
+
+```bash
+python3 scripts/sat_measure.py       # TAX/NRCI on the SAT data (new)
+python3 scripts/deliver29.py         # this run's deliverables
+```

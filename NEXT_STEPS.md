@@ -1,10 +1,11 @@
 # NEXT_STEPS.md — where the remaining 0.766 lives and how to get it
 
 Companion to `STATUS.md`. Everything below is measured on the delivered
-table (**Run 28, score 22.819978**, 454/1000 beat grid; SAT data
-reviewed this run) with `scripts/gap_analysis.py`,
-`scripts/root_audit.py` (run 27) and `scripts/sat_review.py` (run 28);
-nothing here is aspirational without a number attached.
+table (**Run 29, score 22.819978**, 454/1000 beat grid; the SAT data
+reviewed run 28 and measured run 29) with `scripts/gap_analysis.py`,
+`scripts/root_audit.py` (run 27), `scripts/sat_review.py` (run 28) and
+`scripts/sat_measure.py` (run 29); nothing here is aspirational
+without a number attached.
 
 ---
 
@@ -21,6 +22,7 @@ Runs 14–28 executed this plan. Measured outcomes, per item:
 | **P3** source watch | **LIVE (paid runs 22+26)** | Run 26: T-263 s(299) imported exactly (+0.003559 with chain). Run 27: 4 optimality theorems + individuals absorbed into the instrument. Run 28: T-083 rectangle bound checked against every row (0 violations, no new floors); register best-known still grid at every top aim. |
 | **P4** root conversions | **INSTRUMENTED (Run 27)** | standing channel re-run (cascade 0, closure 0 — fixpoint true); `scripts/root_audit.py` built and run: the leverage map, corrected. Two documentation errors from run 26 fixed (§2). |
 | **SAT data review** | **DONE (Run 28, user input)** | `scripts/sat_review.py` over all 1000 packings: contact language 99% parallel (run18-frontier 8% generic outlier); T-263 family 41 floaters at 0.68 (most slack); grid nearest-gap exactly 1.0; n=50 decode cross-validated (105 contacts). §2a. |
+| **SAT measure (TAX/NRCI)** | **DONE (Run 29, user input)** | `scripts/sat_measure.py`: the tie test is the SAT data's binary layer (3.3-decade gap); SAT-TAX = g·Q, SAT-NRCI with GLM's constants and regime map. Vacuum = exactly the 546 grid rows; only off-vacuum provable rows = the 4 hand-proved packings (5/11/17/19); depth anti-correlates with genericity (frontier −0.61; chain3 deepest yet nearly vacuum) — run-28 P1' reading corrected. §2b. |
 | **P5** certification completeness | **open** | unchanged (Lean build, exact replays); the tier-1 report's "s(6)=3 theorem" line retracted (register: restricted-optimality only). |
 
 ## 1. The gap, decomposed
@@ -143,13 +145,14 @@ squares, Maxwell counting ratio). Ledger
    non-parallel corner) and 47.5% have 4 (parallel corner); only 1.0%
    are generic single-tight edge/vertex contacts, and 3-tight is
    structurally empty. The classes differ sharply: grid/chain/closure/
-   gobel are ≥ 99% parallel (2- or 4-tight), while **run18-frontier —
-   the record class — carries 8% generic contacts** (ratio median
-   1.057 vs 1.2+ everywhere else). Reading: the frontier's slack is
-   literally in its contact language; a P1' construction that wants to
-   beat grid should seek generic (non-parallel) contact structures,
-   not the lattice languages of P1(a)/(b) — consistent with their
-   pointwise domination result.
+   gobel are ≥ 99% parallel (2- or 4-tight), while run18-frontier —
+   the record class — carries 8% generic contacts (ratio median
+   1.057 vs 1.2+ everywhere else). READING CORRECTED BY RUN 29 (§2b):
+   the class-level contrast is real but the prescription is not
+   "seek generic contacts" — within the record class, deeper rows are
+   LESS generic (φ-vs-depth −0.61), and the deepest class in the
+   table (chain3) is nearly at the vacuum. Genericity marks the
+   small-n provable regime and shallow records, not depth.
 2. **The T-263 family floats 41 squares.** n = 299/334/371 each have
    41 free squares (no pair contact, no wall touch) at Maxwell ratio
    0.68 — the most slack in the table (next: 0.71 at 334). The 41 are
@@ -173,6 +176,57 @@ squares, Maxwell counting ratio). Ledger
    (250/251/284/191/190: side "16.0/17.0/14.0", finder "-"). Nobody
    upstream has beaten grid in the mid-band either; the 325..1000
    emptiness and these rows are the same frontier.
+
+### 2b. The SAT measure: TAX/NRCI on the SAT data (Run 29, `scripts/sat_measure.py`)
+
+User input asked for a measure on the SAT data in the GLM's currency
+(TAX, NRCI — github.com/DigitalEuan/GLM, the parent system; definitions
+in upload/GLM_Complete_Number_Theory_Evidence.md §1.1–1.3). The answer
+is yes, and the SAT data has its own binary layer to carry it:
+
+- **The binary layer is the symmetry tie.** A contact pair is *tied*
+  when the two axis families see the same two directions
+  (multiset{pen_u0, pen_v0} = multiset{pen_u1, pen_v1}); tied contacts
+  have even weight (2 or 4 tight axes — the parity law of run 28).
+  Measured: the tie residual is sharply bimodal — tied population
+  ≤ 5e-12 (float noise of exact constructions), generic continuum
+  ≥ 1.1e-8, a 3.3-decade empty gap between. "Parallel" is a measured
+  property of the data, not a tolerance choice.
+- **The measure** (the carrier is the packing's contact word; 1-bits =
+  generic contacts, g of them): SAT-TAX = g·Q with the GLM's Q =
+  Y+1/8 (Y = 1/(π+2/π)); SAT-NRCI = 10/(10+SAT-TAX) ∈ (0,1];
+  GLM regime map at integer cutoffs g ≤ 6/25/59 (exact under the
+  proved Y bounds). Validated on the n=50 decode row (C=105, g=10,
+  the ten weight-1 contacts of run 26/28).
+- **What it says about the landscape:**
+  1. The vacuum (NRCI = 1 exactly) is precisely the 546 grid rows.
+     The GLM theorem NRCI=1 ⟺ v=0 lands here as: no generic contacts
+     ⟺ grid.
+  2. The only off-vacuum **provable** rows in the whole table are the
+     four hand-proved packings — Göbel 5 (φ=1.00: all four contacts
+     generic), Ahmed 11, Overbeck 17, Fitzharding 19 (NRCI 0.70–0.87).
+     The provable frontier off the vacuum is exactly the generic
+     language at small n; everything else (450 sub rows, NRCI median
+     0.39, 55 subcoherent) is unproven territory.
+  3. **Depth is not bought with genericity.** Within run18-frontier,
+     φ-vs-depth = −0.61 (shallow third φ 0.138, deep third 0.048);
+     the deepest class, chain3 (our large-n constructions, d/√n
+     median 0.0123), sits nearly at the vacuum (φ 0.015). The
+     landscape is two-phase: a **vacuum phase** (grid/lattice-tied,
+     depth by chain arithmetic at large n) and a **generic phase**
+     (small n, hand-proved, where every known proof lives). This
+     corrects run 28's P1' reading: do not chase generic contacts
+     for depth; genericity is the signature of the small-n provable
+     regime.
+  4. The register row (T-263, n=299) is the most generic per contact
+     in the table (φ 0.101). **Falsifiable prediction for the P2
+     re-run:** if settling the 41 floaters improves L on that family,
+     the improved packing should move toward the tied language (φ
+     down, NRCI up) — the deep mid-band is vacuum-like. If instead
+     the improved packing has φ up, the two-phase picture is wrong
+     and the P1' search should be re-aimed at the generic language.
+- Ledger: `workspace/push/sat_measure29.json` (per-row g, φ, TAX,
+  NRCI, regime, census, walls; class and status aggregates).
 
 ## 3. Failure → requirement (updated with runs 14–28)
 
@@ -202,7 +256,7 @@ discipline as failure 11, applied backwards in time.
 
 ## 4. Prioritized pushes (updated Run 28)
 
-### P1' — blob-regime insertion campaign (updated Run 28)
+### P1' — blob-regime insertion campaign (updated Run 29)
 
 Seed from record states, insert one square at fixed L, pressure-settle;
 first targets the aiming map's top rows (251, 250, 284, 191 — the
@@ -210,12 +264,13 @@ r=5/6 roots of the two biggest diagonals). New lead to read first:
 "Structure-Guided Search for Packing Unit Squares in a Square"
 (preprints.org, 2026-11-03, registration requests jlevy/squares #799)
 — the community's current method paper; it names the structures that
-found the recent records. SAT-review guidance (§2a.1): seek generic
-(non-parallel) contact structures — the record class's 8% generic
-share is where the table's slack lives; the parallel languages of
-P1(a)/(b) are measured dead ends.
+found the recent records. Run-29 guidance (§2b.3): depth at large n
+is vacuum-like — the mid-band target rows will resemble chain3
+(lattice-tied, φ ≈ 0.015), not the generic language; genericity is
+the small-n provable regime. Read the preprint against that
+prediction.
 
-### P2 — RENEWED for the T-263 family (Run 28; see §2a.2)
+### P2 — RENEWED for the T-263 family (Runs 28–29; see §2a.2, §2b.4)
 
 Originally closed (runs 23–25: 52/52 cells, 0 finds). The SAT review
 found the exception the closure was waiting for: n = 299/334/371 carry
@@ -225,6 +280,9 @@ annealer from the register states (exact coordinates in
 lists/certs/n-299), floaters free, settle with contact-graph
 re-breaking. Value if it converts: the family's rows are already
 sub-grid, so any find is direct d/√n on top of 0.68-ratio states.
+Run-29 addition: log SAT-NRCI before/after — the two-phase picture
+(§2b.3) predicts any improved packing comes with φ down (more tied);
+φ up falsifies it and re-aims P1' at the generic language.
 
 ### P3 — source watch (weekly; the only item that has paid)
 
@@ -264,7 +322,7 @@ certificate.
 | all open rows at the area bound | 6.662 (theoretical ceiling) |
 | the leader's standing | 11.5% of the theoretical ceiling |
 
-## 6. What was executed (runs 14–28), measured
+## 6. What was executed (runs 14–29), measured
 
 1. **Runs 14–25**: P2 finished; P1(a) closed by domination; the
    deliverable-name fix (run 25).
@@ -280,7 +338,7 @@ certificate.
    individual proofs absorbed into the instrument; the register
    re-checked (no new records; max n = 308, zero bounds > 324); the
    aggregate measured (0.4334 at T-263 depth; d\* = 0.0382).
-4. **Run 28 (this run; user input: review the SAT data for insight)**:
+4. **Run 28 (user input: review the SAT data for insight)**:
    `scripts/sat_review.py` built and run over all 1000 packings —
    per-pair SAT margins, contact normals, contact types, binding
    walls, free squares, Maxwell ratios. Validated against the run-26
@@ -294,6 +352,20 @@ certificate.
    c=1 only); the register's best-known is still grid at every top
    aim; the old "s(6)=3 theorem" claim retracted (register has only
    restricted-optimality there). Score unchanged 22.819977568.
+5. **Run 29 (this run; user input: a TAX/NRCI-style measure on the
+   SAT data)**: definitions extracted from the GLM papers (the repo
+   is the parent system); `scripts/sat_measure.py` built and run —
+   the tie test is the SAT data's binary layer (residual bimodal,
+   3.3-decade gap: tied ≤ 5e-12, generic ≥ 1.1e-8); SAT-TAX = g·Q,
+   SAT-NRCI = 10/(10+TAX), GLM regime map at integer cutoffs.
+   Validated on n=50 (C=105, g=10). Findings in §2b; headline: the
+   vacuum (NRCI=1) is exactly the 546 grid rows; the only off-vacuum
+   provable rows are the four hand-proved packings (5, 11, 17, 19);
+   depth anti-correlates with genericity (frontier φ-vs-depth −0.61;
+   deepest class chain3 nearly at the vacuum) — run 28's P1'
+   "seek generic contacts" reading corrected in §2a.1; falsifiable
+   P2 prediction recorded (any T-263 improvement should come with
+   φ down). Score unchanged 22.819977568.
 
 Score 22.823536149 → **22.819977568** (runs 26–27); beats-grid 454;
 submission.csv rebuilt and round-trip verified.
