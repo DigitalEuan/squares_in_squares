@@ -252,3 +252,17 @@ python3 scripts/closure_apply.py
 python3 scripts/final_assembly.py       # rebuilds submission.csv
 python3 scripts/deliver25.py            # this run's deliverables
 ```
+
+
+## A18. Run 26: P1(b)/(c) closures + T-263 import
+
+```bash
+python3 scripts/twoblock_sweep.py       # P1(b): two-block sweep (~2 min)
+python3 scripts/seam_census.py          # P1(c): census + n=50 decode
+python3 scripts/import_atlas.py         # P3: idempotent (may fetch)
+python3 scripts/import_s299.py          # P3: T-263 s(299) (needs network)
+python3 scripts/cascade3.py             # P4: fixpoint propagation
+python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py       # rebuilds submission.csv
+python3 scripts/deliver26.py            # this run's deliverables
+```

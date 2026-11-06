@@ -1,214 +1,142 @@
-# NEXT_STEPS.md — where the remaining 0.769 lives and how to get it
+# NEXT_STEPS.md — where the remaining 0.766 lives and how to get it
 
 Companion to `STATUS.md`. Everything below is measured on the delivered
-table (Run 13, score 22.823536) with `scripts/gap_analysis.py` and the
-diagonal census; nothing here is aspirational without a number attached.
+table (**Run 26, score 22.819978**, 454/1000 beat grid) with
+`scripts/gap_analysis.py` and the diagonal census; nothing here is
+aspirational without a number attached.
 
 ---
+
+## 0. Execution status of this plan (updated Run 26, 2026-11-06)
+
+Runs 14–26 executed this plan. Measured outcomes, per item:
+
+| item | status | measured result |
+|---|---|---|
+| **P1(a)** strip + generalized Göbel (w∈{1,2,3}, two independent staircases) | **CLOSED (Run 25)** | built EXACTLY from a closed-form decode of the imported members (L(a,w)=a+1+w/√2); 88/88 designs finalize-verified; the family is DOMINATED by the table on every row n≤1000 (full-range check: table strictly deeper at 950 rows, equal at the rest, 0 finds); acceptance 44/58/31 FAILS by capacity (ceilings 38/52/27 squares — short by 6/6/4). The community "exact:square-N.svg" rows ARE this family. |
+| **P1(b)** two-block / block+slab ((K−2)×(K−1) body + 45° corner block) | **CLOSED (Run 26)** | exact family: 45° m×m corner block, lower-left face on x+y=D, maximal integer-lattice fill; L=(D+(3/2)√2·m)/2, n=m²+\|cells\|; 763 designs enumerated, pointwise DOMINATED by plain grid capacity at the same L (0 designs beat grid, min gap 0 at one tie); acceptance FAILS by capacity (ceilings 36/49/25). |
+| **P1(c)** axis-aligned dominant + tilted seams | **CLOSED as a family (Run 26)** | census of all 454 sub-grid rows: 314 strip-45 (P1(a)), 31 Pythagorean-exact, 109 drifted. The blob rows are isostatic hand-polished arrangements on rational lattices (n=50 decoded exactly: L=53/7, angle arctan(3/4), tilted centers on 1/50, axis grid at 2/7 mod 1, 105 contacts, K²+1 signature) — NOT a parametric family. The decode→closed-form→sweep method does not transfer; the follow-up is the blob-regime insertion campaign (P2-bis below). |
+| **P2** motif-seeded numerical polish | **DONE (Runs 23–25)** | full designed sweep 52/52 cells (26 rows × 2 targets): 0 hard checks, 0 finds with BOTH random seeds (run 23) and family seeds (runs 24–25). These rows are jammed at their family geometry at targets grid−0.0005/grid−0.002. |
+| **P3** source watch | **LIVE (paid this run)** | Run 26: T-263 s(299)≤17.8012385339790622 (jlevy/squares #893, Nov 3 2026; finder Daniel, improver Özden) fetched from the retained packet, exact-rational verify (0 penetration, L=side exactly), APPLIED: row gain 0.0012513. The weekly watch is the highest-EV item in this plan — it produced the only score gain of runs 14–26. |
+| **P4** root conversions | **standing** | the T-263 import propagated via cascade3 to n=334, 371 (chain, +0.000273); the chain correctly stops where gobel2 designs are deeper (410, 453, 498). |
+| **P5** certification completeness | **open** | unchanged (Lean build, exact replays) |
+
+**P1 is now fully closed** — all three named architectures were built
+exactly, measured, and dominated. The remaining paths are: sources (P3),
+the blob-regime insertion campaign (P2-bis), and certification (P5).
 
 ## 1. The gap, decomposed
 
 | | score | note |
 |---|---|---|
-| our submission (Run 13) | 22.823536 | 454/1000 beat grid |
+| our submission (Run 26) | 22.819978 | 454/1000 beat grid |
 | leaderboard best (reported) | 22.0544214515 | |
-| gap | **0.769115** | |
+| gap | **0.765556** | |
 
-Closed this session (measured):
+Closed since Run 13 (measured):
 
 | push | gain |
 |---|---|
 | import 76 community best-known packings (n ≤ 324) | 0.050264 |
 | chain propagation from those records (33 conversions) | 0.013671 |
-| **total closed** | **0.063935** |
+| T-263 s(299) import + cascade (Run 26) | 0.003559 |
+| **total closed** | **0.067494** |
 
-**Where the remaining ~0.70 must be:** for n ≤ 324 we are now *exactly* at
-the community's certified frontier (`best.json` vs table: 0 rows either
-way). The community tracks only n ≤ 324. The Ellsworth catalogue has **one**
-record in 325..1000. So the remaining score lives at **n = 325..1000**,
-plus the classic open problems at small n — in both cases beyond the
-published frontier.
+**Where the remaining ~0.76 must be:** the register now moves above
+n=324 too (T-263 is a 299; Deotte's fault-DP seeds s(334) directly) —
+the mid-band 325..1000 is no longer beyond the published frontier, it
+is at its edge. The tie structure (measured on the Run-26 table):
 
-Concretely (area headroom of the tied, non-proven rows):
+| band | tied rows | area headroom Σ(K−√n)/√n |
+|---|---|---|
+| n ≤ 324 | 174 | 4.96 (famous open problems) |
+| n > 324 | 372 | 4.06 |
+| **total** | **546** | **9.02** |
 
-| band | tied rows | area headroom Σ(K−√n)/√n | leader needs |
-|---|---|---|---|
-| n ≤ 324 | ~150 | 2.82 (much of it in famous open problems) | some |
-| n > 324 | ~255 | 4.02 (per-row cap ≈ 0.026) | most of the 0.769 |
-| **total** | **~405** | **6.82** | **11.3% of it** |
-
-Equivalent statement: a uniform depth of **d\* = 0.034** below grid on every
-open row matches the leader. That is a small, systematic edge — consistent
-with either (a) many modest new packings in the un-searched mid-band, or
-(b) better depths on the improved-window rows where our chain tails sit at
-0.02–0.05 while the area bound allows 0.3–0.5.
+A uniform depth d\* = 0.028 below grid on every open row matches the
+leader (leader uses 8.5% of the theoretical ceiling).
 
 ## 2. The frontier is organized in residue diagonals (the leverage map)
 
-Write K = ⌈√n⌉, c = n − (K−1)². The tied rows lie on **54 diagonals**
-n = (K−1)² + c; each diagonal is one cascade family. The chain law
-(`cascade3`) walks *up* a diagonal from its first construction, at constant
-depth. So **a single construction at a diagonal's root converts every tied
-member above it** — and the 2026 proofs (s(k²−3)=k, s(k²−4)=k) have cut off
-the shallow part of each diagonal, leaving the roots exactly where the open
-problems are.
+Unchanged (the chain law and the diagonal structure stand). The
+c=10 diagonal (299, 334, 371, 410, 453, 498 … 993) is now a live
+example: T-263 at the root converted 2 members by chain; the tail
+(810, 869, 930, 993) is still AT GRID — the deepest untapped chain
+reach in the table. A second T-263-class record at any of those four
+n converts them all by the chain law.
 
-Top diagonals by total headroom (`scripts/gap_analysis.py`, extend with the
-diagonal census below):
+## 3. Failure → requirement (updated with runs 14–26)
 
-| c | open members | total headroom | root (K, r) | root headroom |
-|---|---|---|---|---|
-| 26 | 16 (251 … 926) | 0.274 | 251 (K=16, r=5) | 0.0099 |
-| 25 | 15 (250 … 866) | 0.272 | 250 (K=16, r=6) | 0.0119 |
-| 22 | 13 (191 … 647) | 0.265 | 191 (K=14, r=5) | 0.0130 |
-| 21 | 12 (190 … 597) | 0.261 | 190 (K=14, r=6) | 0.0157 |
-| 28 | 16 (284 … 989) | 0.251 | 284 (K=17, r=5) | 0.0088 |
-| 8 | 3 (44, 57, 72) | 0.176 | 44 (K=7, r=5) | **0.0553** |
-| 3 | 1 (12) | 0.155 | 12 (K=4, r=4) | 0.1547 |
-| 9 | 3 (58, 73, 90) | 0.158 | 58 (K=8, r=6) | 0.0505 |
-| 6 | 2 (31, 42) | 0.158 | 31 (K=6, r=5) | **0.0776** |
-| 12 | 4 (76 … 133) | 0.149 | 76 (K=9, r=5) | 0.0324 |
-| 13 | 4 (94 … 157) | 0.140 | 94 (K=10, r=6) | 0.0314 |
+Items 1–7 of the original list stand. Three additions from the
+closures:
 
-Reading of the table:
+8. **P1(a)/(b) dominated pointwise** (runs 25–26) → confirmed: any
+   single-family architecture with a rigid parametrization is dominated
+   by the grid at equal L; the sub-grid records live in the blob regime.
+9. **The blob records are isostatic, not parametric** (Run 26 census) →
+   the method that closed P1(a) (decode → closed form → sweep) does
+   not transfer; blob rows need search seeded from the records
+   themselves (insertion at fixed L), or new sources.
+10. **Sources move weekly now** (T-258 Oct 26 → T-263 Nov 4) → the
+    watch must run weekly; each record is worth ~0.0013/row plus chain.
 
-- The **master keys** are the r = 5/6 rows (n = K²−5, K²−6): they are the
-  roots of the long diagonals (c = 2K−1−r). A depth-d construction at a
-  root is worth ≈ d × Σ(1/√m) over its diagonal — e.g. n=251 at depth 0.01
-  converts 16 rows and is worth ≈ 0.005; n=44 at depth 0.05 converts 3 rows
-  *and* deepens 89, 108, 129 … where it beats the current chain values,
-  worth ≈ 0.025.
-- The **deepest roots** (best d for the effort) are the small ones:
-  n=31 (0.078 area), n=44 (0.055), n=58 (0.050), n=76 (0.032), n=94 (0.031).
-  These are also the honest open problems of the literature.
-- The long diagonals' roots (250, 251, 283, 284 …) have little area room
-  (0.007–0.016) but huge reach — small depths are still worth having
-  because the chain multiplies them.
+## 4. Prioritized pushes (updated)
 
-## 3. Failure → requirement (the failures name the next design)
+### P1 — CLOSED (see §0). Replaced by:
 
-This is the analytic core of "what is required to push further":
+### P1' — blob-regime insertion campaign (the renamed P2-bis)
 
-1. **Relaxation/SA jams at E ~ 1e-2 and fails the positive control even at
-   n=5** (whose answer is literally a picture: one 45° square + four
-   corners) → required: **motif-level constructions**. Search may only
-   polish constructions, never find them.
-2. **LP always lands on a rigid grid (s\* = (k−L)/(k−1) exactly)** →
-   required: **change of combinatorial type**. No local move crosses the
-   wall; the design space must be new shapes, not new starting points.
-3. **Mixed 0/45 contacts cost 1+√2/2** → required: **single-angle
-   assemblies** (45° blocks and axis-aligned blocks, meeting along clean
-   faces).
-4. **45° is the kink minimum of s(θ); √3 escalation refuted** → required:
-   stay in **Q(√2)/45°** geometry; the walls are structure, not fields.
-5. **Pocket-fill is structurally negative (L is monotone in n)** →
-   required: **new bases**; the front moves only by construction.
-6. **G4 asymmetric-staircase sweep: 0/503 near-miss targets representable
-   at s < grid** (Run 13) → required: **a new architecture**. The
-   diamond+staircase family is *count-exhausted* in the tied zone: the
-   whole class — symmetric or not, clipped or not — cannot express these n
-   below the grid. The binding geometry is the staircase-hypotenuse ↔
-   diamond-edge contact (they are parallel 45° lines) and the diamond's
-   ≤50% area efficiency in its bbox. Anything that wins must have a higher
-   density ceiling: e.g. a mostly-axis-aligned body with tilted seams, or
-   an attached-strip (Göbel-strip) geometry, not a central diamond.
-7. **Sources beat search (three times now: survey SVGs, catalogue, and this
-   session's 76-record register import)** → required: **keep the source
-   pipeline warm**; the register moves weekly.
+The 140 blob rows (31 Pythagorean-exact + 109 drifted) are hand-polished
+isostatic arrangements. The record-holders' method (fault-line DP,
+refill generations, exact descent — visible in the T-258→T-263 history)
+transfers to us as: seed from an existing record state, insert one
+square at fixed L, pressure-settle, exact-descent. First targets: the
+at-grid c=10 tail (810, 869, 930, 993) seeded from the T-263 state at
+L=17.80…+h; acceptance = any row below grid.
 
-## 4. Prioritized pushes
+### P2 — DONE (52/52 cells, 0 finds; rows jammed at family geometry)
 
-### P1 — New architecture for the tied zone (the named requirement)
+Renewal only if P1' produces a new near-miss map worth polishing.
 
-The diamond+staircase class is closed (Run 13). Build and sweep a family
-with a higher density ceiling. Concrete candidates, in order of promise:
+### P3 — source watch (weekly; the only item that paid in runs 14–26)
 
-- **(a) staircase + attached 45° strip** (generalized Göbel strip): the
-  Göbel strip family already packs n = ⌊a²+a+3+(a−1)√2⌋ at a+1+1/√2 — a
-  **depth 0.293** family, far deeper than anything in the tied zone.
-  Generalize to strip width w ∈ {1,2,3} and two independent end
-  staircases; sweep for n = K²−r, r ∈ [5, K+4]. This is the closest known
-  structure to the deep records (n=27, 38, 52, 67, 84 … are all strip
-  members).
-- **(b) two-block / block + slab**: an axis-aligned (K−2)×(K−1) body plus a
-  45° corner block — the mix the diamond family cannot make.
-- **(c) axis-aligned dominant + tilted seams**: for r ≤ 8 the packing must
-  be ~97% dense; the only known way is axis-aligned rows with tilted
-  squares in the seams (this is what the 2026 community records at
-  n ≈ 250–308 look like).
+- `import_atlas.py` weekly (idempotent).
+- The register (jlevy/squares) now moves above n=324: watch issues for
+  T-numbers ≥ 263, the `packing/frontier/*.md` files, and the Deotte
+  fault-DP line (s(334) seed → 334, 371 …).
+- Verified lower bounds (Hosono 2026 etc.) keep pruning the target set.
 
-Acceptance test (cheap and decisive): beat grid at **n = 44, 58, 31** — the
-deepest roots. A single hit is worth 0.02–0.03 with its diagonal.
+### P4 — root conversions (standing; mandatory after every table change)
 
-### P2 — Motif-seeded numerical polish
+cascade3 + closure_apply to fixpoint, then final_assembly. Run 26's
+order is the template: import → cascade3 (2 conversions) →
+closure_apply (0) → final_assembly (score 22.819978) → download sync.
 
-The record-holders' engine (GPU SA from structured seeds; Schadt/Ellsworth)
-is the only tool known to find packings in this regime. Our LP/annealer is
-a *finisher* — but it has never been run **seeded from family states near
-the wall** (the near-miss map: gaps 0.0208 / 0.0416 / 0.071 at 503 tied
-rows, `workspace/push/gobel4_results.json` + the symmetric near-miss scan).
-One bounded campaign: take the top-50 near-misses, seed with the family
-state at s = grid + gap, and run contact-graph re-settling (break one
-contact cluster at a time). This is the one place where search has a
-chance: the state is already 99.9% of the way there.
+### P5 — certification completeness (open; ledger, not score)
 
-### P3 — Source watch (proven EV, near-zero cost)
+Unchanged: Lean `lake build`, exact-algebraic replays of imported
+states (T-263 is already exact-rational — replay it in `Fraction`
+arithmetic as the community's verifier does), the run-12 Q(√2) family
+certificate.
 
-- Re-run `scripts/import_atlas.py` against a refreshed
-  `workspace/sources/atlas/lists/` (or the jlevy/squares register) weekly;
-  it is idempotent and packlib-gated. 76 records appeared in ~7 weeks; the
-  next batch will cover more of the mid-band.
-- Watch the register's **verified lower bounds** (Hosono 2026 etc.): they
-  tell us which tied rows are worth attacking and which are near-proven
-  optimal.
-
-### P4 — Root conversions (amplified by the cascade)
-
-Whatever produces constructions (P1/P2/P3), aim them at the diagonal roots
-first (§2 table). The cascade then converts the rest of the diagonal for
-free via `cascade3` + `closure_apply` — always re-run both to fixpoint
-after any table change (the loop order is mandatory; Run 3/9/10 all earned
-score from the propagation pass, not the find itself).
-
-### P5 — Certification completeness (ledger, not score)
-
-- Lean `lake build` completion; close `cascade_count_symbolic` and
-  `verification_margin_soundness` (both have candidate proofs written).
-- Exact-algebraic re-verification of the imported atlas states (their
-  certs are exact rationals in t = tan(θ/2); a replay in `Fraction`
-  arithmetic is cheap and matches the community's standard).
-- The run-12 Q(√2) family L(k²+1) = k + 5√2/2 − 3: certificate + replay.
-
-## 5. Value ladder (what a unit of effort is worth)
+## 5. Value ladder (updated)
 
 | action | score value |
 |---|---|
-| one imported record at depth d on n ≤ 324 (no cascade) | d/√n |
-| one root construction at depth d on a diagonal with m tied members | ≈ d · Σ(1/√m) ≈ d · (0.4…0.5) |
-| depth 0.01 uniform over the 405 open rows | 0.045 |
-| depth 0.034 uniform over the open rows | **0.769 (the whole gap)** |
-| all open rows at the area bound | 6.82 (theoretical ceiling) |
-| the leader's standing | 11.3% of the theoretical ceiling |
+| one imported record at depth d (no cascade) | d/√n |
+| one root record at depth d on a diagonal with m tied members | ≈ d · Σ(1/√m) |
+| the T-263 import (d=0.0216 at n=299, 2 chain members) | 0.003559 (measured) |
+| depth 0.028 uniform over the 546 open rows | **0.765556 (the whole gap)** |
+| all open rows at the area bound | 9.02 (theoretical ceiling) |
+| the leader's standing | 8.5% of the theoretical ceiling |
 
-## 6. What was executed in this session (Run 13), measured
+## 6. What was executed (runs 14–26), measured
 
-1. **Path portability fix** — 62 scripts now resolve paths from the repo
-   root (they were hard-wired to one machine's home directory); the
-   pipeline runs anywhere.
-2. **Community register import** (`scripts/import_atlas.py`): 76 certified
-   best-known packings applied, 244 equal-to-current correctly skipped, 0
-   verify-fails; direct gain 0.050264; attribution preserved per row.
-3. **Propagation to fixpoint** (`cascade3`, `closure_apply`): 33 chain
-   conversions (gain 0.013671); closure clean at fixpoint (monotone
-   envelope preserved, 0 violations).
-4. **Architecture test** (`scripts/gobel4.py`): the asymmetric 4-staircase
-   generalization swept completely over 503 near-miss targets — **0
-   representations below grid**; the negative is now a theorem-grade
-   statement about the diamond+staircase class, and it *names* what the
-   next architecture must be (P1).
-5. **Instrument** (`scripts/gap_analysis.py`): block/residue census, leader
-   calibration (d\* = 0.034), headroom decomposition — rerunnable after
-   every table change.
+1. **Run 24–25**: NEXT_STEPS P1(a) + P2 executed as designed (see §0).
+2. **Run 26**: P1(b) closed by domination; P1(c) closed as a census +
+   decode (blob regime); P3 paid: T-263 imported exactly, +0.003559
+   with chain; fixpoint confirmed; score 22.823536149 → **22.819978**.
 
-Score 22.887471 → **22.823536** (−0.063935); beats-grid 448 → 454;
-submission.csv rebuilt and round-trip verified.
+Score 22.823536149 → **22.819978** (−0.003559); beats-grid 454 (new
+members 334, 371 are sub-grid); submission.csv rebuilt and round-trip
+verified (0 issues, 1000/1000 rows re-verified independently).
