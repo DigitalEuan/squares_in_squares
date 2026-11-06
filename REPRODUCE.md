@@ -278,3 +278,11 @@ python3 scripts/root_audit.py      # the P4 instrument (new)
 python3 scripts/import_atlas.py    # weekly watch (idempotent)
 python3 scripts/deliver27.py       # this run's deliverables
 ```
+
+
+## A20. Run 28: SAT data review
+
+```bash
+python3 scripts/sat_review.py        # the SAT-data instrument (new)
+python3 scripts/deliver28.py         # this run's deliverables
+```

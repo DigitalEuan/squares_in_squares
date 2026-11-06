@@ -1,32 +1,33 @@
 # NEXT_STEPS.md — where the remaining 0.766 lives and how to get it
 
 Companion to `STATUS.md`. Everything below is measured on the delivered
-table (**Run 27, score 22.819978**, 454/1000 beat grid; fixpoint
-re-confirmed this run) with `scripts/gap_analysis.py`,
-`scripts/root_audit.py` (new, run 27) and the diagonal census; nothing
-here is aspirational without a number attached.
+table (**Run 28, score 22.819978**, 454/1000 beat grid; SAT data
+reviewed this run) with `scripts/gap_analysis.py`,
+`scripts/root_audit.py` (run 27) and `scripts/sat_review.py` (run 28);
+nothing here is aspirational without a number attached.
 
 ---
 
-## 0. Execution status of this plan (updated Run 27, 2026-11-06)
+## 0. Execution status of this plan (updated Run 28, 2026-11-06)
 
-Runs 14–27 executed this plan. Measured outcomes, per item:
+Runs 14–28 executed this plan. Measured outcomes, per item:
 
 | item | status | measured result |
 |---|---|---|
 | **P1(a)** strip + generalized Göbel | **CLOSED (Run 25)** | exact closed-form family (L(a,w)=a+1+w/√2); 88/88 designs verified; dominated by the table on every row (0 finds); acceptance 44/58/31 fails by capacity (ceilings 38/52/27). |
 | **P1(b)** two-block / block+slab | **CLOSED (Run 26)** | 45° m×m corner block + integer-lattice fill, L=(D+(3/2)√2·m)/2; 763 designs, pointwise grid-dominated (0 beat grid at equal L); acceptance fails by capacity (36/49/25). |
 | **P1(c)** axis-aligned dominant + tilted seams | **CLOSED as a family (Run 26)** | census: 314 strip-45, 31 Pythagorean-exact, 109 drifted; n=50 decoded exactly (L=53/7, arctan(3/4), 1/50 lattice, 105 contacts, K²+1). The blob rows are isostatic hand-polished, not parametric; follow-up = P1'. |
-| **P2** motif-seeded numerical polish | **DONE (Runs 23–25)** | 52/52 cells swept, 0 finds (random + family seeds); rows jammed at family geometry. Renew only if P1' yields a new near-miss map. |
-| **P3** source watch | **LIVE (paid runs 22+26)** | Run 26: T-263 s(299)≤17.8012385339790622 imported exactly (+0.003559 with chain). Run 27: register re-checked — no new records; **4 optimality theorems + individual proofs absorbed into the instrument** (see §2). |
-| **P4** root conversions | **INSTRUMENTED (Run 27)** | standing channel re-run (cascade 0, closure 0 — fixpoint true); `scripts/root_audit.py` built and run: the leverage map, corrected (below). Two documentation errors from run 26 fixed (§2). |
-| **P5** certification completeness | **open** | unchanged (Lean build, exact replays). |
+| **P2** motif-seeded numerical polish | **DONE (23–25) → RENEWED (Run 28)** | 52/52 cells 0 finds originally; the SAT review found the T-263 family (299/334/371) with 41 floaters at ratio 0.68, imported after the campaign — one bounded re-run aimed there (§2a.2). |
+| **P3** source watch | **LIVE (paid runs 22+26)** | Run 26: T-263 s(299) imported exactly (+0.003559 with chain). Run 27: 4 optimality theorems + individuals absorbed into the instrument. Run 28: T-083 rectangle bound checked against every row (0 violations, no new floors); register best-known still grid at every top aim. |
+| **P4** root conversions | **INSTRUMENTED (Run 27)** | standing channel re-run (cascade 0, closure 0 — fixpoint true); `scripts/root_audit.py` built and run: the leverage map, corrected. Two documentation errors from run 26 fixed (§2). |
+| **SAT data review** | **DONE (Run 28, user input)** | `scripts/sat_review.py` over all 1000 packings: contact language 99% parallel (run18-frontier 8% generic outlier); T-263 family 41 floaters at 0.68 (most slack); grid nearest-gap exactly 1.0; n=50 decode cross-validated (105 contacts). §2a. |
+| **P5** certification completeness | **open** | unchanged (Lean build, exact replays); the tier-1 report's "s(6)=3 theorem" line retracted (register: restricted-optimality only). |
 
 ## 1. The gap, decomposed
 
 | | score | note |
 |---|---|---|
-| our submission (Run 27) | 22.819978 | 454/1000 beat grid |
+| our submission (Run 28) | 22.819978 | 454/1000 beat grid |
 | leaderboard best (reported) | 22.0544214515 | |
 | gap | **0.765556** | |
 
@@ -123,11 +124,59 @@ The **master keys** remain the r = 5/6 roots (n = K²−5, K²−6): c = 2K−1�
 puts c=26 at r=5 (K=16) and c=25 at r=6 — the same pair the original
 plan named, now with the conversions measured. The deepest-root small
 open problems (n = 6, 43, 57, 58, 74, 75 …) are single-row diagonals —
-worth their d/√n only, no chain reach (values 0.002–0.009).
+worth their d/√n only, no chain reach (values 0.002–0.009). NOTE (run
+28): the tier-1 verification report's old "theorem s(6)=3" line is NOT
+backed by the register — n = 6 appears there only in
+restricted-optimality rows (T-261/T-124, local-minima searches, C1/C0),
+never as an optimality result. s(6) = 3 remains a conjecture by our
+classification; n = 6 stays a legal (if low-value) aim.
 
-## 3. Failure → requirement (updated with runs 14–27)
+### 2a. The SAT data reviewed (Run 28, `scripts/sat_review.py`)
 
-Items 1–10 stand (see run-26 revision). Two additions:
+Per-pair separating-axis data over all 1000 delivered packings
+(margins, contact normals, contact types, binding-wall touches, free
+squares, Maxwell counting ratio). Ledger
+`workspace/push/sat_review28.json`. What it says:
+
+1. **The table's contact language is 99% parallel.** Of 1,806,403 pair
+   contacts, 51.5% have exactly 2 tight SAT axes (parallel edge or
+   non-parallel corner) and 47.5% have 4 (parallel corner); only 1.0%
+   are generic single-tight edge/vertex contacts, and 3-tight is
+   structurally empty. The classes differ sharply: grid/chain/closure/
+   gobel are ≥ 99% parallel (2- or 4-tight), while **run18-frontier —
+   the record class — carries 8% generic contacts** (ratio median
+   1.057 vs 1.2+ everywhere else). Reading: the frontier's slack is
+   literally in its contact language; a P1' construction that wants to
+   beat grid should seek generic (non-parallel) contact structures,
+   not the lattice languages of P1(a)/(b) — consistent with their
+   pointwise domination result.
+2. **The T-263 family floats 41 squares.** n = 299/334/371 each have
+   41 free squares (no pair contact, no wall touch) at Maxwell ratio
+   0.68 — the most slack in the table (next: 0.71 at 334). The 41 are
+   the same squares in all three (chain children inherit them),
+   quasi-contacting at median gap 0.0035 with wall distance up to 6.46.
+   These rows were imported AFTER the P2 polish campaign; they have
+   never been polish-seeded. **Renew P2 for exactly this family** —
+   it is the one place where the record-holder's engine and our
+   finisher could meet: 41 floaters at ratio 0.68 is a near-miss map
+   of size 3.
+3. **The grid is provably rigid at the pair level.** The 546 grid rows
+   have nearest non-contact gap exactly 1.0 (a full empty cell) — the
+   P2 0-finds there are now a measured statement, not an anecdote.
+4. **Karakuş's rectangle bound (T-083) was checked against every row.**
+   s(N) ≥ 1/2 + √(N − ⌊√N⌋ + 1/4) for nonsquare 8..324: 0 violations
+   of our sub-grid L; it implies grid-optimality only on the c = 1
+   diagonal (k²−1, already covered by T-084) — no new proven floors
+   for us, but it is the right certificate shape for the mid-band:
+   if it ever extends past 324 it cuts the aiming set directly.
+5. **The register's best-known is still grid at every top aim**
+   (250/251/284/191/190: side "16.0/17.0/14.0", finder "-"). Nobody
+   upstream has beaten grid in the mid-band either; the 325..1000
+   emptiness and these rows are the same frontier.
+
+## 3. Failure → requirement (updated with runs 14–28)
+
+Items 1–10 stand (see run-26 revision). Three additions:
 
 11. **Documentation arithmetic is a failure mode too** (run 27): the
 run-26 §2 edit eyeballed diagonal memberships and chain extents, and
@@ -141,10 +190,19 @@ squares (provably dead) and overcounted the aggregate by 70% (0.736 vs
 the true 0.433). Requirement: absorb every new optimality result into
 PROVEN_FLOOR immediately — a wrong aiming map wastes the whole
 campaign.
+13. **A "theorem" cited without the register row is a claim, not a
+floor** (run 28): the tier-1 verification report carries "engine
+refuses 6@2.9 = theorem s(6)=3", but the register has no optimality
+row for n = 6 — only restricted-optimality searches (T-261/T-124,
+local-minima assertions, C1/C0). We keep n = 6 as a legal aim and
+retract the floor. Requirement: PROVEN_FLOOR entries must cite a
+register row (or a published theorem we have read), and old claims
+get audited when the register is re-checked — the same retraction
+discipline as failure 11, applied backwards in time.
 
-## 4. Prioritized pushes (updated Run 27)
+## 4. Prioritized pushes (updated Run 28)
 
-### P1' — blob-regime insertion campaign (unchanged; new lead)
+### P1' — blob-regime insertion campaign (updated Run 28)
 
 Seed from record states, insert one square at fixed L, pressure-settle;
 first targets the aiming map's top rows (251, 250, 284, 191 — the
@@ -152,9 +210,21 @@ r=5/6 roots of the two biggest diagonals). New lead to read first:
 "Structure-Guided Search for Packing Unit Squares in a Square"
 (preprints.org, 2026-11-03, registration requests jlevy/squares #799)
 — the community's current method paper; it names the structures that
-found the recent records.
+found the recent records. SAT-review guidance (§2a.1): seek generic
+(non-parallel) contact structures — the record class's 8% generic
+share is where the table's slack lives; the parallel languages of
+P1(a)/(b) are measured dead ends.
 
-### P2 — DONE (renew only on a new near-miss map from P1')
+### P2 — RENEWED for the T-263 family (Run 28; see §2a.2)
+
+Originally closed (runs 23–25: 52/52 cells, 0 finds). The SAT review
+found the exception the closure was waiting for: n = 299/334/371 carry
+41 free squares each at Maxwell ratio 0.68 — imported after the
+polish campaign, never seeded. One bounded re-run: seed the LP/
+annealer from the register states (exact coordinates in
+lists/certs/n-299), floaters free, settle with contact-graph
+re-breaking. Value if it converts: the family's rows are already
+sub-grid, so any find is direct d/√n on top of 0.68-ratio states.
 
 ### P3 — source watch (weekly; the only item that has paid)
 
@@ -194,14 +264,14 @@ certificate.
 | all open rows at the area bound | 6.662 (theoretical ceiling) |
 | the leader's standing | 11.5% of the theoretical ceiling |
 
-## 6. What was executed (runs 14–27), measured
+## 6. What was executed (runs 14–28), measured
 
 1. **Runs 14–25**: P2 finished; P1(a) closed by domination; the
    deliverable-name fix (run 25).
 2. **Run 26**: P1(b) closed by domination; P1(c) closed as a census +
    decode (blob regime); P3 paid: T-263 imported exactly, +0.003559
    with chain (334, 371); score 22.823536149 → 22.819977568.
-3. **Run 27 (this run)**: P4 executed — the standing channel re-run to
+3. **Run 27**: P4 executed — the standing channel re-run to
    fixpoint (cascade 0, closure 0, score unchanged 22.819977568;
    submission.csv round-trip 0 issues); `root_audit.py` built and run
    (chain-envelope audit: 0 above envelope; proven floors: 156 rows;
@@ -210,6 +280,20 @@ certificate.
    individual proofs absorbed into the instrument; the register
    re-checked (no new records; max n = 308, zero bounds > 324); the
    aggregate measured (0.4334 at T-263 depth; d\* = 0.0382).
+4. **Run 28 (this run; user input: review the SAT data for insight)**:
+   `scripts/sat_review.py` built and run over all 1000 packings —
+   per-pair SAT margins, contact normals, contact types, binding
+   walls, free squares, Maxwell ratios. Validated against the run-26
+   n=50 decode (105 contacts, exact). Findings in §2a; headline:
+   the contact language is 99% parallel with run18-frontier the
+   8%-generic outlier; the T-263 family floats 41 squares at ratio
+   0.68 (most slack in the table, never polish-seeded → P2 renewed
+   for that family); the grid's nearest non-contact gap is exactly
+   1.0 (P2's 0-finds there now measured); Karakuş's T-083 rectangle
+   bound checked against every row (0 violations, no new floors —
+   c=1 only); the register's best-known is still grid at every top
+   aim; the old "s(6)=3 theorem" claim retracted (register has only
+   restricted-optimality there). Score unchanged 22.819977568.
 
 Score 22.823536149 → **22.819977568** (runs 26–27); beats-grid 454;
 submission.csv rebuilt and round-trip verified.
