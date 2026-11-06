@@ -227,3 +227,14 @@ python3 scripts/sweep23.py    # ~28 min: Part 0 audit + 36-cell ladder + apply
 python3 scripts/audit23.py    # optional: fact-base audit, pass 1
 python3 scripts/audit23b.py   # optional: fact-base audit, pass 2
 ```
+
+
+## A16. Run 24: NEXT_STEPS execution
+
+```bash
+python3 scripts/import_atlas.py      # P3: idempotent community import
+python3 scripts/p2_seed_polish.py     # P2: family-seeded polish (~50 min)
+python3 scripts/cascade3.py           # P4: fixpoint propagation
+python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py     # rebuilds submission.csv
+```
