@@ -2,16 +2,18 @@
 
 Companion to `STATUS.md`. Everything below is measured on the delivered
 table (**Run 30, score 22.645991**, 543/1000 beat grid; the Mishapolk
-import landed this run) with `scripts/gap_analysis.py`,
+import landed that run; run 31 reviewed the table — §2c — and closed
+P1' by null without changing it) with `scripts/gap_analysis.py`,
 `scripts/root_audit.py` (run 27; refreshed run 30),
-`scripts/sat_review.py` (run 28) and `scripts/sat_measure.py` (run 29);
-nothing here is aspirational without a number attached.
+`scripts/sat_review.py` (run 28), `scripts/sat_measure.py` (run 29)
+and `scripts/symmetry_audit.py` (run 31); nothing here is aspirational
+without a number attached.
 
 ---
 
-## 0. Execution status of this plan (updated Run 28, 2026-11-06)
+## 0. Execution status of this plan (updated Run 31, 2026-11-06)
 
-Runs 14–28 executed this plan. Measured outcomes, per item:
+Runs 14–31 executed this plan. Measured outcomes, per item:
 
 | item | status | measured result |
 |---|---|---|
@@ -23,6 +25,7 @@ Runs 14–28 executed this plan. Measured outcomes, per item:
 | **P4** root conversions | **INSTRUMENTED (Run 27)** | standing channel re-run (cascade 0, closure 0 — fixpoint true); `scripts/root_audit.py` built and run: the leverage map, corrected. Two documentation errors from run 26 fixed (§2). |
 | **SAT data review** | **DONE (Run 28, user input)** | `scripts/sat_review.py` over all 1000 packings: contact language 99% parallel (run18-frontier 8% generic outlier); T-263 family 41 floaters at 0.68 (most slack); grid nearest-gap exactly 1.0; n=50 decode cross-validated (105 contacts). §2a. |
 | **SAT measure (TAX/NRCI)** | **DONE (Run 29, user input)** | `scripts/sat_measure.py`: the tie test is the SAT data's binary layer (3.3-decade gap); SAT-TAX = g·Q, SAT-NRCI with GLM's constants and regime map. Vacuum = exactly the 546 grid rows; only off-vacuum provable rows = the 4 hand-proved packings (5/11/17/19); depth anti-correlates with genericity (frontier −0.61; chain3 deepest yet nearly vacuum) — run-28 P1' reading corrected. §2b. |
+| **Symmetry review (D4 census)** | **DONE (Run 31, user input)** | `scripts/symmetry_audit.py` over all 1000 rows: constructions are majority-symmetric (gobel2/gobelS 100%, chain3 76%, exact 71%, closure 72%) but every record class is asymmetric (mishapolk 0%, run18-frontier 5%, register C1); tied-vs-sub asymmetry is a storage artifact; G~depth +0.31 / G~C/n +0.32 (present but weak). The P1' campaign built on it (symmetric canonical seeds + record-seeded insertion) closed by null at 356/395/355 — the Mishapolk records' voids are a thin seam (no axis-aligned +1 insertion; first candidate overlaps +0.257), not +1-voided grids. §2c. |
 | **P5** certification completeness | **open** | unchanged (Lean build, exact replays); the tier-1 report's "s(6)=3 theorem" line retracted (register: restricted-optimality only). |
 
 ## 1. The gap, decomposed
@@ -219,9 +222,74 @@ is yes, and the SAT data has its own binary layer to carry it:
 - Ledger: `workspace/push/sat_measure29.json` (per-row g, φ, TAX,
   NRCI, regime, census, walls; class and status aggregates).
 
-## 3. Failure → requirement (updated with runs 14–28)
+### 2c. The symmetry review (Run 31, user input: "many optimal grids are
+symmetrical and efficient")
 
-Items 1–10 stand (see run-26 revision). Three additions:
+`scripts/symmetry_audit.py`: a D4 point-group census over all 1000
+delivered packings — 8 elements about the bbox center (rotations leave
+θ invariant mod π/2; every reflection maps θ → −θ); an element holds
+iff the mapped multiset of (center, θ) matches within 1e-6. Joined
+per row with the SAT measures (C, g, φ, NRCI recomputed), depth, class
+and status. Ledger `workspace/push/symmetry_audit31.json`.
+
+1. **The input is true of the construction classes, not of the
+   records.** gobel2/gobelS are 100% symmetric (D2/D4), chain3 76%
+   (C2/Cs), exact 71%, closure 72% — but every record class is
+   asymmetric: mishapolk 0% symmetric (209/209 C1, distance-to-symmetry
+   ≥ 0.1), run18-frontier 5%, register (T-263) C1. The deepest known
+   rows are lattice-tied AND symmetric; the imported frontier is
+   neither.
+2. **The tied/sub asymmetry split is a storage artifact.** Stored tied
+   states are 15.3% symmetric vs sub 37.6% — but tied rows are stored
+   as tail-drop grids (canonical asymmetric); a symmetric arrangement
+   exists for every tied row, and the census note says so. Read
+   nothing into the split.
+3. **Efficiency (C/n) tracks the contact language, not symmetry.**
+   Mean C/n: grid 3.600 (corner contacts included; validated at n=356:
+   C=1313 = 674 edge + 639 corner), construction classes 3.1–3.6,
+   records ~1.9–2.8. G_size~C/n = +0.32 and G_size~depth = +0.31 are
+   present but weak — both are carried by the class structure (item
+   1), not by within-class variation. Depth~φ +0.14: deeper rows are
+   slightly MORE generic on this table (the Mishapolk import put
+   asymmetric deep rows in the mid-band; run-29's −0.61 was measured
+   on run18-frontier alone).
+4. **The falsifiable turn: the P1' campaign at the top aims
+   (356/395/355) built on the census — and closed by null.**
+   - Arm A (symmetric canonical seeds, 14/14 cells: 7 hole-orbit
+     patterns across the three aims × 2 deltas): D4/D2/Cs hole
+     orbits in the K×K lattice, ramp_settle pressure + 3 anneal cycles,
+     finalize gate. Every seed's group confirmed in-ledger by the
+     census; every cell an honest null (0 hard hops, soft extents
+     pinned ~2e-3 above L_t — the run-30 signature).
+   - Arm B (record-seeded greedy insertion, 3/3 cells): the deepest
+     sub-K record below each aim (344@18.9927 for 356/355;
+     382@19.9876 for 395), greedy max-clearance axis-aligned
+     insertion at L(seed) on the 0.25-lattice. Result: **zero
+     insertions everywhere** — the best first candidate overlaps by
+     +0.257. The Mishapolk records' free area (16.7 units² at n=344)
+     is a thin seam fragmented across 51 orientations, not +1-voided
+     grids like the gobel rows. This is the structural reason
+     mid-band +1 insertion at fixed L has no purchase, and matches
+     Karimi's observation that his next-K strip jumps +8 squares —
+     there is no +1 route.
+   - Three arm-B bugs were found and fixed by synthetic sanity tests
+     before the null was trusted (seed rule: smallest-L record over
+     all m; tangency: pen=0 rejected; container: centers at 0.25 put
+     edges outside [0, L] by 0.25). Each fix is a run-31 lesson: the
+     greedy is only trustworthy after it recovers a known answer.
+5. **What the null leaves standing.** The aims stay open (356/395/355
+   at grid, Mishapolk's best there = integer grid too — checked
+   upstream). The next legal language at the aims is Karimi's
+   two-strip class (wall strips at small angles) — which is exactly
+   what Mishapolk's rows already are, and their voids are seams. So
+   the aiming map's values (§2) remain live but unclaimed by this
+   run's instruments; the honest statement is: **symmetry does not
+   buy depth at the aims — it is the signature of the parametric
+   classes that already sit below the frontier.**
+
+## 3. Failure → requirement (updated with runs 14–31)
+
+Items 1–13 stand (see run-26/27/28 revisions). Two additions:
 
 11. **Documentation arithmetic is a failure mode too** (run 27): the
 run-26 §2 edit eyeballed diagonal memberships and chain extents, and
@@ -245,20 +313,37 @@ register row (or a published theorem we have read), and old claims
 get audited when the register is re-checked — the same retraction
 discipline as failure 11, applied backwards in time.
 
-## 4. Prioritized pushes (updated Run 28)
+14. **A greedy is only trustworthy after it recovers a known answer**
+    (run 31): arm B returned 0 insertions three times for three
+    different bugs (seed rule; tangency sign; container bounds) — and
+    each looked like an honest null. The synthetic sanity test (a
+    grid with known holes; the greedy must find exactly those holes)
+    is what caught all three. Requirement: every new search heuristic
+    ships with a synthetic recovery test in the ledger; a null from
+    an untested heuristic is not a result.
+15. **Correlations recomputed on a changed table can flip sign**
+    (run 31): run-29's depth~φ = −0.61 (frontier-only) became +0.14
+    on the run-30 table — the Mishapolk import added asymmetric deep
+    rows to the mid-band. Requirement: every published correlation
+    carries its row set; re-state it after each import, never carry
+    it across a table change.
 
-### P1' — blob-regime insertion campaign (updated Run 30)
+## 4. Prioritized pushes (updated Run 31)
 
-Seed from record states, insert one square at fixed L, pressure-settle.
-The aiming map moved with the import (§2): first targets now
-356 (c=32, 0.011102, 14 conversions), 395 (c=34), 355 (c=31), then
-the old masters 284/319/251 — every one sits at grid today and is
-open. Karimi's preprint ("Structure-Guided Search", preprints.org
-202611.0242 — preprints.org blocks plain fetchers; read via a
-browser) is the community's method paper; read it against the
-two-phase prediction (§2b.3): depth at large n is vacuum-like —
-the wall-strip languages (Karimi's, Göbel's) are tied languages,
-which is consistent.
+### P1' — CLOSED BY NULL (runs 30–31)
+
+Run 30: the aiming map moved to 356/395/355 with the Mishapolk
+import. Run 31 built the campaign the census informed and closed it:
+arm A (symmetric canonical seeds) 14/14 null; arm B (record-seeded
+insertion) 3/3 null — the Mishapolk records' voids are a thin seam,
+not +1 space (§2c.4). The aims remain open upstream (Mishapolk's best
+there = integer grid). The two-phase picture stands untested at the
+aims: no improvement was found to measure φ on. Numerical insertion
+and squeeze at the aims are dead in this landscape; the next legal
+language there is the two-strip class, and its voids are seams too —
+which is why the aiming map's values stay unclaimed. If anything
+moves at the aims it will be an imported record (P3), not a
+construction we can parametrize or a settle we can run.
 
 ### P2 — CLOSED FOR GOOD (runs 23–25, 30)
 
@@ -383,7 +468,25 @@ certificate.
    range) + the window theorem (K ≥ 16: s(n) < K whenever
    n ≤ K² − 8√K − 19, exponent 3/5 → 1/2 over Bui/McClenagan) —
    the certificate shape for our mid-band rows.
+7. **Run 31 (user input: "many optimal grids are symmetrical and
+   efficient")**: the input became a measured hypothesis, not an
+   assumption. `scripts/symmetry_audit.py`: D4 census over all 1000
+   rows joined with recomputed SAT measures (§2c). Headline: the
+   construction classes are majority-symmetric (gobel2/gobelS 100%,
+   chain3 76%) but every record class is asymmetric (mishapolk 0%,
+   209/209 C1, distance-to-symmetry ≥ 0.1); tied-vs-sub 15.3%/37.6%
+   is a storage artifact (tail-drop grids); G~depth +0.31 / G~C/n
+   +0.32 present but weak; grid C validated as edge+corner contacts
+   (n=356: 1313 = 674 + 639). The P1' campaign built on the census
+   closed by null at the top aims 356/395/355: arm A (canonical
+   symmetric seeds, 14/14) and arm B (record-seeded greedy insertion,
+   3/3 after three bug fixes each caught by a synthetic sanity test —
+   §3.14). Arm B's null is structural: the Mishapolk records' free
+   area is a thin seam (best first-candidate overlap +0.257 at
+   n=344), not +1-voided grids — mid-band +1 insertion at fixed L has
+   no purchase, matching Karimi's +8-per-K jumps. P1' closed by null;
+   the aims stay open. Score unchanged 22.645990613.
 
 Score 22.823536149 → 22.819977568 (runs 26–27) → **22.645990613**
-(run 30); beats-grid 543; submission.csv rebuilt and round-trip
-verified.
+(run 30); beats-grid 543; run 31 unchanged (analysis + campaign null);
+submission.csv rebuilt and round-trip verified.

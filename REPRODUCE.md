@@ -307,3 +307,12 @@ python3 scripts/cascade3.py && python3 scripts/closure_apply.py \
 python3 scripts/root_audit.py        # refresh the leverage map
 python3 scripts/deliver30.py         # this run's deliverables
 ```
+
+
+## A23. Run 31: symmetry review + P1' campaign null
+
+```bash
+python3 scripts/symmetry_audit.py      # D4 census + SAT measures (122s)
+python3 scripts/p1p_insert31.py         # P1' at 356/395/355 (null, 17 cells)
+python3 scripts/deliver31.py            # this run's deliverables
+```
