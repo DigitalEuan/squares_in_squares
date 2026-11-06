@@ -1,30 +1,29 @@
 # Squares in Squares — Verified Constructions, Leech-Lattice Analysis, and the Rotated-Block Program
 
-This repository is the complete, reproducible working state of a
+This repository is a reproducible working state of a
 Kaggle *Squares in Squares* project (pack n unit squares into a minimal
 square container; 1000 puzzles, n = 1..1000; score = Σ(L/√n − 1), lower
 is better), extended with a machine-verified Leech-lattice layer and a
 fully enumerated rotated-block family program.
 
-**Where this project began.** It is a descendant of the GLM study
-(github.com/DigitalEuan/GLM): the *General Lattice Machine*, whose
-number-theory evidence (TAX/NRCI, Y/Q/B constants, delta-sigma as the
-canonical carrier for irrationals) was compiled into a physical
-compiler — the cent compiler v12_2_ext, 41 wheels
+**Where this project began.** It is a branch of the GLM study
+(github.com/DigitalEuan/GLM): the *Geometric Language Machine*, foundations include: use exact Arithmetic; no floats/rounding, no SHA-256, no random or disruptive operations anywhere possible - specifically within computation,
+number-theory evidence-based (TAX/NRCI, Y/Q/B constants, delta-sigma as the
+canonical carrier for irrationals). Part of the GLM project is a concept generator — the cent compiler v12_2_ext, it has "wheels" of data that spin to find operational paths regardless of domain 
 (github.com/DigitalEuan/squares_in_squares/tree/main/workspace/cent_compiler_v12_2_ext).
 Two of those wheels are this project's engines: **W36** (Numerical SAT
 Substrate — the exact algebra that became packlib's SAT verifier) and
 **W37** (Viscoelastic Settling — the creep/pressure ramp that became
-the pressure-settling engine). Every construction this project
-produces is a W36 certificate; every search it runs is a W37
-settle. The record from start to finish — lineage, engines, sources,
-operating loop — is the system record in `STATUS.md`.
+the "pressure-settling engine" - the engine concept the cent_compiler generated). Every construction this project
+produces is a wheel certificate (W36); every search it runs is a wheel
+settle (W37). The record from start to finish — lineage, engines, sources,
+operating loop — is the system record in `STATUS.md`. More operatiors and more/denser wheels should produce more concepts, I suspect the Python libraries would make excellent wheels - reduce to cent_compiler '¢' primitives and exact Arithmetic then confirm with Lean4.
 
-## Headline results (Run 34, 2026-11-07; last score move run 30)
+## Current results (Run 34, 2026-11-07; last score move run 30)
 
 | Quantity | Value |
 |---|---|
-| Submission score | **22.645991** (grid ceiling 28.937670, improvement −6.291679) |
+| Submission score | **22.65991** (grid ceiling 28.937670, improvement −6.291679) |
 | Puzzles beating the plain grid | **543 / 1000** |
 | Leaderboard best (reported) | 22.0544214515 → gap **0.591569** |
 | Certification | 1000/1000 packings SAT-verified + 500,500-row CSV round-trip (0 issues; re-verified runs 32–34) |
@@ -51,7 +50,7 @@ operating loop — is the system record in `STATUS.md`.
    largest import of the project — **Mishapolk/square-packing-records**
    (run 30: verified bounds at ALL 1000 n; the band 325..1000 was
    invisible to our atlas; 221 rows imported, −0.173983). Sources beat
-   search: every score move since run 9 has been an import.
+   search: every score move since run 9 has been an import. I am trying to keep track of all external sources and clearly identify and reference them.
 3. **Analytic families** — Göbel strip/central-square, the 4-parameter
    diamond+staircase G(a1,a2,b,c) (17 mid-band finds beyond the catalogue),
    the clipped variant G(a1,a2,b,c,t) (5 more).
@@ -79,7 +78,7 @@ the list of steps that need network access (live catalogue mirrors) or
 transient /tmp files.
 
 ## Operations 
-Each run, update top-level README.md, STATUS.md, NEXT_STEPS.md and REPRODUCE.md all need updating. If possible GLM_INVESTIGATION.md should be upkeep as an overview of the whole study.
+Each run, update top-level STATUS.md (include the README.md copied at the bottom of STATUS.md), NEXT_STEPS.md and REPRODUCE.md all need updating. If possible GLM_INVESTIGATION.md should be upkeep as an overview of the whole study.
 
 ## Guarantee
 
