@@ -28,15 +28,25 @@ at member m, i.e. L'(m) = L(m) - d: every member n >= m of the
 diagonal moves to min(L(n), min(envelope(n), L'(m)-K(m)) + K(n)).
 Reported at d = 0.0216 (the T-263 class) and d = 0.01.
 
-Outputs: workspace/push/root_audit27.json + a printed summary fit for
-NEXT_STEPS (top aiming positions, fixpoint audit, open-diagonal set).
+Outputs: workspace/push/root_audit.json (default) — or argv[1] as the
+ledger path and argv[2] as the run label — plus a printed summary fit
+for NEXT_STEPS (top aiming positions, fixpoint audit, open-diagonal set).
+
+Run 32 fix: the score/gap figures are computed from the live table
+(were hardcoded to the run-27 score, so the run-30 refresh printed the
+stale gap 0.7656 instead of 0.5916).
 """
 import json
 import math
+import sys
 
 W = "/home/z/my-project"
 TAB = f"{W}/workspace/submission/table.json"
-OUT = f"{W}/workspace/push/root_audit27.json"
+OUT = (sys.argv[1] if len(sys.argv) > 1
+       else f"{W}/workspace/push/root_audit.json")
+RUN = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+
+LEADER = 22.0544214515  # leaderboard best, user-reported 2026-11-05
 
 D_T263 = 0.0216  # the T-263 depth class (17.80124 vs grid 17.82288 at K=18)
 
@@ -96,6 +106,28 @@ PROVEN_FLOOR.update(_indiv)
 
 def main():
     tab = json.load(open(TAB))
+    score = sum(tab[k]["L"] / math.sqrt(int(k)) - 1 for k in tab)
+    gap = score - LEADER
+
+    # ---- table laws (run 34: given a live home here; the run-33 STATUS
+    # cited a checker that did not exist).  Tolerance 1e-7 = ENV_TOL: the
+    # finalize step scales states by up to +2e-9 per row for the 12-dp
+    # CSV round-trip, so exact comparisons at 1e-12 are storage noise —
+    # at 1e-7 the shell law shows 0/937 violations (run 33's STATUS said
+    # "937 checked, 0 violations" via a phantom script; now it is real).
+    mono_bad = [n for n in range(1, 1000)
+                if tab[str(n)]["L"] > tab[str(n + 1)]["L"] + ENV_TOL]
+    shell_checked, shell_bad = 0, []
+    for n in range(1, 1001):
+        m = n + 2 * math.floor(tab[str(n)]["L"]) + 1
+        if m <= 1000:
+            shell_checked += 1
+            if tab[str(m)]["L"] > tab[str(n)]["L"] + 1 + ENV_TOL:
+                shell_bad.append({"n": n, "m": m,
+                                  "excess": tab[str(m)]["L"] - tab[str(n)]["L"] - 1})
+    print(f"table laws: monotone {1000 - 1 - len(mono_bad)}/999 clean; "
+          f"shell {shell_checked - len(shell_bad)}/{shell_checked} clean")
+
     rows = {}
     for k in tab:
         n = int(k)
@@ -268,12 +300,25 @@ def main():
               f"converts {len(a['converts_T263'])} rows")
     print(f"  TOTAL: one T-263-class record at every diagonal's first "
           f"open row: {total_root263:.6f} (at depth 0.01: {total_d01:.6f})")
-    print(f"  (score gap to leader: "
-          f"{22.819977568 - 22.0544214515:.6f})")
+    print(f"  (score gap to leader: {gap:.6f})")
 
     json.dump({
-        "run": 27, "part": "P4 root-conversion audit",
+        "run": RUN, "part": "P4 root-conversion audit",
         "chain_law": "L'(n) = L(m) + (K(n) - K(m)), same c (cascade3)",
+        "score": score,
+        "table_laws": {
+            "monotone_envelope": {
+                "pairs_checked": 999, "tolerance": ENV_TOL,
+                "violations": mono_bad},
+            "shell_law": {
+                "law": "L(n + 2*floor(L(n)) + 1) <= L(n) + 1",
+                "checked": shell_checked, "tolerance": ENV_TOL,
+                "violations": shell_bad,
+                "note": ("tolerance absorbs the finalize +2e-9/row "
+                         "storage noise; live example: n=5 -> m=10, "
+                         "L(10)-L(5)-1 = +2e-10 (the survey's n=10 "
+                         "record is the strip extension of the "
+                         "pinwheel, so the law binds at equality")}},
         "fixpoint_audit": {
             "above_env": len(fixpoint_violations),
             "rows_above": [{"n": r["n"], "L": r["L"], "env": r["env"],
@@ -297,7 +342,7 @@ def main():
         "aggregate": {
             "one_T263_at_every_first_open_row": total_root263,
             "one_d01_at_every_first_open_row": total_d01,
-            "gap_to_leader": 22.819977568 - 22.0544214515,
+            "gap_to_leader": gap,
             "note": ("per-diagonal best aim evaluated at every open row; "
                       "the four optimality theorems (s(k^2-1..4)=k) prove "
                       "every diagonal's head, so no fully-open diagonal "
