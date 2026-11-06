@@ -238,3 +238,17 @@ python3 scripts/cascade3.py           # P4: fixpoint propagation
 python3 scripts/closure_apply.py
 python3 scripts/final_assembly.py     # rebuilds submission.csv
 ```
+
+
+## A17. Run 25: P1 strip scan + P2 remainder
+
+```bash
+python3 scripts/strip_decode.py         # P1: member-state decode (audit)
+python3 scripts/strip_sweep.py          # P1: generalized strip sweep (~2 min)
+P2_ROWS=134,135,157,158 \
+  python3 scripts/p2_seed_polish.py      # P2 remainder (~10 min)
+python3 scripts/cascade3.py             # fixpoint propagation
+python3 scripts/closure_apply.py
+python3 scripts/final_assembly.py       # rebuilds submission.csv
+python3 scripts/deliver25.py            # this run's deliverables
+```
