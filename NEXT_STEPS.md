@@ -1,11 +1,11 @@
-# NEXT_STEPS.md — where the remaining 0.766 lives and how to get it
+# NEXT_STEPS.md — where the remaining 0.592 lives and how to get it
 
 Companion to `STATUS.md`. Everything below is measured on the delivered
-table (**Run 29, score 22.819978**, 454/1000 beat grid; the SAT data
-reviewed run 28 and measured run 29) with `scripts/gap_analysis.py`,
-`scripts/root_audit.py` (run 27), `scripts/sat_review.py` (run 28) and
-`scripts/sat_measure.py` (run 29); nothing here is aspirational
-without a number attached.
+table (**Run 30, score 22.645991**, 543/1000 beat grid; the Mishapolk
+import landed this run) with `scripts/gap_analysis.py`,
+`scripts/root_audit.py` (run 27; refreshed run 30),
+`scripts/sat_review.py` (run 28) and `scripts/sat_measure.py` (run 29);
+nothing here is aspirational without a number attached.
 
 ---
 
@@ -18,8 +18,8 @@ Runs 14–28 executed this plan. Measured outcomes, per item:
 | **P1(a)** strip + generalized Göbel | **CLOSED (Run 25)** | exact closed-form family (L(a,w)=a+1+w/√2); 88/88 designs verified; dominated by the table on every row (0 finds); acceptance 44/58/31 fails by capacity (ceilings 38/52/27). |
 | **P1(b)** two-block / block+slab | **CLOSED (Run 26)** | 45° m×m corner block + integer-lattice fill, L=(D+(3/2)√2·m)/2; 763 designs, pointwise grid-dominated (0 beat grid at equal L); acceptance fails by capacity (36/49/25). |
 | **P1(c)** axis-aligned dominant + tilted seams | **CLOSED as a family (Run 26)** | census: 314 strip-45, 31 Pythagorean-exact, 109 drifted; n=50 decoded exactly (L=53/7, arctan(3/4), 1/50 lattice, 105 contacts, K²+1). The blob rows are isostatic hand-polished, not parametric; follow-up = P1'. |
-| **P2** motif-seeded numerical polish | **DONE (23–25) → RENEWED (Run 28)** | 52/52 cells 0 finds originally; the SAT review found the T-263 family (299/334/371) with 41 floaters at ratio 0.68, imported after the campaign — one bounded re-run aimed there (§2a.2). |
-| **P3** source watch | **LIVE (paid runs 22+26)** | Run 26: T-263 s(299) imported exactly (+0.003559 with chain). Run 27: 4 optimality theorems + individuals absorbed into the instrument. Run 28: T-083 rectangle bound checked against every row (0 violations, no new floors); register best-known still grid at every top aim. |
+| **P2** motif-seeded numerical polish | **CLOSED (Runs 23–25, 30)** | runs 23–25: 52/52 cells 0 finds. Run 30 renewal for the T-263 family (the SAT review's exception: 41 floaters at ratio 0.68): 12/12 cells (299/334/371 × ladder 0.002/0.005/0.01), 0 finds, 0 hard hops, soft extents pinned 0.4–2.5e-3 above L_t — the floaters do not settle deeper by contact-graph re-breaking. P2 is closed for good. |
+| **P3** source watch | **LIVE (paid runs 22, 26, 30)** | Run 30 (the largest since run 22): the weekly atlas check was unchanged, but probing beyond it found **Mishapolk/square-packing-records** — `upper_bounds.json` carries verified bounds at ALL 1000 n, including 676 in the band 325..1000 our atlas never showed us. 221 rows imported (exact certificates, center-basis t=tan(θ/2)): score 22.819978 → 22.645991. Also read: Karimi two-strip (n≥1184, above our range) + window theorem. |
 | **P4** root conversions | **INSTRUMENTED (Run 27)** | standing channel re-run (cascade 0, closure 0 — fixpoint true); `scripts/root_audit.py` built and run: the leverage map, corrected. Two documentation errors from run 26 fixed (§2). |
 | **SAT data review** | **DONE (Run 28, user input)** | `scripts/sat_review.py` over all 1000 packings: contact language 99% parallel (run18-frontier 8% generic outlier); T-263 family 41 floaters at 0.68 (most slack); grid nearest-gap exactly 1.0; n=50 decode cross-validated (105 contacts). §2a. |
 | **SAT measure (TAX/NRCI)** | **DONE (Run 29, user input)** | `scripts/sat_measure.py`: the tie test is the SAT data's binary layer (3.3-decade gap); SAT-TAX = g·Q, SAT-NRCI with GLM's constants and regime map. Vacuum = exactly the 546 grid rows; only off-vacuum provable rows = the 4 hand-proved packings (5/11/17/19); depth anti-correlates with genericity (frontier −0.61; chain3 deepest yet nearly vacuum) — run-28 P1' reading corrected. §2b. |
@@ -29,9 +29,9 @@ Runs 14–28 executed this plan. Measured outcomes, per item:
 
 | | score | note |
 |---|---|---|
-| our submission (Run 28) | 22.819978 | 454/1000 beat grid |
+| our submission (Run 30) | 22.645991 | 543/1000 beat grid |
 | leaderboard best (reported) | 22.0544214515 | |
-| gap | **0.765556** | |
+| gap | **0.591569** | |
 
 Closed since Run 13 (measured):
 
@@ -40,27 +40,28 @@ Closed since Run 13 (measured):
 | import 76 community best-known packings (n ≤ 324) | 0.050264 |
 | chain propagation from those records (33 conversions) | 0.013671 |
 | T-263 s(299) import + cascade (Run 26) | 0.003559 |
-| **total closed** | **0.067494** |
+| **Mishapolk 221-row import + channel (Run 30)** | **0.173983** |
+| **total closed** | **0.241477** |
 
-**Where the remaining 0.766 lives (measured, run 27):** the register's
-entire result set spans n = 5..308 — **zero upper bounds exist above
-n = 324** (the run-26 statement "the register now moves above n=324"
-was wrong: T-263 is a 299, inside the classic range). The mid-band
-325..1000 remains beyond the published frontier; the watch must keep
-probing for it.
+**The mid-band 325..1000 is no longer empty upstream.** The run-27
+statement "zero upper bounds exist above n = 324" was true of our
+atlas (squaremath.org covers 1..324 only). Mishapolk's
+`upper_bounds.json` (fetched run 30) has verified bounds at every n
+in 1..1000; the ones that beat our table were imported, and the rest
+of the band is now ours. The frontier moved: our watch must keep
+probing Mishapolk, Couzo and Karimi for anything below our new rows.
 
-The tie structure, corrected by the proven-floor split:
+The tie structure on the new table:
 
 | | rows | note |
 |---|---|---|
-| tied rows (L = grid) | 546 | |
+| tied rows (L = grid) | 457 | |
 | — of which **proven floors** (can never improve) | 152 | perfect squares (area bound), s(k²−1)=k [T-084], s(k²−2)=k [T-086], s(k²−3)=k [T-064], s(k²−4)=k [T-081], plus individuals: s(11), s(12)=4, s(13)=4, s(21)=5, s(32)=6, s(44)=7 [T-252], s(45)=7, s(46)=7, s(59)=8, s(60)=8, s(61)=8, s(76)=9, s(77)=s(78)=9, s(95)=s(96)=10, s(2..5) |
-| — **open rows** (the attackable set) | **394** | all at r = 2K−1−c ≥ 5; area room 6.662 |
+| — **open rows** (the attackable set) | **305** | measured by root_audit run 30 |
 
-A uniform depth **d\* = 0.0382** below grid on the 394 open rows
-matches the leader (equivalently 0.028 over all 546 tied rows — but 152
-of those are proven floors that can never move). The leader's standing
-is 11.5% of the open rows' theoretical ceiling.
+A uniform depth d\* = 0.0365 (0.591569 over Σ(1/√m) = 16.198) on the
+305 open rows matches the leader. The leader's standing as a share of
+the open rows' area ceiling (5.005): 11.8%.
 
 ## 2. The leverage map (corrected + instrumented, Run 27)
 
@@ -81,46 +82,33 @@ The instrument (`scripts/root_audit.py`, ledger
 table. Its outputs, cross-validated against an independent
 reimplementation (totals agree to 1e-6):
 
-**Fixpoint audit:** 0 rows above the chain envelope (no unexploited
-conversions — the cascade is at a true fixpoint); 968 rows at/below
-envelope; 0 fully-open diagonals remain (the four optimality theorems
+**Fixpoint audit (refreshed Run 30):** 0 rows above the chain envelope
+(fixpoint true after the import — the channel absorbed it); 305 open
+rows; 0 fully-open diagonals remain (the four optimality theorems
 prove every diagonal's head).
 
-**Top diagonals by open-row headroom** (identical to the Run-13 table,
-now instrument-verified — that table was right all along):
+**Top aims by value** (one Mishapolk-depth record, ~0.002/√n at the
+aim, converting every later member of its diagonal to min(current,
+chain from the aim) — root_audit run 30):
 
-| c | open rows | headroom | best aim (first open row) |
-|---|---|---|---|
-| 26 | 16 (251 … 926) | 0.274 | 251 (K=16, r=5) |
-| 25 | 15 (250 … 866) | 0.272 | 250 (K=16, r=6) |
-| 22 | 13 (191 … 647) | 0.265 | 191 (K=14, r=5) |
-| 21 | 12 (190 … 597) | 0.261 | 190 (K=14, r=6) |
-| 28 | 16 (284 … 989) | 0.251 | 284 (K=17, r=5) |
-| 27 | 15 (283 … 988) | 0.249 | 283 (K=17, r=6) |
-| 24 | 13 (220 … 985) | 0.239 | 220 (K=15, r=6) |
-| 23 | 12 (219 … 984) | 0.235 | 219 (K=15, r=7) |
-| 29 | 15 (318 … 990) | 0.229 | 318 (K=18, r=7) |
-| 30 | 15 (319 … 991) | 0.215 | 319 (K=18, r=8) |
+| c | best aim (first open row) | K | converts | window | value |
+|---|---|---|---|---|---|
+| 32 | 356 | 19 | 14 | 0.132038 | 0.011102 |
+| 34 | 395 | 20 | 13 | 0.125393 | 0.010656 |
+| 31 | 355 | 19 | 13 | 0.158556 | 0.010527 |
+| 28 | 284 | 17 | 11 | 0.147700 | 0.010418 |
+| 30 | 319 | 18 | 13 | 0.139429 | 0.010378 |
+| 26 | 251 | 16 | 11 | 0.157020 | 0.010296 |
+| 33 | 394 | 20 | 13 | 0.150567 | 0.010229 |
+| 36 | 436 | 21 | 12 | 0.119387 | 0.009958 |
+| 24 | 220 | 15 | 10 | 0.167603 | 0.009886 |
+| 35 | 435 | 21 | 12 | 0.143346 | 0.009667 |
 
-**Aiming map** (value of one T-263-class record, depth 0.0216, at the
-best open row of each diagonal — a record at row m converts every
-later member of its diagonal to min(current, chain from m)):
-
-| aim n | K | converts | value |
-|---|---|---|---|
-| 251 | 16 | 16 rows (251…926) | 0.015569 |
-| 250 | 16 | 15 rows (250…866) | 0.014877 |
-| 284 | 17 | 16 rows (284…989) | 0.014863 |
-| 191 | 14 | 13 rows (191…647) | 0.014854 |
-| 283 | 17 | 15 rows (283…988) | 0.014191 |
-| 220 | 15 | 13 rows | 0.014069 |
-| 190 | 14 | 12 rows | 0.014027 |
-| 318 | 18 | 15 rows | 0.013568 |
-
-**Aggregate:** one T-263-class record at every diagonal's best open
-aim = **0.4334** (56.6% of the whole gap); at depth 0.01, 0.1989.
-Σ(1/√m) over all convertible open rows = 20.07, so d\* = 0.765556 /
-20.07 = **0.0382** uniform matches the leader.
+**Aggregate:** one Mishapolk-depth record at every diagonal's first
+open aim = **0.375304** (63.4% of the whole gap); at depth 0.01,
+0.167187. All top aims sit at grid today — the rows 356/395/355/284/
+319/251/394/436/220/435 are open and tied; every one of them is a
+legal P1' insertion target with measured conversion reach.
 
 The **master keys** remain the r = 5/6 roots (n = K²−5, K²−6): c = 2K−1−r
 puts c=26 at r=5 (K=16) and c=25 at r=6 — the same pair the original
@@ -159,10 +147,13 @@ squares, Maxwell counting ratio). Ledger
    the same squares in all three (chain children inherit them),
    quasi-contacting at median gap 0.0035 with wall distance up to 6.46.
    These rows were imported AFTER the P2 polish campaign; they have
-   never been polish-seeded. **Renew P2 for exactly this family** —
-   it is the one place where the record-holder's engine and our
-   finisher could meet: 41 floaters at ratio 0.68 is a near-miss map
-   of size 3.
+   never been polish-seeded. **RESOLVED (Run 30): the bounded P2
+   re-run (12/12 cells, ladder 0.002/0.005/0.01 below row L,
+   settle→anneal→re-harden, finalize gate) found nothing — 0 finds,
+   0 hard hops, soft extents pinned 0.4–2.5e-3 above L_t.** The
+   floaters do not settle deeper by contact-graph re-breaking; the
+   record's depth is not floaters waiting to close. P2 closed for
+   good.
 3. **The grid is provably rigid at the pair level.** The 546 grid rows
    have nearest non-contact gap exactly 1.0 (a full empty cell) — the
    P2 0-finds there are now a measured statement, not an anecdote.
@@ -256,41 +247,45 @@ discipline as failure 11, applied backwards in time.
 
 ## 4. Prioritized pushes (updated Run 28)
 
-### P1' — blob-regime insertion campaign (updated Run 29)
+### P1' — blob-regime insertion campaign (updated Run 30)
 
-Seed from record states, insert one square at fixed L, pressure-settle;
-first targets the aiming map's top rows (251, 250, 284, 191 — the
-r=5/6 roots of the two biggest diagonals). New lead to read first:
-"Structure-Guided Search for Packing Unit Squares in a Square"
-(preprints.org, 2026-11-03, registration requests jlevy/squares #799)
-— the community's current method paper; it names the structures that
-found the recent records. Run-29 guidance (§2b.3): depth at large n
-is vacuum-like — the mid-band target rows will resemble chain3
-(lattice-tied, φ ≈ 0.015), not the generic language; genericity is
-the small-n provable regime. Read the preprint against that
-prediction.
+Seed from record states, insert one square at fixed L, pressure-settle.
+The aiming map moved with the import (§2): first targets now
+356 (c=32, 0.011102, 14 conversions), 395 (c=34), 355 (c=31), then
+the old masters 284/319/251 — every one sits at grid today and is
+open. Karimi's preprint ("Structure-Guided Search", preprints.org
+202611.0242 — preprints.org blocks plain fetchers; read via a
+browser) is the community's method paper; read it against the
+two-phase prediction (§2b.3): depth at large n is vacuum-like —
+the wall-strip languages (Karimi's, Göbel's) are tied languages,
+which is consistent.
 
-### P2 — RENEWED for the T-263 family (Runs 28–29; see §2a.2, §2b.4)
+### P2 — CLOSED FOR GOOD (runs 23–25, 30)
 
-Originally closed (runs 23–25: 52/52 cells, 0 finds). The SAT review
-found the exception the closure was waiting for: n = 299/334/371 carry
-41 free squares each at Maxwell ratio 0.68 — imported after the
-polish campaign, never seeded. One bounded re-run: seed the LP/
-annealer from the register states (exact coordinates in
-lists/certs/n-299), floaters free, settle with contact-graph
-re-breaking. Value if it converts: the family's rows are already
-sub-grid, so any find is direct d/√n on top of 0.68-ratio states.
-Run-29 addition: log SAT-NRCI before/after — the two-phase picture
-(§2b.3) predicts any improved packing comes with φ down (more tied);
-φ up falsifies it and re-aims P1' at the generic language.
+Runs 23–25: 52/52 cells, 0 finds. Run 30: the T-263 renewal (§2a.2)
+returned an honest null in all 12 cells — the 41 floaters at Maxwell
+ratio 0.68 do not settle deeper by contact-graph re-breaking. The
+run-29 falsifiable prediction (φ down / NRCI up on any improvement)
+stands untested: there was no improvement to measure. Numerical
+polish is dead in this landscape; every future gain must come from
+constructions or imports (P1', P3).
 
 ### P3 — source watch (weekly; the only item that has paid)
 
-- `import_atlas.py` weekly (idempotent); register frontier files for
-  T ≥ 264; the mid-band 325..1000 is still empty upstream — a single
-  record there (e.g. at 251/250/284) is worth 0.015 by the map.
-- Absorb new **optimality** results into root_audit's PROVEN_FLOOR the
-  day they land (they re-cut the aiming map; see §3.12).
+- `import_atlas.py` weekly (idempotent) — unchanged this week
+  (324 entries, 0 new; 319 rejected no-beat).
+- **Add Mishapolk to the weekly loop** (`fetch_mishapolk.py` +
+  `import_mishapolk.py`, idempotent + resumable): it paid 0.173983 on
+  its first run. Watch `upper_bounds.json` for rows that beat our new
+  table; watch for certificates at the 528 construction-only entries
+  (only n=261 has gain > 1e-5: 16.678780 vs our 16.682927).
+- Karimi (read run 30): two-strip packings live at n ≥ 1184 —
+  outside our range — but the **window theorem** (for every integer
+  K ≥ 16, s(n) < K whenever n ≤ K² − 8√K − 19; exponent 3/5 → 1/2
+  over Bui/McClenagan) is the certificate shape for our mid-band
+  rows: it proves sub-grid existence for n up to K²−8√K−19 whenever
+  such a record lands. At K=19: n ≤ 303. If his preprint ever
+  optimizes the construction below 1184, import directly.
 
 ### P4 — root conversions (INSTRUMENTED, Run 27; standing)
 
@@ -315,14 +310,13 @@ certificate.
 | action | score value |
 |---|---|
 | one imported record at depth d (no cascade) | d/√n |
-| one T-263-class record at 251 / 250 / 284 / 191 | 0.0156 / 0.0149 / 0.0149 / 0.0149 |
-| the T-263 import (measured, runs 26) | 0.003559 |
-| one T-263-class record at every diagonal's best open aim | **0.4334 (56.6% of the gap)** |
-| depth 0.0382 uniform over the 394 open rows | **0.765556 (the whole gap)** |
-| all open rows at the area bound | 6.662 (theoretical ceiling) |
-| the leader's standing | 11.5% of the theoretical ceiling |
+| one Mishapolk-depth record at 356 / 395 / 284 | 0.011102 / 0.010656 / 0.010418 |
+| the Mishapolk import (measured, run 30) | 0.173983 |
+| one Mishapolk-depth record at every diagonal's first open aim | **0.375304 (63.4% of the gap)** |
+| uniform depth matching the leader over the 305 open rows | **0.591569 (the whole gap; d\* = 0.0365)** |
+| all open rows at the area bound | 5.005 (theoretical ceiling) |
 
-## 6. What was executed (runs 14–29), measured
+## 6. What was executed (runs 14–30), measured
 
 1. **Runs 14–25**: P2 finished; P1(a) closed by domination; the
    deliverable-name fix (run 25).
@@ -366,6 +360,30 @@ certificate.
    "seek generic contacts" reading corrected in §2a.1; falsifiable
    P2 prediction recorded (any T-263 improvement should come with
    φ down). Score unchanged 22.819977568.
+6. **Run 30 (this run; continue NEXT_STEPS)**: three parts.
+   **(a) P2 closed for good** — the T-263 renewal (§2a.2): 12/12
+   cells (299/334/371 × ladder 0.002/0.005/0.01 below row L,
+   settle→anneal→re-harden hops, finalize gate), 0 finds, 0 hard
+   hops, soft extents pinned 0.4–2.5e-3 above L_t. The 41 floaters
+   do not settle deeper by re-breaking.
+   **(b) P3 paid the largest import since run 22** — the weekly
+   atlas check was unchanged, but the Karimi lead (issue #799, read
+   via browser; preprints.org blocks plain fetchers) pointed past
+   our sources: **Mishapolk/square-packing-records**
+   `upper_bounds.json` has verified bounds at ALL 1000 n — the band
+   325..1000 our atlas (1..324 only) never showed us. Imported 221
+   rows (exact certificates, center-basis t=tan(θ/2); two
+   invocations after a verify-tolerance fix for exact-tangency float
+   noise and a dry-run ledger bug): score 22.819977568 →
+   **22.645990613**, beats-grid 454 → 543. Standing channel run
+   (cascade 9, closure 3, assembly round-trip 0 issues); root_audit
+   refreshed: fixpoint true, 305 open rows, aggregate 0.375304;
+   best aim moved to c=32 n=356 (0.011102, 14 conversions).
+   **(c) Karimi read**: two-strip packings at n ≥ 1184 (outside our
+   range) + the window theorem (K ≥ 16: s(n) < K whenever
+   n ≤ K² − 8√K − 19, exponent 3/5 → 1/2 over Bui/McClenagan) —
+   the certificate shape for our mid-band rows.
 
-Score 22.823536149 → **22.819977568** (runs 26–27); beats-grid 454;
-submission.csv rebuilt and round-trip verified.
+Score 22.823536149 → 22.819977568 (runs 26–27) → **22.645990613**
+(run 30); beats-grid 543; submission.csv rebuilt and round-trip
+verified.

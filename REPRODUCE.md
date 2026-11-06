@@ -294,3 +294,16 @@ python3 scripts/deliver28.py         # this run's deliverables
 python3 scripts/sat_measure.py       # TAX/NRCI on the SAT data (new)
 python3 scripts/deliver29.py         # this run's deliverables
 ```
+
+
+## A22. Run 30: P2 renewal (null) + Mishapolk import
+
+```bash
+python3 scripts/t263_polish.py       # P2 T-263 family (null: 0/12 cells)
+python3 scripts/fetch_mishapolk.py   # fetch + compare (idempotent)
+python3 scripts/import_mishapolk.py  # gated import (resumable)
+python3 scripts/cascade3.py && python3 scripts/closure_apply.py \
+  && python3 scripts/final_assembly.py
+python3 scripts/root_audit.py        # refresh the leverage map
+python3 scripts/deliver30.py         # this run's deliverables
+```
