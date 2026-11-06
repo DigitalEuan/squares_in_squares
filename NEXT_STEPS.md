@@ -1,19 +1,23 @@
 # NEXT_STEPS.md — where the remaining 0.592 lives and how to get it
 
-Companion to `STATUS.md`. Everything below is measured on the delivered
-table (**Run 30, score 22.645991**, 543/1000 beat grid; the Mishapolk
-import landed that run; run 31 reviewed the table — §2c — and closed
-P1' by null without changing it) with `scripts/gap_analysis.py`,
-`scripts/root_audit.py` (run 27; refreshed run 30),
-`scripts/sat_review.py` (run 28), `scripts/sat_measure.py` (run 29)
-and `scripts/symmetry_audit.py` (run 31); nothing here is aspirational
-without a number attached.
+Companion to `STATUS.md` (which now duplicates the README and carries
+the system map — see its §2). Everything below is measured on the
+delivered table (**Run 32, score 22.645991**, 543/1000 beat grid; the
+Mishapolk import landed run 30; run 31 reviewed the table — §2c — and
+closed P1' by null; run 32 recovered the tree from the GitHub remote
+after a sandbox rollback and re-verified the fixpoint) with
+`scripts/gap_analysis.py`, `scripts/root_audit.py` (run 27; refreshed
+runs 30 and 32 — run 32 fixed the instrument: its gap figure was
+hardcoded to the run-27 score, so the run-30 refresh had printed the
+stale 0.7656 instead of 0.5916), `scripts/sat_review.py` (run 28),
+`scripts/sat_measure.py` (run 29) and `scripts/symmetry_audit.py`
+(run 31); nothing here is aspirational without a number attached.
 
 ---
 
-## 0. Execution status of this plan (updated Run 31, 2026-11-06)
+## 0. Execution status of this plan (updated Run 32, 2026-11-06)
 
-Runs 14–31 executed this plan. Measured outcomes, per item:
+Runs 14–32 executed this plan. Measured outcomes, per item:
 
 | item | status | measured result |
 |---|---|---|
@@ -27,6 +31,7 @@ Runs 14–31 executed this plan. Measured outcomes, per item:
 | **SAT measure (TAX/NRCI)** | **DONE (Run 29, user input)** | `scripts/sat_measure.py`: the tie test is the SAT data's binary layer (3.3-decade gap); SAT-TAX = g·Q, SAT-NRCI with GLM's constants and regime map. Vacuum = exactly the 546 grid rows; only off-vacuum provable rows = the 4 hand-proved packings (5/11/17/19); depth anti-correlates with genericity (frontier −0.61; chain3 deepest yet nearly vacuum) — run-28 P1' reading corrected. §2b. |
 | **Symmetry review (D4 census)** | **DONE (Run 31, user input)** | `scripts/symmetry_audit.py` over all 1000 rows: constructions are majority-symmetric (gobel2/gobelS 100%, chain3 76%, exact 71%, closure 72%) but every record class is asymmetric (mishapolk 0%, run18-frontier 5%, register C1); tied-vs-sub asymmetry is a storage artifact; G~depth +0.31 / G~C/n +0.32 (present but weak). The P1' campaign built on it (symmetric canonical seeds + record-seeded insertion) closed by null at 356/395/355 — the Mishapolk records' voids are a thin seam (no axis-aligned +1 insertion; first candidate overlaps +0.257), not +1-voided grids. §2c. |
 | **P5** certification completeness | **open** | unchanged (Lean build, exact replays); the tier-1 report's "s(6)=3 theorem" line retracted (register: restricted-optimality only). |
+| **Run 32** (recovery + docs) | **DONE (user input)** | sandbox rollback found (HEAD back at run 27; runs 28–31 gone locally) — recovered from github.com/DigitalEuan/squares_in_squares (the remote had them; local lineage preserved on branch `sandbox-lineage-27`). Channel re-run on the recovered tree: cascade 0, closure fixpoint, assembly 0 issues, table bit-identical (score 22.645990613 unchanged). `root_audit.py` FIXED (hardcoded run-27 score/gap; now argv output/run + live score — the run-30 refresh had printed gap 0.7656 stale); root_audit32 reproduces the run-30 refresh exactly with the corrected 0.591569. README unfrozen (run-13 era → run-32 state); **STATUS.md rewritten: duplicates the README + system map + census** (new standing rule); 10 run-27-era download/ files the remote had dropped were restored from the lineage. Failure 16 below. |
 
 ## 1. The gap, decomposed
 
@@ -287,7 +292,7 @@ and status. Ledger `workspace/push/symmetry_audit31.json`.
    buy depth at the aims — it is the signature of the parametric
    classes that already sit below the frontier.**
 
-## 3. Failure → requirement (updated with runs 14–31)
+## 3. Failure → requirement (updated with runs 14–32)
 
 Items 1–13 stand (see run-26/27/28 revisions). Two additions:
 
@@ -327,8 +332,28 @@ discipline as failure 11, applied backwards in time.
     rows to the mid-band. Requirement: every published correlation
     carries its row set; re-state it after each import, never carry
     it across a table change.
+16. **A sandbox rollback is a failure mode, not a data event** (run
+    32; the third occurrence — run 17 lost runs 9–16, run 19's chapter
+    B lost the campaign files, run 32 lost runs 28–31 locally): at the
+    start of a turn the tree sat at the run-27 commit with a clean
+    status, which *looked* canonical. Requirements: (a) at the start
+    of every turn, verify the tree's run era against the GitHub remote
+    BEFORE anything else — `git fetch origin` and compare; the remote
+    is the durability line, so push every run; (b) never reconstruct
+    lost work from memory while the remote holds it; (c) when
+    adopting the remote, restore the union (the local-only artifacts
+    — this time 789 paths incl. 73 download/ files, RUN_NOTES.md, and
+    10 download/ files the remote had itself dropped between runs 27
+    and 31); (d) after any table-bearing recovery, re-run the channel
+    + fixpoint audit and require bit-identity with the claimed score.
+    (e) Documents freeze silently: the remote README/STATUS were still
+    at the run-13 era during runs 28–31 — six score moves unreflected.
+    Requirement: every run updates README, STATUS, NEXT_STEPS,
+    REPRODUCE and RUN_NOTES/notes together (the deliver script checks
+    the STATUS-README-table sync; STATUS.md now duplicates the README
+    per the standing rule).
 
-## 4. Prioritized pushes (updated Run 31)
+## 4. Prioritized pushes (updated Run 32)
 
 ### P1' — CLOSED BY NULL (runs 30–31)
 
@@ -379,9 +404,11 @@ whatever produces constructions, aim it at the measured best rows
 (§2 aiming map); after any table change re-run the loop
 cascade3 → closure_apply → final_assembly (mandatory order), then
 `root_audit.py` to refresh the map and check the fixpoint (0 rows
-above envelope required). Run 27 state: fixpoint true, score
-22.819977568 unchanged, map refreshed, two documentation errors
-corrected.
+above envelope required). Run 32 state (re-verified on the recovered
+tree): fixpoint true, score 22.645990613 unchanged, map refreshed
+(root_audit32.json), the instrument now takes its ledger path and run
+label as argv and computes the score/gap live (run-30's refresh had
+printed the stale run-27 gap; fixed this run — see §0 and failure 16).
 
 ### P5 — certification completeness (open; ledger, not score)
 
@@ -390,7 +417,7 @@ Unchanged: Lean `lake build` (close `cascade_count_symbolic`,
 states (T-263 already exact-rational); the run-12 Q(√2) family
 certificate.
 
-## 5. Value ladder (updated, measured)
+## 5. Value ladder (re-measured Run 32; values unchanged from run 30)
 
 | action | score value |
 |---|---|
@@ -401,7 +428,7 @@ certificate.
 | uniform depth matching the leader over the 305 open rows | **0.591569 (the whole gap; d\* = 0.0365)** |
 | all open rows at the area bound | 5.005 (theoretical ceiling) |
 
-## 6. What was executed (runs 14–30), measured
+## 6. What was executed (runs 14–32), measured
 
 1. **Runs 14–25**: P2 finished; P1(a) closed by domination; the
    deliverable-name fix (run 25).
@@ -487,6 +514,26 @@ certificate.
    no purchase, matching Karimi's +8-per-K jumps. P1' closed by null;
    the aims stay open. Score unchanged 22.645990613.
 
+8. **Run 32 (user input: continue NEXT_STEPS + the STATUS.md
+   mirror rule)**: rollback recovery + documentation. (a) Recovery: the
+   tree was found at the run-27 era (runs 28–31 gone locally, clean
+   status); `git fetch` showed the GitHub remote holding them; adopted
+   via reset, restored the union (789 ours-only paths; plus 10
+   download/ files the remote had dropped between runs 27 and 31);
+   channel re-run: cascade 0, closure fixpoint, assembly round-trip 0
+   issues, table bit-identical — score **22.645990613** unchanged, 543
+   beats; root_audit32 refreshed (0 above envelope, 305 open, aggregate
+   0.375304, best aim c=32 n=356). (b) Instrument fix: root_audit.py's
+   score/gap was hardcoded to run 27 — the run-30 refresh had printed
+   the stale gap 0.7656; now live-computed (0.591569). (c) Documents:
+   README unfrozen (was run-13 era through six score moves);
+   **STATUS.md rewritten per the new standing rule — it now duplicates
+   the README headline/score-engine and adds the system map (how the
+   system operates, what information comes from where) with the
+   script-computed source census**; RUN_NOTES/notes ported for runs
+   28–31 (the ledger was itself at the run-27 state). Failure 16
+   records the standing rules.
+
 Score 22.823536149 → 22.819977568 (runs 26–27) → **22.645990613**
-(run 30); beats-grid 543; run 31 unchanged (analysis + campaign null);
-submission.csv rebuilt and round-trip verified.
+(run 30); beats-grid 543; runs 31–32 unchanged (analysis, campaign
+null, recovery); submission.csv rebuilt and round-trip verified.
