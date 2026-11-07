@@ -1,4 +1,6 @@
-# STATUS.md — Squares in Squares: the system and sources record (Run 34, 2026-11-07)
+# STATUS.md — Squares in Squares: the system and sources record (Run 36, 2026-11-07)
+
+> Run 36 is the canonical latest state represented by the surviving run records. Run 34 remains a historical system-map milestone; the full lineage and source documentation below is preserved.
 
 This is the "everything in one place" document: the full record of how
 this project works from start to finish — where it came from (the GLM
@@ -357,36 +359,36 @@ its source's say-so. The one case where the gate found a mismatch
 widening OUR tolerance by 2e-15, not by skipping the check — the
 source was right and the instrument learned.
 
-### 6.3 The delivered census (script-computed, run 34)
+### 6.3 The delivered census (script-computed, Run 36)
 
 | Source class | All 1000 | Beats grid (543) | What it is |
 |---|---|---|---|
 | `grid` | 457 | 0 (tied) | the trivial ⌈√n⌉ grid — the ceiling every other class beats |
-| `mishapolk` | 209 | 209 | run-30 import (221 applied; the channel then found deeper values for 12: 8 `chain3`, 4 `closure`) — includes n=154/270/303 where Mishapolk beat the register |
-| `chain3` | 87 | 87 | our L-extension band chains |
-| `exact` | 78 | 78 | survey record SVGs (20–100 digit parse) |
-| `run18-frontier` | 75 | 75 | the run-13 register import: 76 applied (ledger `atlas_import.json`); 3 later beaten by Mishapolk and re-labeled (n=154/270/303); n=327/332 carry the label from the run-18 snapshot-restore |
+| `mishapolk` | 207 | 207 | run-30 import after Run 35/36 re-attribution; verified bounds and exact certificates |
+| `chain3` | 88 | 88 | our L-extension band chains |
+| `exact` | 77 | 77 | survey record SVGs (20–100 digit parse) |
+| `run18-frontier` | 68 | 68 | the run-13 register import after later channel re-attribution |
 | göbel families (2/3/S) | 54 | 54 | our analytic constructions |
 | `removal` | 18 | 18 | removal windows from survey packings |
 | `closure` | 18 | 18 | our removal-closure fixpoint |
 | `aux` | 3 | 3 | auxiliary survey constructions |
-| `register:T-263` | 1 | 1 | the run-26 exact import s(299) |
+| `register` | 10 | 10 | Run 35 register records, including T-263 and the nine later candidate records |
 
-## 7. Delivered state (verified Run 34)
+## 7. Delivered state (verified Run 36; Run 34 remains historical context)
 
 | Quantity | Value |
 |---|---|
-| Submission score | **22.645991** (exact 22.645990613) |
+| Submission score | **22.642386651** (rounded **22.642387**) |
 | Grid ceiling | 28.937670 |
-| Total improvement | −6.291679 |
+| Total improvement | −6.295283 |
 | Puzzles beating the grid | **543 / 1000** |
 | Grid-tied | 457 (of which **152 are proven floors**) |
 | Open rows (attackable set) | **305** (root_audit run 34) |
 | Leaderboard best (user-reported 2026-11-05) | 22.0544214515 |
-| Gap to leader | **0.591569** |
+| Gap to leader | **0.587965** |
 
 Score history: 22.823536 (run 13) → 22.819978 (runs 26–27, T-263) →
-**22.645991** (run 30, Mishapolk) — unchanged since (runs 31–34:
+**22.642386651** (Run 35 register records + n=338 chain; reproduced at Run 36) — latest score move after the Run 34 Mishapolk state (runs 31–34:
 analysis, campaign nulls, recoveries + documentation).
 
 Table invariants (checked every run: `root_audit.py`'s `table_laws`
@@ -428,7 +430,7 @@ these laws to a `gap_analysis.py` that did not exist; they now live in
   exact replays; the tier-1 report's "s(6)=3 theorem" line retracted
   (register: restricted-optimality only).
 
-## 9. Run history (1 → 34)
+## 9. Run history (1 → 36)
 
 | Run | Theme | Score after | Verdict |
 |---|---|---|---|
@@ -464,6 +466,8 @@ these laws to a `gap_analysis.py` that did not exist; they now live in
 | 32 | **rollback #3 recovery** + documentation layer: adopted the remote's runs 28–31; channel fixpoint re-verified bit-identical; root_audit fixed (stale run-27 gap); documents unfrozen (were run-13 era through six score moves) | 22.645991 | failure 16 (rollback rules); STATUS got the system map |
 | 33 | **rollback #4 recovery** + the lineage record: run-32 artifacts redone bit-identically; the GLM → cent compiler → this project lineage recorded (this document rebuilt); the front-page copy rides at the bottom of this file for the upload transport | 22.645991 | failure 17 (the transport rule); see `NEXT_STEPS.md` |
 | 34 | accuracy dive (user order): **the cascade recorded** (§4: chain law with live T-263/pinwheel examples, removal closure, table laws, the measured ledger 0.241477); table laws re-homed from a phantom reference into `root_audit.py` (monotone 999/999, shell 937/937 @1e-7); census re-verified against the live table and the import ledgers (register re-attributed to run 13: 76 applied, 3 beaten by Mishapolk, +2 via the run-18 restore; Mishapolk 221→209 = 8 chain3 + 4 closure re-earned); `repository.zip` retired — the GitHub repository is the transport | 22.645991 | channel bit-identical; laws 0-violation |
+| 35 | **score move**: nine Evan Daniel register records T-243/T-257/T-267–T-273 imported, plus the n=338 chain conversion; direct gain 0.003359 and cascade gain 0.000245 | **22.642386651** | latest score move; 543/1000 beat grid |
+| 36 | **re-establishment**: Run 35 reproduced from its surviving records; independent rescore, cascade, closure fixpoint, wedge probe, and documentation state re-verified | **22.642386651** | canonical latest state represented by the run records |
 
 ## 10. Guarantee
 

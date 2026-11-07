@@ -19,18 +19,18 @@ produces is a wheel certificate (W36); every search it runs is a wheel
 settle (W37). The record from start to finish — lineage, engines, sources,
 operating loop — is the system record in `STATUS.md`. More operatiors and more/denser wheels should produce more concepts, I suspect the Python libraries would make excellent wheels - reduce to cent_compiler '¢' primitives and exact Arithmetic then confirm with Lean4.
 
-## Current results (Run 34, 2026-11-07; last score move run 30)
+## Current results (Run 36, 2026-11-07; last score move run 35)
 
 | Quantity | Value |
 |---|---|
-| Submission score | **22.65991** (grid ceiling 28.937670, improvement −6.291679) |
+| Submission score | **22.642386651** (rounded **22.642387**; grid ceiling 28.937670, improvement −6.295283) |
 | Puzzles beating the plain grid | **543 / 1000** |
-| Leaderboard best (reported) | 22.0544214515 → gap **0.591569** |
-| Certification | 1000/1000 packings SAT-verified + 500,500-row CSV round-trip (0 issues; re-verified runs 32–34) |
+| Leaderboard best (reported) | 22.0544214515 → gap **0.587965** |
+| Certification | 1000/1000 packings SAT-verified + 500,500-row CSV round-trip (0 issues; Run 36 record) |
 | Golay/Leech verification | 28/28 + 14/14 assertions, integer-exact |
 | Algebraic certificates | 1169 (7 angle families + surveys + run-11 census) |
 | Proven-optimal rows | 156 (152 tied at grid + 4 below-grid: s(5), s(11), s(17), s(19)) |
-| Largest single import | **Mishapolk/square-packing-records, 221 rows (run 30)**: 22.819978 → 22.645991 (−0.173983) |
+| Latest score move | **Nine Evan Daniel register records (Run 35) + n=338 chain conversion**: 22.645991 → **22.642386651** (−0.003604) |
 
 ## The score engine (what actually produces improvements)
 

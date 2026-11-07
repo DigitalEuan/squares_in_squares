@@ -2,8 +2,8 @@
 
 Companion to `STATUS.md` (which now duplicates the README and carries
 the system map — see its §2). Everything below is measured on the
-delivered table (**Run 32, score 22.645991**, 543/1000 beat grid; the
-Mishapolk import landed run 30; run 31 reviewed the table — §2c — and
+delivered table (**Run 36, score 22.642386651**, 543/1000 beat grid; the
+Run 35 register import and n=338 chain landed after the Mishapolk import; run 31 reviewed the table — §2c — and
 closed P1' by null; run 32 recovered the tree from the GitHub remote
 after a sandbox rollback and re-verified the fixpoint) with
 `scripts/gap_analysis.py`, `scripts/root_audit.py` (run 27; refreshed
@@ -15,9 +15,9 @@ stale 0.7656 instead of 0.5916), `scripts/sat_review.py` (run 28),
 
 ---
 
-## 0. Execution status of this plan (updated Run 32, 2026-11-06)
+## 0. Execution status of this plan (updated Run 36, 2026-11-07)
 
-Runs 14–32 executed this plan. Measured outcomes, per item:
+Runs 14–36 executed this plan. Measured outcomes, per item:
 
 | item | status | measured result |
 |---|---|---|
@@ -25,21 +25,23 @@ Runs 14–32 executed this plan. Measured outcomes, per item:
 | **P1(b)** two-block / block+slab | **CLOSED (Run 26)** | 45° m×m corner block + integer-lattice fill, L=(D+(3/2)√2·m)/2; 763 designs, pointwise grid-dominated (0 beat grid at equal L); acceptance fails by capacity (36/49/25). |
 | **P1(c)** axis-aligned dominant + tilted seams | **CLOSED as a family (Run 26)** | census: 314 strip-45, 31 Pythagorean-exact, 109 drifted; n=50 decoded exactly (L=53/7, arctan(3/4), 1/50 lattice, 105 contacts, K²+1). The blob rows are isostatic hand-polished, not parametric; follow-up = P1'. |
 | **P2** motif-seeded numerical polish | **CLOSED (Runs 23–25, 30)** | runs 23–25: 52/52 cells 0 finds. Run 30 renewal for the T-263 family (the SAT review's exception: 41 floaters at ratio 0.68): 12/12 cells (299/334/371 × ladder 0.002/0.005/0.01), 0 finds, 0 hard hops, soft extents pinned 0.4–2.5e-3 above L_t — the floaters do not settle deeper by contact-graph re-breaking. P2 is closed for good. |
-| **P3** source watch | **LIVE (paid runs 22, 26, 30)** | Run 30 (the largest since run 22): the weekly atlas check was unchanged, but probing beyond it found **Mishapolk/square-packing-records** — `upper_bounds.json` carries verified bounds at ALL 1000 n, including 676 in the band 325..1000 our atlas never showed us. 221 rows imported (exact certificates, center-basis t=tan(θ/2)): score 22.819978 → 22.645991. Also read: Karimi two-strip (n≥1184, above our range) + window theorem. |
+| **P3** source watch | **LIVE (paid runs 22, 26, 30, 35)** | Run 30 (the largest since run 22): the weekly atlas check was unchanged, but probing beyond it found **Mishapolk/square-packing-records** — `upper_bounds.json` carries verified bounds at ALL 1000 n, including 676 in the band 325..1000 our atlas never showed us. 221 rows imported (exact certificates, center-basis t=tan(θ/2)): score 22.819978 → 22.645991. Also read: Karimi two-strip (n≥1184, above our range) + window theorem. |
 | **P4** root conversions | **INSTRUMENTED (Run 27)** | standing channel re-run (cascade 0, closure 0 — fixpoint true); `scripts/root_audit.py` built and run: the leverage map, corrected. Two documentation errors from run 26 fixed (§2). |
 | **SAT data review** | **DONE (Run 28, user input)** | `scripts/sat_review.py` over all 1000 packings: contact language 99% parallel (run18-frontier 8% generic outlier); T-263 family 41 floaters at 0.68 (most slack); grid nearest-gap exactly 1.0; n=50 decode cross-validated (105 contacts). §2a. |
 | **SAT measure (TAX/NRCI)** | **DONE (Run 29, user input)** | `scripts/sat_measure.py`: the tie test is the SAT data's binary layer (3.3-decade gap); SAT-TAX = g·Q, SAT-NRCI with GLM's constants and regime map. Vacuum = exactly the 546 grid rows; only off-vacuum provable rows = the 4 hand-proved packings (5/11/17/19); depth anti-correlates with genericity (frontier −0.61; chain3 deepest yet nearly vacuum) — run-28 P1' reading corrected. §2b. |
 | **Symmetry review (D4 census)** | **DONE (Run 31, user input)** | `scripts/symmetry_audit.py` over all 1000 rows: constructions are majority-symmetric (gobel2/gobelS 100%, chain3 76%, exact 71%, closure 72%) but every record class is asymmetric (mishapolk 0%, run18-frontier 5%, register C1); tied-vs-sub asymmetry is a storage artifact; G~depth +0.31 / G~C/n +0.32 (present but weak). The P1' campaign built on it (symmetric canonical seeds + record-seeded insertion) closed by null at 356/395/355 — the Mishapolk records' voids are a thin seam (no axis-aligned +1 insertion; first candidate overlaps +0.257), not +1-voided grids. §2c. |
 | **P5** certification completeness | **open** | unchanged (Lean build, exact replays); the tier-1 report's "s(6)=3 theorem" line retracted (register: restricted-optimality only). |
 | **Run 32** (recovery + docs) | **DONE (user input)** | sandbox rollback found (HEAD back at run 27; runs 28–31 gone locally) — recovered from github.com/DigitalEuan/squares_in_squares (the remote had them; local lineage preserved on branch `sandbox-lineage-27`). Channel re-run on the recovered tree: cascade 0, closure fixpoint, assembly 0 issues, table bit-identical (score 22.645990613 unchanged). `root_audit.py` FIXED (hardcoded run-27 score/gap; now argv output/run + live score — the run-30 refresh had printed gap 0.7656 stale); root_audit32 reproduces the run-30 refresh exactly with the corrected 0.591569. README unfrozen (run-13 era → run-32 state); **STATUS.md rewritten: duplicates the README + system map + census** (new standing rule); 10 run-27-era download/ files the remote had dropped were restored from the lineage. Failure 16 below. |
+| **Run 35** (score move) | **DONE** | Nine Evan Daniel register records T-243/T-257/T-267–T-273 imported; direct gain 0.003359 plus n=338 chain conversion 0.000245; score 22.645991 → **22.642386651**. |
+| **Run 36** (re-establishment) | **DONE** | Run 35 reproduced from surviving records; independent rescore agrees; canonical latest state. |
 
 ## 1. The gap, decomposed
 
 | | score | note |
 |---|---|---|
-| our submission (Run 30) | 22.645991 | 543/1000 beat grid |
+| our submission (Run 36) | 22.642386651 | 543/1000 beat grid |
 | leaderboard best (reported) | 22.0544214515 | |
-| gap | **0.591569** | |
+| gap | **0.587965** | |
 
 Closed since Run 13 (measured):
 
@@ -49,7 +51,8 @@ Closed since Run 13 (measured):
 | chain propagation from those records (33 conversions) | 0.013671 |
 | T-263 s(299) import + cascade (Run 26) | 0.003559 |
 | **Mishapolk 221-row import + channel (Run 30)** | **0.173983** |
-| **total closed** | **0.241477** |
+| **register records + n=338 chain (Runs 35–36)** | **0.003604** |
+| **total closed** | **0.245081** |
 
 **The mid-band 325..1000 is no longer empty upstream.** The run-27
 statement "zero upper bounds exist above n = 324" was true of our

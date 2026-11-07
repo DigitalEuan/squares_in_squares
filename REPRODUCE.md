@@ -1,12 +1,20 @@
 # REPRODUCE.md — exact reproduction guide
 
+> **Snapshot note (2026-11-08):** The first verification block below is the
+> historical Run 15 chain. The canonical state represented by the latest run
+> records is Run 36: score **22.642386651** (rounded **22.642387**), with
+> 543/1000 rows beating grid. The complete operational repository is present
+> in this GitHub checkout; the Run 36 record is preserved in
+> `RECONCILIATION.md` until the corresponding run-36 execution artifacts are
+> restored.
+
 Everything runs from the repository root. Python 3.12 with numpy (sympy
 only for the certificate scripts); node (or bun) with the `docx` package
 for the report step. All scripts resolve their own paths from the repo
 location (fixed in Run 13 — no machine-specific paths remain). Offline
 verification chain: ~15 minutes.
 
-## A. Verify the delivered state (offline, deterministic)
+## A. Historical Run 15 verification chain (offline, deterministic)
 
 ```bash
 # 0. verifier self-tests (SAT engine, grid packings, overlap detection)
@@ -16,8 +24,8 @@ python3 scripts/packlib.py                  # -> "self-tests passed"
 #    re-verified from the file on disk, independent score recomputation
 python3 scripts/final_assembly.py
 python3 scripts/score_submission.py workspace/submission/submission.csv
-#    -> SCORE = 22.823536, grid ceiling = 28.937670, overlap failures: none,
-#       454/1000 beat grid (the run-13 frontier)
+#    -> Historical Run 15 result: SCORE = 22.823536, grid ceiling = 28.937670,
+#       overlap failures: none, 454/1000 beat grid (the run-13 frontier)
 
 # 2. Golay code + Leech lattice: 28 assertions, integer-exact (~4 min)
 python3 scripts/leech_core.py               # -> "SUMMARY: 28/28 VERIFIED"
@@ -32,9 +40,9 @@ python3 scripts/leech_map.py                # -> coverage 88.9%; spearman +0.79
 python3 scripts/figures.py                  # -> "ALL 5 FIGURES OK"
 ```
 
-Expected invariant: these steps leave `table.json`, `submission.csv` and
-the score unchanged (22.823536) — the pipeline is idempotent at the
-delivered frontier.
+Expected historical invariant: these steps leave `table.json`, `submission.csv`
+and the Run 15 score unchanged (22.823536). This is not the current Run 36
+score; see `RECONCILIATION.md` for the snapshot transition.
 
 ## B. Rebuild the run-13 frontier from the run-12 table
 
