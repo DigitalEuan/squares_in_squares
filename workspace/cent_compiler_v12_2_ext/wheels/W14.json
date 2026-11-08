@@ -13,8 +13,8 @@
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "physically_supported",
-      "expected_dimensional_explicit": null,
-      "note": "rearranged: omega^2 = 1/(LC)"
+      "expected_dimensional_explicit": false,
+      "note": "Balances on the seven physical axes (L M T I H N J). The eighth house axis 'A' (angle) does not balance here because W13 gives angle an A exponent of +1 and angular_frequency therefore carries A; quantities like spring_constant and reactance are declared A^0. The 8-axis check is expected to fail."
     },
     {
       "id": "W14-02",
@@ -22,8 +22,8 @@
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "physically_supported",
-      "expected_dimensional_explicit": null,
-      "note": ""
+      "expected_dimensional_explicit": false,
+      "note": "Balances on the seven physical axes (L M T I H N J). The eighth house axis 'A' (angle) does not balance here because W13 gives angle an A exponent of +1 and angular_frequency therefore carries A; quantities like spring_constant and reactance are declared A^0. The 8-axis check is expected to fail."
     },
     {
       "id": "W14-03",

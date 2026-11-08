@@ -49,6 +49,10 @@ Every contract carries one status:
 |--------|---------|
 | `implemented_verified` | covered by an exact check in `tests/test_core.py` |
 | `implemented_tested` | implemented and exercised, but not by a dedicated invariant check |
+
+Every contract currently carries `implemented_verified`: all 41 have a dedicated
+invariant check in `tests/test_core.py`. The status is recomputed on each run of
+`tools/export_capabilities.py` from `vocabulary.VERIFIED_OPS`.
 | `implemented_proof_pending` | implementation exists; the named theorem is not proved |
 | `specified_implementation_pending` | contract only |
 | `unsupported` | deliberately not provided |
@@ -81,7 +85,7 @@ than restating it.
 
 ## 4. What is verified
 
-`python3 tests/test_core.py` runs **73 checks** in ten groups and exits
+`python3 tests/test_core.py` runs **76 checks** in ten groups and exits
 non-zero on any failure:
 
 | Group | Checks | Representative claims |
@@ -94,7 +98,7 @@ non-zero on any failure:
 | state | 2 | writes invisible until commit; deterministic PRNG stream |
 | program | 8 | arity, parameters, single assignment, kinds, combinational vs stateful cycles |
 | evaluator | 17 | tick semantics of accum/rate/delay/hysteresis/noise/quantize/pid/state-space/ΔΣ/fields/ports |
-| coverage | 13 | every remaining primitive executes with its documented result |
+| coverage | 16 | every remaining primitive executes with its documented result; the four composite macros each have a dedicated invariant check |
 | resolution | 3 | fallback selection, strict refusal, diverging outcome |
 
 Also checked by the same suite: a failed tick leaves the machine untouched

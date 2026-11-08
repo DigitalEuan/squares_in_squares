@@ -265,3 +265,14 @@ python3 tools/export_capabilities.py --out capabilities.json   # 29 atomic + 12 
 ```
 
 The exact core is deliberately honest about scope: no Lean proofs are claimed (theorem labels read "Lean pending"), `noise` is a deterministic two-point law rather than an entropy source, `transmission_line` is a documented delay-line model, and the 2-form stores only its nonzero components. These limits are listed in `docs/extensions.md`.
+
+
+---
+
+## Tidy-up validation (2026-11-09)
+
+The substrate declaration gate was rerun after repairing W24, W32 and W35.
+`python3 tools/audit_cases.py --strict` now reports **0 disagreements across 127
+cases**, and `python3 tools/inventory.py --strict` is clean. The 22 application
+Markdown records are now source inputs to `tools/compile_applications.py`; the
+strict run compiled **22/22** and wrote `validation/applications.json`.

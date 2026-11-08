@@ -17,7 +17,7 @@ various
 
 ## Pipeline (8 steps)
 
-Run `python3 tests/show_work.py` to see the full trace. The steps are:
+Run `python3 tools/compile_applications.py --strict` to see the full trace. The steps are:
 
 1. **¢ DAG decomposition** — formula parsed into atomic ¢ operations
 2. **∆ enumeration** — all valid physical implementations enumerated
@@ -48,6 +48,6 @@ Template: `log_amp` → `examples/proposal_09_log_amp.cir`
 ## How to Run
 
 ```bash
-cd cent_compiler_v1
-python3 tests/show_work.py                        # trace all 22 proposals
+cd cent_compiler_v12_2_ext
+python3 tools/compile_applications.py --strict                        # trace all 22 proposals
 python3 cent compile "output = log(power)"                    # compile just this one

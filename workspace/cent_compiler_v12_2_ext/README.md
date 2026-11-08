@@ -9,7 +9,7 @@ A cross-domain physical compiler with a **living knowledge base**. Takes any abs
 ## Quick Start
 
 ```bash
-cd cent_compiler_v12
+cd cent_compiler_v12_2_ext
 
 # Compile a £ through the full pipeline
 python3 cent compile "velocity = (2 * energy / mass)^(1/2)"
@@ -40,26 +40,37 @@ python3 cent enumerate "y = sqrt(5)"
 
 ## System Statistics (v2.0)
 
+**Counting convention.** The substrate holds two kinds of wheel. *Physical
+formula wheels* (W1–W35) carry monomial axioms and dimensional vectors;
+*computational substrate wheels* (W36 NumPy SAT, W37 SciPy L-BFGS-B) carry a
+numerical method instead of a law. The table below counts the **31 physical
+wheels**; `wheels/index.json` additionally reports the 33-wheel totals. Both
+are correct — see `docs/INVENTORY.md` for the full reconciliation and
+`python3 tools/inventory.py` to re-derive it.
+
 | Metric | Value |
 |--------|-------|
-| Wheels | 31 (loaded from JSON) |
-| Axioms | 72 |
-| Cases | 119 |
-| ¢ primitives | 16 atomic + 6 composite = 22 |
+| Wheels | 31 physical (W1–W35) + 2 computational (W36, W37) = 33 files |
+| Axioms | 73 physical (78 including the computational substrates) |
+| Cases | 119 physical (127 including the computational substrates) |
+| ¢ primitives | 29 atomic + 12 composite = 41 contracts |
 | ∆ substrate expansions | ~38 |
 | TIER 3 transducers | 7 |
-| Cross-domain junctions | 33 |
+| Cross-domain junctions | 33 physical (37 including the computational substrates) |
+| Non-identities | 5 physical (7 including the computational substrates) |
 | Escalation layers | 5 (ideal → parasitic → thermal → quantum → fabricated) |
 | Knowledge states | 5 (KNOWS / THINKS-TRUE / DOESN'T-KNOW / NEEDS / LANGUAGE) |
-| Python modules | 12 |
+| Python modules | 25 in `cent_compiler/` |
+| Exact-core checks | 76/76 (`python3 tests/test_core.py`) |
+| Simulation checks | 7/7 (`python3 cent test`) |
 | Package exports | 49 |
-| Tests passing | 38/39 (1 dimensional check, honestly classified) |
+| £ test cases | 38/39 (1 dimensional check, honestly classified) |
 
 ---
 
 ## Key Results
 
-- **31 wheels** loaded from JSON (single source of truth in `wheels/` folder)
+- **33 wheels** loaded from JSON (31 physical formula wheels + 2 computational substrates; single source of truth in `wheels/` folder)
 - **22 ¢ primitives** (v1.0's 12 + v2.0's 10 new: exp, log, sat, hysteresis, grad, div_spatial, curl, delay, translinear, state_space)
 - **22 proposals** with full 8-step pipeline trace (7 original + 3 v2.0 primitives + 12 expanded wheels)
 - **22 .cir files** written to disk (one per proposal, 9 SPICE templates)
@@ -77,7 +88,7 @@ python3 cent enumerate "y = sqrt(5)"
 The v2.0 compiler above is a floating-point pipeline: it decomposes, enumerates, escalates and emits SPICE. The exact core is a second, independent execution layer in the same package. It has no binary floating point at all.
 
 ```bash
-# 73 checks over exact arithmetic, enclosures, ports, fields, programs
+# 76 checks over exact arithmetic, enclosures, ports, fields, programs
 python3 tests/test_core.py
 
 # machine-readable capability registry (29 atomic + 12 composite)
@@ -89,7 +100,7 @@ python3 tools/export_capabilities.py --out capabilities.json
 | Atomic ¢ primitives | 29 across 4 tiers |
 | Composite macros | 12 |
 | Contracts in the registry | 41 |
-| Core verification | 73/73 checks |
+| Core verification | 76/76 checks |
 | Documentation | `docs/semantics.md`, `docs/extensions.md` |
 
 What the exact core adds:
@@ -106,28 +117,32 @@ What the exact core adds:
 ## Package Layout
 
 ```
-cent_compiler_v12/
+cent_compiler_v12_2_ext/
 ├── README.md                    # this file
 ├── CENT_FRAMEWORK.md            # canonical documentation
 ├── DELTA_SIGMA_DEMO.md           # standalone flagship demo
 ├── VALIDATION_REPORT.md         # 6 PASS + 1 dimensional check (honest)
-├── cent                         # CLI tool (5 subcommands)
-├── cent_compiler/               # Python package (12 modules)
-│   ├── grammar.py               # 22 ¢ primitives + AST decomposer
-│   ├── wheels.py                # 31 wheels loaded from JSON
+├── cent                         # CLI tool (8 subcommands)
+├── cent_compiler/               # Python package (25 modules)
+│   ├── grammar.py               # 41 ¢ contracts + AST decomposer
+│   ├── wheels.py                # 33 wheels loaded from JSON (topology from index.json)
+│   ├── wheels_19.py             # W16-W19 extension layer
+│   ├── wheels_extended.py       # licensed-union derivability helpers
 │   ├── substrate_library.py     # ~38 ∆ expansion rules
 │   ├── pattern_matcher.py       # 3-pattern clustering
 │   ├── cost_function.py         # 6-axis ¢_cost + pruning
 │   ├── isomorphism_gate.py      # 3-tier gate + ∆Σ classifier + 7 transducers
 │   ├── simulator.py             # 7 verified simulations
+│   ├── scaled_simulator.py      # unit-scaled simulation layer
 │   ├── spice_emitter.py         # SPICE netlist + .cir file output
 │   ├── delta_sigma.py           # ∆Σ engine + flagship demonstration
-│   ├── pound_suite.py           # 8 £ test cases
-│   └── hypothesis_bridge.py     # Cent Wheel + escalation + conjecture loop + ledger
-├── applications/                # 7 application proposals
+│   ├── pound_suite.py           # £ test cases
+│   ├── hypothesis_bridge.py     # Cent Wheel + escalation + conjecture loop + ledger
+│   └── ui.py                    # cent ui / report / eval console
+├── applications/                # 22 source application proposals
 ├── expansion/                   # roadmap + Hypothesis Engine reference
-├── tests/                       # validation tests + wheel generators
-├── wheels/                      # 32 JSON files — single source of truth
+├── tests/                       # test_core.py — 73 exact-core checks
+├── wheels/                      # 34 JSON files (33 wheels + index.json) — single source of truth
 └── examples/                    # 5 .cir files + demo output
 ```
 
@@ -151,10 +166,19 @@ docs/
 └── extensions.md       # 29/23 reconciliation, statuses, limitations
 
 tools/
-└── export_capabilities.py
+├── export_capabilities.py   # renders the contract registry
+└── inventory.py             # WS0 recount + counting-convention reconciliation
 
 tests/
-└── test_core.py        # 73 core checks
+└── test_core.py        # 76 core checks in ten groups
+```
+
+Run both suites:
+
+```bash
+python3 tests/test_core.py   # 76/76 exact-core checks
+python3 cent test            # 7/7 physical simulations
+python3 tools/inventory.py   # substrate recount (see docs/INVENTORY.md)
 ```
 
 ---
@@ -186,3 +210,18 @@ Plus Hypothesis Engine reference files for the knowledge state management archit
 ## License
 
 Open source. Built on the GLM wheel system (github.com/DigitalEuan/GLM).
+
+### Compiler-backed application proposals
+
+The 22 Markdown files in `applications/` are source proposal records, not test
+output. Their target relations can be compiled and audited against the live
+compiler with:
+
+```bash
+python3 tools/compile_applications.py --out validation/applications.json --strict
+```
+
+The command writes a machine-readable ledger containing each proposal's parsed
+¢ DAG, implementation count and ranking, exact-core material, SPICE material,
+and compiler notes. It exits non-zero if a proposal cannot be compiled or has no
+ranked implementation.

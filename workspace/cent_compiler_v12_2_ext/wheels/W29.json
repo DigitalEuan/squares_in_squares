@@ -3,7 +3,7 @@
   "title": "Spintronics & Spin Transport",
   "axioms": [
     "larmor_frequency = gyromagnetic_ratio * magnetic_field",
-    "spin_diffusion_length = diffusion_coefficient * time^(1/2)"
+    "spin_diffusion_length = diffusion_coefficient^(1/2) * time^(1/2)"
   ],
   "cases": [
     {
@@ -26,12 +26,12 @@
     },
     {
       "id": "W29-03",
-      "equation": "time = (spin_diffusion_length / diffusion_coefficient)^2",
+      "equation": "time = spin_diffusion_length^2 / diffusion_coefficient",
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "physically_supported",
       "expected_dimensional_explicit": null,
-      "note": ""
+      "note": "L_s = sqrt(D*tau). The previous axiom wrote D*sqrt(t) and the previous case wrote (L_s/D)^2; both were dimensionally wrong."
     },
     {
       "id": "W29-N1",

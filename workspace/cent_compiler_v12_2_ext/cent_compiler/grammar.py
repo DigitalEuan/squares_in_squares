@@ -317,7 +317,7 @@ def spoke_formula_from_axiom(axiom: str, target: str) -> Optional[str]:
     Returns None if the target cannot be isolated (e.g. appears linearly in
     a multi-term axiom).
     """
-    from glm_wheels import parse_equation, relation_vector
+    from .wheels import parse_equation, relation_vector
     lhs, rhs = parse_equation(axiom)
     # We want target = (some expression of the other variables).
     # The relation vector tells us the exponents.

@@ -63,9 +63,17 @@ The 31 wheels encode static monomial axioms. Only `¢_mult`, `¢_scale`, `¢_div
 
 ---
 
-## 2. The Wheel Data Substrate (31 wheels)
+## 2. The Wheel Data Substrate (31 physical wheels + 2 computational substrates)
 
-All wheel data is loaded from JSON files in `wheels/` — the single source of truth. No hardcoded data in Python.
+All wheel data is loaded from JSON files in `wheels/` — the single source of truth.
+
+> **Known exception (WS2).** `cent_compiler/wheels_extended.py` and
+> `cent_compiler/wheels_19.py` still carry hardcoded `JUNCTIONS` (13) and
+> `NON_IDENTITIES` (5) literals from the Phase 157/158 tables. They are stale
+> strict subsets of `index.json` (37 / 7) and are not used by the compile
+> pipeline — `cent_compiler/wheels.py` loads topology from `index.json` only —
+> but they violate the "loaders, not data" rule and must be retired. Tracked in
+> `docs/INVENTORY.md` §6.
 
 | Family | Wheels | Domains |
 |--------|--------|---------|
@@ -73,8 +81,27 @@ All wheel data is loaded from JSON files in `wheels/` — the single source of t
 | Domain (Phase 157) | W11-W15 | Uniform motion, density, oscillator, LC circuit, charge-time |
 | Expanded (v2.0) | W16-W19 | Magnetic flux, gravitation, ideal gas, EM waves |
 | Computational Depth | W20-W35 | Elasticity, fracture, chemical kinetics, electrochemistry, semiconductor, plasma, superconductivity, spintronics, capillarity, heat transfer, hemodynamics, electrophysiology |
+| Computational Substrates | W36-W37 | NumPy SAT relaxation, SciPy L-BFGS-B viscoelastic settling — numerical methods, not physical laws |
 
-**Totals:** 31 wheels, 72 axioms, 119 cases, 108 dimensional vectors, 33 junctions, 5 non-identities.
+**Totals (physical wheels W1–W35):** 31 wheels, 73 axioms, 119 cases, 33 junction declarations, 5 non-identities. **Including the computational substrates (W1–W37):** 33 wheel files, 78 axioms, 127 cases, 37 junction declarations, 7 non-identities — the figures `wheels/index.json` reports.
+
+**Counting convention.** Every total in this document counts the **31 physical
+formula wheels** unless it says otherwise. `wheels/index.json` mixes the two on
+purpose: `total_wheels: 33` is the all-wheel count, `total_axioms: 73` and
+`total_cases: 119` are the physical-wheel counts. Both readings are correct;
+the ambiguity was never written down, which is what produced three different
+counts of the same substrate. See `docs/INVENTORY.md` and
+`python3 tools/inventory.py`.
+
+**Reserved numbers.** W26, W27, W30 and W31 are unassigned and stay that way:
+filling them would put unverified physics in the substrate, and renumbering
+would break every citation that refers to the current W-numbers. The next free
+numbers are W38–W42.
+
+**Topology authority.** `wheels/index.json` is the only source of junctions and
+non-identities that `cent_compiler/wheels.py` loads. The `junctions` /
+`non_identities` blocks inside individual wheel files are local annotations and
+need not be exhaustive.
 
 ---
 
@@ -192,29 +219,35 @@ Each ∆ is certified with exact parameters (voltage range, bandwidth, temperatu
 ## 10. File Layout
 
 ```
-cent_compiler_v12/
+cent_compiler_v12_2_ext/
 ├── README.md
 ├── CENT_FRAMEWORK.md            # this document
 ├── DELTA_SIGMA_DEMO.md           # standalone flagship demo
 ├── VALIDATION_REPORT.md         # honest test results
-├── cent                         # CLI tool (5 subcommands)
-├── cent_compiler/               # Python package (12 modules)
+├── cent                         # CLI tool (8 subcommands)
+├── cent_compiler/               # Python package (25 modules)
 │   ├── __init__.py              # v2.0, 49 exports
-│   ├── grammar.py               # 22 ¢ primitives + AST decomposer
-│   ├── wheels.py                # 31 wheels loaded from JSON
+│   ├── grammar.py               # 41 ¢ contracts + AST decomposer
+│   ├── wheels.py                # 33 wheels loaded from JSON (topology from index.json)
+│   ├── wheels_19.py             # W16-W19 extension layer
+│   ├── wheels_extended.py       # licensed-union derivability helpers
 │   ├── substrate_library.py     # ~38 ∆ expansion rules
 │   ├── pattern_matcher.py       # 3-pattern clustering
 │   ├── cost_function.py         # 6-axis ¢_cost + pruning
 │   ├── isomorphism_gate.py      # 3-tier gate + ∆Σ classifier + 7 transducers
 │   ├── simulator.py             # 7 verified simulations
+│   ├── scaled_simulator.py      # unit-scaled simulation layer
 │   ├── spice_emitter.py         # SPICE netlist generation + .cir file output
 │   ├── delta_sigma.py           # ∆Σ engine + flagship demonstration
-│   ├── pound_suite.py           # 8 £ test cases
-│   └── hypothesis_bridge.py     # Cent Wheel + escalation + conjecture loop + ledger
+│   ├── pound_suite.py           # £ test cases
+│   ├── hypothesis_bridge.py     # Cent Wheel + escalation + conjecture loop + ledger
+│   └── ui.py                    # cent ui / report / eval console
 ├── applications/                # 7 application proposals
 ├── expansion/                   # roadmap documents + Hypothesis Engine reference
-├── tests/                       # validation tests + wheel generators
-├── wheels/                      # 32 JSON files (31 wheels + index) — single source of truth
+├── tests/                       # test_core.py — 73 exact-core checks
+├── tools/                       # export_capabilities.py, inventory.py
+├── docs/                        # semantics.md, extensions.md, INVENTORY.md
+├── wheels/                      # 34 JSON files (33 wheels + index.json) — single source of truth
 └── examples/                    # 5 .cir files + demo output
 ```
 
@@ -241,7 +274,7 @@ The sections above describe the compilation pipeline. The exact core is a separa
 
 **Feedback.** A back edge is well founded only if its producer is stateful. The static checker rejects every other cycle, and on the first tick a back edge reads the producer's documented initial value.
 
-**Verification.** `python3 tests/test_core.py` runs 73 checks (exact, interval, port, density, geometry, state, program, evaluator, coverage, resolution), and `python3 tools/export_capabilities.py` renders the contract registry. The conventions are in `docs/semantics.md`; the vocabulary reconciliation and honest limitations are in `docs/extensions.md`. A console UI (`cent ui`, `cent report`, `cent eval`) turns a £ into the ¢ census, the ranked ∆, a SPICE netlist and a `cent-material/1` bundle that the exact core can run.
+**Verification.** `python3 tests/test_core.py` runs 76 checks (exact, interval, port, density, geometry, state, program, evaluator, coverage, resolution), and `python3 tools/export_capabilities.py` renders the contract registry. The conventions are in `docs/semantics.md`; the vocabulary reconciliation and honest limitations are in `docs/extensions.md`. A console UI (`cent ui`, `cent report`, `cent eval`) turns a £ into the ¢ census, the ranked ∆, a SPICE netlist and a `cent-material/1` bundle that the exact core can run.
 
 ---
 

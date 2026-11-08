@@ -30,8 +30,8 @@
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "model_convention",
-      "expected_dimensional_explicit": false,
-      "note": "Kepler third law; convention drops the 4\u03c0\u00b2 factor (radial convention)"
+      "expected_dimensional_explicit": null,
+      "note": "Kepler's third law. T^2 = L^3/(L^3 M^-1 T^-2 * M) balances on every axis; the explicit flag was set false in error."
     },
     {
       "id": "W17-N1",

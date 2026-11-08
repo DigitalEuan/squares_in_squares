@@ -17,6 +17,7 @@ machine-readable JSON.
 """
 from __future__ import annotations
 
+import dataclasses
 from dataclasses import dataclass, field
 from typing import Mapping, Optional
 
@@ -97,6 +98,37 @@ COMPOSITE_PRIMITIVES: tuple[str, ...] = (
 
 ALL_PRIMITIVES: tuple[str, ...] = ATOMIC_PRIMITIVES + COMPOSITE_PRIMITIVES
 
+#: Primitives with a *dedicated invariant check* in ``tests/test_core.py``.
+#:
+#: ``docs/extensions.md`` §2 defines ``implemented_verified`` as "covered by an
+#: exact check in ``tests/test_core.py``" and ``implemented_tested`` as
+#: "implemented and exercised, but not by a dedicated invariant check".  This
+#: set is the second half of that definition: every entry has its own check
+#: asserting a documented invariant on exact rationals or certified enclosures
+#: (power conservation, tick semantics, enclosure containment, transactional
+#: state, static checking).
+#:
+#: All 29 atomic primitives and all 12 composite primitives qualify: WS3 gave
+#: ``thermo_electric``, ``phase_locked_loop``, ``transmission_line`` and
+#: ``kalman_observer`` their own checks, so none is left exercised only inside a
+#: grouped check.
+VERIFIED_OPS: frozenset[str] = frozenset({
+    # classical scalar arithmetic and signals
+    "sum", "neg", "mult", "scale", "accum", "rate", "wrap", "spatial",
+    "exp", "log", "sat", "hysteresis", "delay",
+    # continuum
+    "grad", "div_spatial", "curl", "laplacian", "boundary",
+    # conservative ports
+    "junction_0", "junction_1", "gyrator", "transformer", "dissipate",
+    "store_pot", "store_kin", "transduce",
+    # stochastic / topological
+    "noise", "quantize", "entropy",
+    # composite
+    "recip", "div", "sqrt", "eq", "translinear", "state_space",
+    "pid", "delta_sigma_modulator", "phase_locked_loop", "transmission_line",
+    "kalman_observer", "thermo_electric",
+})
+
 #: Compatibility aliases accepted by :func:`canonical_op`.
 ALIASES: dict[str, str] = {
     "pll": "phase_locked_loop",
@@ -173,6 +205,11 @@ CONTRACTS: dict[str, Contract] = {}
 
 
 def _register(c: Contract) -> None:
+    # A contract earns `implemented_verified` by having a dedicated invariant
+    # check in tests/test_core.py (see VERIFIED_OPS).  Anything else stays at
+    # `implemented_tested` even though the suite exercises it.
+    if c.op in VERIFIED_OPS and c.status == IMPLEMENTED_TESTED:
+        c = dataclasses.replace(c, status=IMPLEMENTED_VERIFIED)
     CONTRACTS[c.op] = c
 
 

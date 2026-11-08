@@ -3,7 +3,8 @@
   "title": "Chemical Kinetics & Transport",
   "axioms": [
     "reaction_rate = rate_constant * concentration",
-    "rate_constant = pre_exponential_factor * concentration / rate_constant"
+    "rate_constant = pre_exponential_factor * concentration",
+    "diffusion_flux = diffusion_coefficient * concentration_gradient"
   ],
   "cases": [
     {
@@ -31,7 +32,7 @@
       "expected_derivable": true,
       "physical_status": "physically_supported",
       "expected_dimensional_explicit": null,
-      "note": ""
+      "note": "Fick's first law. diffusion_flux (L^-2 T^-1 N) and concentration_gradient (L^-4 N) were referenced but undeclared; the axiom carrying the law was also missing."
     },
     {
       "id": "W22-N1",
@@ -40,11 +41,14 @@
       "expected_derivable": false,
       "physical_status": "negative_control",
       "expected_dimensional_explicit": null,
-      "note": ""
+      "note": "Negative control: division instead of multiplication. Also dimensionally wrong, as required."
     }
   ],
   "quantities": [
     "concentration",
+    "concentration_gradient",
+    "diffusion_coefficient",
+    "diffusion_flux",
     "pre_exponential_factor",
     "rate_constant",
     "reaction_rate"
@@ -84,12 +88,12 @@
         "A"
       ],
       "exponents": [
-        0,
+        3,
         0,
         -1,
         0,
         0,
-        0,
+        -1,
         0,
         0
       ]
@@ -134,6 +138,72 @@
         0,
         0,
         1,
+        0,
+        0
+      ]
+    },
+    "diffusion_flux": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        -2,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "concentration_gradient": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        -4,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "diffusion_coefficient": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        2,
+        0,
+        -1,
+        0,
+        0,
+        0,
         0,
         0
       ]

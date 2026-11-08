@@ -3,7 +3,7 @@
   "title": "Capillarity & Surface Phenomena",
   "axioms": [
     "pressure = surface_tension / capillary_radius",
-    "capillary_height = surface_tension * wetting_coefficient / (viscosity * capillary_radius)"
+    "capillary_height = surface_tension * wetting_coefficient / (density * gravity * capillary_radius)"
   ],
   "cases": [
     {
@@ -27,11 +27,11 @@
     {
       "id": "W32-03",
       "equation": "viscosity = surface_tension * wetting_coefficient / (capillary_height * capillary_radius)",
-      "expected_dimensional": true,
-      "expected_derivable": true,
+      "expected_dimensional": false,
+      "expected_derivable": false,
       "physical_status": "physically_supported",
-      "expected_dimensional_explicit": null,
-      "note": ""
+      "expected_dimensional_explicit": false,
+      "note": "This viscosity rearrangement is retained as a negative dimensional/derivability control; capillary height now uses the dimensionally complete equilibrium law with density and gravity."
     },
     {
       "id": "W32-N1",
@@ -49,7 +49,9 @@
     "pressure",
     "surface_tension",
     "viscosity",
-    "wetting_coefficient"
+    "wetting_coefficient",
+    "density",
+    "gravity"
   ],
   "dimensions": {
     "capillary_height": {
@@ -177,6 +179,50 @@
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "density": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        -3,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "gravity": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        1,
+        0,
+        -2,
         0,
         0,
         0,

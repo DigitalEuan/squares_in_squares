@@ -207,10 +207,55 @@ NON_IDENTITIES: Tuple[NonIdentity, ...] = (
 
 
 # ---------------------------------------------------------------------------
+# 3b. Topology is loaded from wheels/index.json
+# ---------------------------------------------------------------------------
+# Invariant §2.1: wheels/*.json + wheels/index.json is the single source of
+# truth, and this module is a loader, not data.  The Phase 157/158 literals
+# above are an offline fallback for running without the wheels/ directory;
+# whenever the JSON is present it wins, so the two tables cannot drift apart
+# again.  They had drifted: the literals held 13 junctions and 5
+# non-identities against index.json's 37 and 7.
+from .wheels import JUNCTIONS as _INDEX_JUNCTIONS
+from .wheels import NON_IDENTITIES as _INDEX_NON_IDENTITIES
+
+if _INDEX_JUNCTIONS:
+    JUNCTIONS = tuple(
+        Junction(wheel_a=j.wheel_a, wheel_b=j.wheel_b, name=j.name,
+                 reason=j.reason, name_b=getattr(j, "name_b", None))
+        for j in _INDEX_JUNCTIONS
+    )
+if _INDEX_NON_IDENTITIES:
+    NON_IDENTITIES = tuple(
+        NonIdentity(wheel_a=n.wheel_a, wheel_b=n.wheel_b, name=n.name, reason=n.reason)
+        for n in _INDEX_NON_IDENTITIES
+    )
+
+
+# ---------------------------------------------------------------------------
 # 4. Prefix-aware axiom rewriting
 # ---------------------------------------------------------------------------
 
 import ast
+
+
+def _literal_rational(node) -> Fraction:
+    """A rational *literal* exponent: ``2``, ``-3``, ``1/2``, ``-1/4``.
+
+    ``wheels.parse_monomial`` has always accepted these (W21/W24/W25/W29/W34
+    carry ``^(1/2)`` and ``^(1/4)``), but this AST rewriter only accepted
+    integer literals, so ``licensed_is_derivable`` refused those wheels
+    outright.  Names are still refused: an exponent must be a number.
+    """
+    if (isinstance(node, ast.Constant) and isinstance(node.value, int)
+            and not isinstance(node.value, bool)):
+        return Fraction(node.value)
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub):
+        return -_literal_rational(node.operand)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        return _literal_rational(node.left) / _literal_rational(node.right)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mult):
+        return _literal_rational(node.left) * _literal_rational(node.right)
+    raise ValueError("a power must be a rational literal")
 
 
 def _walk_rename(node, wheel_id: str) -> Monomial:
@@ -230,10 +275,8 @@ def _walk_rename(node, wheel_id: str) -> Monomial:
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
         return _walk_rename(node.left, wheel_id).mul(_walk_rename(node.right, wheel_id).pow(-1))
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Pow):
-        exponent = _walk_rename(node.right, wheel_id)
-        if exponent.powers or exponent.coefficient.denominator != 1:
-            raise ValueError("a power must be an integer literal")
-        return _walk_rename(node.left, wheel_id).pow(exponent.coefficient.numerator)
+        exponent = _literal_rational(node.right)
+        return _walk_rename(node.left, wheel_id).pow(exponent)
     raise ValueError(f"unsupported syntax in node: {ast.dump(node)}")
 
 
@@ -249,7 +292,8 @@ def prefix_axiom(axiom: str, wheel_id: str) -> str:
         if not m.powers:
             return str(m.coefficient)
         body = " * ".join(
-            (n if e == 1 else f"{n}^{e}") for n, e in m.powers
+            (n if e == 1 else f"{n}^({e})" if e.denominator != 1 else f"{n}^{e}")
+            for n, e in m.powers
         )
         if m.coefficient != 1:
             body = f"{m.coefficient} * {body}"
@@ -281,7 +325,8 @@ def prefix_case_equation(equation: str, target_wheel_id: str,
         raise ValueError(f"equation needs one '=': {equation!r}")
     lhs, rhs = (s.strip() for s in equation.split("="))
     def walk_and_prefix(node):
-        from glm_wheels import Monomial as _M, Fraction as _F
+        from fractions import Fraction as _F
+        from .wheels import Monomial as _M
         if isinstance(node, ast.Name):
             holder = _wheel_holding(node.id, wheels, prefer=target_wheel_id)
             if holder is None:
@@ -310,10 +355,8 @@ def prefix_case_equation(equation: str, target_wheel_id: str,
         if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
             return walk_and_prefix(node.left).mul(walk_and_prefix(node.right).pow(-1))
         if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Pow):
-            exponent = walk_and_prefix(node.right)
-            if exponent.powers or exponent.coefficient.denominator != 1:
-                raise ValueError("a power must be an integer literal")
-            return walk_and_prefix(node.left).pow(exponent.coefficient.numerator)
+            # Same rule as _walk_rename: a rational literal exponent.
+            return walk_and_prefix(node.left).pow(_literal_rational(node.right))
         raise ValueError(f"unsupported syntax: {ast.dump(node)}")
     lhs_m = walk_and_prefix(ast.parse(lhs.replace("^", "**"), mode="eval").body)
     rhs_m = walk_and_prefix(ast.parse(rhs.replace("^", "**"), mode="eval").body)
@@ -321,7 +364,8 @@ def prefix_case_equation(equation: str, target_wheel_id: str,
         if not m.powers:
             return str(m.coefficient)
         body = " * ".join(
-            (n if e == 1 else f"{n}^{e}") for n, e in m.powers
+            (n if e == 1 else f"{n}^({e})" if e.denominator != 1 else f"{n}^{e}")
+            for n, e in m.powers
         )
         if m.coefficient != 1:
             body = f"{m.coefficient} * {body}"
@@ -508,7 +552,7 @@ def census_licensed_union(wheels: Tuple[Wheel, ...] = WHEELS_15,
                         # This is the local two-input spoke check.
                         # For census brevity we use the existing derive_from via
                         # the unprefixed wheel axioms:
-                        from glm_wheels import derive_from as _df
+                        from .wheels import derive_from as _df
                         y_local = y.split(".", 1)[1]
                         z_local = z.split(".", 1)[1]
                         if y_local in wheel_quantities(w) and z_local in wheel_quantities(w):

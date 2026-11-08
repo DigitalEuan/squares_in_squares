@@ -37,11 +37,11 @@
     {
       "id": "W20-N1",
       "equation": "stress = youngs_modulus / strain",
-      "expected_dimensional": false,
+      "expected_dimensional": true,
       "expected_derivable": false,
       "physical_status": "negative_control",
       "expected_dimensional_explicit": null,
-      "note": ""
+      "note": "Negative control on PHYSICS, not on dimensions: stress = youngs_modulus / strain balances dimensionally (Pa = Pa / dimensionless) but is the wrong relation - the constitutive law is stress = youngs_modulus * strain. A harder control: only the derivation can reject it."
     }
   ],
   "quantities": [

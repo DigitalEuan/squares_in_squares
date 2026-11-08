@@ -1,0 +1,787 @@
+{
+  "atomic": [
+    "sum",
+    "neg",
+    "mult",
+    "scale",
+    "accum",
+    "rate",
+    "wrap",
+    "spatial",
+    "exp",
+    "log",
+    "sat",
+    "hysteresis",
+    "delay",
+    "grad",
+    "div_spatial",
+    "curl",
+    "laplacian",
+    "boundary",
+    "junction_0",
+    "junction_1",
+    "gyrator",
+    "transformer",
+    "dissipate",
+    "store_pot",
+    "store_kin",
+    "transduce",
+    "noise",
+    "quantize",
+    "entropy"
+  ],
+  "atomic_count": 29,
+  "by_status": {
+    "implemented_proof_pending": [],
+    "implemented_tested": [],
+    "implemented_verified": [
+      "sum",
+      "neg",
+      "mult",
+      "scale",
+      "accum",
+      "rate",
+      "wrap",
+      "spatial",
+      "exp",
+      "log",
+      "sat",
+      "hysteresis",
+      "delay",
+      "grad",
+      "div_spatial",
+      "curl",
+      "laplacian",
+      "boundary",
+      "junction_0",
+      "junction_1",
+      "gyrator",
+      "transformer",
+      "dissipate",
+      "store_pot",
+      "store_kin",
+      "transduce",
+      "noise",
+      "quantize",
+      "entropy",
+      "recip",
+      "div",
+      "sqrt",
+      "eq",
+      "translinear",
+      "state_space",
+      "pid",
+      "phase_locked_loop",
+      "transmission_line",
+      "kalman_observer",
+      "thermo_electric",
+      "delta_sigma_modulator"
+    ],
+    "specified_implementation_pending": [],
+    "unsupported": []
+  },
+  "composite": [
+    "recip",
+    "div",
+    "sqrt",
+    "eq",
+    "translinear",
+    "state_space",
+    "pid",
+    "phase_locked_loop",
+    "transmission_line",
+    "kalman_observer",
+    "thermo_electric",
+    "delta_sigma_modulator"
+  ],
+  "composite_count": 12,
+  "contracts": {
+    "accum": {
+      "domain": "exact rational or interval",
+      "errors": [],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "y_t = x_t + y_{t-1}; stores the accumulated value",
+      "op": "accum",
+      "output": "numeric",
+      "params": "none",
+      "state": "running sum (exact)",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "boundary": {
+      "domain": "consistent shape and spacing",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "field",
+      "kind": "atomic",
+      "notes": "alpha*psi + beta*dpsi/dn = gamma on every face",
+      "op": "boundary",
+      "output": "field",
+      "params": "shape: int[]; spacing: rational; kind: dirichlet|neumann|robin; value/alpha/beta/gamma: rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "continuum"
+    },
+    "curl": {
+      "domain": "h > 0; 2-form has 276 components on the 24-D carrier",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "vector_field",
+      "kind": "atomic",
+      "notes": "exterior derivative, not a 4-coordinate scalar",
+      "op": "curl",
+      "output": "two_form",
+      "params": "h: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "continuum"
+    },
+    "delay": {
+      "domain": "ticks >= 1",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "per-node delay line",
+      "op": "delay",
+      "output": "numeric",
+      "params": "ticks: int >= 1; initial: numeric",
+      "state": "ring buffer of length ticks",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "delta_sigma_modulator": {
+      "domain": "order in {1,2}, 0 < threshold",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "composite",
+      "notes": "canonical 1st/2nd order sigma-delta loop",
+      "op": "delta_sigma_modulator",
+      "output": "bit",
+      "params": "order: 1|2; threshold: rational",
+      "state": "integrator(s) and last output",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "dissipate": {
+      "domain": "R > 0, T > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric (effort)",
+      "kind": "atomic",
+      "notes": "linear dissipator; entropy rate e^2/(R T) >= 0",
+      "op": "dissipate",
+      "output": "port",
+      "params": "resistance, temperature: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "conservative"
+    },
+    "div": {
+      "domain": "denominator != 0",
+      "errors": [
+        "division_by_zero"
+      ],
+      "inputs": "numeric, numeric",
+      "kind": "composite",
+      "notes": "exact division of a numerator operand by a denominator operand",
+      "op": "div",
+      "output": "numeric",
+      "params": "none",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "div_spatial": {
+      "domain": "h > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "vector_field",
+      "kind": "atomic",
+      "notes": "",
+      "op": "div_spatial",
+      "output": "numeric",
+      "params": "h: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "continuum"
+    },
+    "entropy": {
+      "domain": "T > 0 and port power >= 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port",
+      "kind": "atomic",
+      "notes": "entropy production rate P/T; rejects active (creating) ports",
+      "op": "entropy",
+      "output": "numeric",
+      "params": "temperature: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "stochastic_topological"
+    },
+    "eq": {
+      "domain": "all exact rationals",
+      "errors": [],
+      "inputs": "value, value",
+      "kind": "composite",
+      "notes": "mathematical equality; intervals must be equal singletons",
+      "op": "eq",
+      "output": "bit",
+      "params": "none",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "exp": {
+      "domain": "all rationals",
+      "errors": [
+        "resource_budget_exhausted"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "certified rational enclosure; exact only at x = 0",
+      "op": "exp",
+      "output": "interval",
+      "params": "precision: int = 64",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": "interval.exp_exp_contains (Lean pending)",
+      "tier": "classical"
+    },
+    "grad": {
+      "domain": "h > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "field",
+      "kind": "atomic",
+      "notes": "",
+      "op": "grad",
+      "output": "vector_field",
+      "params": "h: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": "geometry.curl_grad_zero (tested)",
+      "tier": "continuum"
+    },
+    "gyrator": {
+      "domain": "r != 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port",
+      "kind": "atomic",
+      "notes": "(e,f) -> (r f, -e/r); anti-reciprocal and power conserving",
+      "op": "gyrator",
+      "output": "port",
+      "params": "resistance: nonzero rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": "power.gyrator_conserves_power (Lean pending)",
+      "tier": "conservative"
+    },
+    "hysteresis": {
+      "domain": "lower < upper",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "two thresholds; retention strictly inside the deadband",
+      "op": "hysteresis",
+      "output": "bit",
+      "params": "lower, upper: rational; initial: bool",
+      "state": "latched bit",
+      "status": "implemented_verified",
+      "theorem": "core.hysteresis_deadband (Lean pending)",
+      "tier": "classical"
+    },
+    "junction_0": {
+      "domain": "at least 2 ports with identical flow",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port+",
+      "kind": "atomic",
+      "notes": "common flow; resolved effort = -sum(other efforts)",
+      "op": "junction_0",
+      "output": "port",
+      "params": "resolved: int = last",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": "power.junction_0_conserves_power (Lean pending)",
+      "tier": "conservative"
+    },
+    "junction_1": {
+      "domain": "at least 2 ports with identical effort",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port+",
+      "kind": "atomic",
+      "notes": "common effort; resolved flow = -sum(other flows)",
+      "op": "junction_1",
+      "output": "port",
+      "params": "resolved: int = last",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": "power.junction_1_conserves_power (Lean pending)",
+      "tier": "conservative"
+    },
+    "kalman_observer": {
+      "domain": "r > 0, p >= 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric (measurement)",
+      "kind": "composite",
+      "notes": "scalar exact-rational Kalman update",
+      "op": "kalman_observer",
+      "output": "numeric",
+      "params": "process_variance, measurement_variance >= 0; initial_x, initial_p",
+      "state": "estimate x and covariance p",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "laplacian": {
+      "domain": "h > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "field",
+      "kind": "atomic",
+      "notes": "",
+      "op": "laplacian",
+      "output": "numeric",
+      "params": "h: positive rational; axes: int[] optional",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "continuum"
+    },
+    "log": {
+      "domain": "x > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "",
+      "op": "log",
+      "output": "interval",
+      "params": "precision: int = 64",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "mult": {
+      "domain": "exact rational or certified interval",
+      "errors": [],
+      "inputs": "numeric*",
+      "kind": "atomic",
+      "notes": "",
+      "op": "mult",
+      "output": "numeric",
+      "params": "none",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "neg": {
+      "domain": "all exact rationals",
+      "errors": [],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "signed negation. Unit complement is a separate operation (density.unit_complement), not this primitive",
+      "op": "neg",
+      "output": "numeric",
+      "params": "none",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "noise": {
+      "domain": "amplitude >= 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "(no inputs)",
+      "kind": "atomic",
+      "notes": "deterministic two-point +-a distribution with probability 1/2; mean 0, variance a^2 exactly. Not a physical entropy source",
+      "op": "noise",
+      "output": "numeric",
+      "params": "amplitude: nonnegative rational; seed: int optional",
+      "state": "PRNG state",
+      "status": "implemented_verified",
+      "theorem": "noise.exact_moments (tested)",
+      "tier": "stochastic_topological"
+    },
+    "phase_locked_loop": {
+      "domain": "dt > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric (phase)",
+      "kind": "composite",
+      "notes": "",
+      "op": "phase_locked_loop",
+      "output": "numeric",
+      "params": "center_frequency, gain, dt: rational; initial_phase: rational",
+      "state": "VCO phase",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "pid": {
+      "domain": "dt > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "composite",
+      "notes": "",
+      "op": "pid",
+      "output": "numeric",
+      "params": "kp, ki, kd, dt: rational; initial: rational",
+      "state": "integral, previous error",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "quantize": {
+      "domain": "q > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "nearest multiple, ties away from zero",
+      "op": "quantize",
+      "output": "numeric",
+      "params": "quantum: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "stochastic_topological"
+    },
+    "rate": {
+      "domain": "dt > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "signed first difference / dt",
+      "op": "rate",
+      "output": "numeric",
+      "params": "dt: positive rational",
+      "state": "previous input",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "recip": {
+      "domain": "x != 0",
+      "errors": [
+        "division_by_zero"
+      ],
+      "inputs": "numeric",
+      "kind": "composite",
+      "notes": "",
+      "op": "recip",
+      "output": "numeric",
+      "params": "none",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "sat": {
+      "domain": "lo <= hi",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "explicit ordered bounds; idempotent clamp",
+      "op": "sat",
+      "output": "numeric",
+      "params": "lo, hi: rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "scale": {
+      "domain": "explicit rational factor (no implied 1/2)",
+      "errors": [
+        "invalid_input"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "",
+      "op": "scale",
+      "output": "numeric",
+      "params": "factor: rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "spatial": {
+      "domain": "index inside the field",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "field",
+      "kind": "atomic",
+      "notes": "explicit field sampling, not a metric",
+      "op": "spatial",
+      "output": "numeric",
+      "params": "axis: int = 0; index: int[24] optional",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "sqrt": {
+      "domain": "x >= 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "composite",
+      "notes": "exact point interval for rational roots, otherwise certified",
+      "op": "sqrt",
+      "output": "interval",
+      "params": "precision: int = 64",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "state_space": {
+      "domain": "dimensionally consistent matrices",
+      "errors": [
+        "invalid_input"
+      ],
+      "inputs": "vector (u)",
+      "kind": "composite",
+      "notes": "x' = A x + B u; y = C x + D u",
+      "op": "state_space",
+      "output": "vector",
+      "params": "A, B, C, D: rational matrices",
+      "state": "x (state vector)",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "store_kin": {
+      "domain": "L > 0, dt > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric (effort)",
+      "kind": "atomic",
+      "notes": "",
+      "op": "store_kin",
+      "output": "port",
+      "params": "inductance, dt: positive rational",
+      "state": "stored flux",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "conservative"
+    },
+    "store_pot": {
+      "domain": "C > 0, dt > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric (flow)",
+      "kind": "atomic",
+      "notes": "",
+      "op": "store_pot",
+      "output": "port",
+      "params": "capacitance, dt: positive rational",
+      "state": "stored charge",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "conservative"
+    },
+    "sum": {
+      "domain": "at least one input; exact rational or certified interval",
+      "errors": [],
+      "inputs": "numeric*",
+      "kind": "atomic",
+      "notes": "pure exact addition; the accumulator is *not* used (see \u00a2_accum)",
+      "op": "sum",
+      "output": "numeric",
+      "params": "none",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    },
+    "thermo_electric": {
+      "domain": "T > 0, R > 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port (electrical)",
+      "kind": "composite",
+      "notes": "Peltier heat S*T*I plus Joule heat I^2*R; sign is physical",
+      "op": "thermo_electric",
+      "output": "port (thermal)",
+      "params": "seebeck, resistance, temperature: rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "transduce": {
+      "domain": "0 < eta <= 1",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port",
+      "kind": "atomic",
+      "notes": "ideal transducer; eta = 1 conserves power exactly",
+      "op": "transduce",
+      "output": "port",
+      "params": "ratio: nonzero rational; efficiency: (0,1]",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "conservative"
+    },
+    "transformer": {
+      "domain": "n != 0",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "port",
+      "kind": "atomic",
+      "notes": "",
+      "op": "transformer",
+      "output": "port",
+      "params": "ratio: nonzero rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": "power.transformer_conserves_power (Lean pending)",
+      "tier": "conservative"
+    },
+    "translinear": {
+      "domain": "positive bases for non-integer exponents",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric+",
+      "kind": "composite",
+      "notes": "product of powers prod(x_i^p_i), not exp(log(x))",
+      "op": "translinear",
+      "output": "interval",
+      "params": "exponents: rational[]",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "transmission_line": {
+      "domain": "segments >= 1, |reflection| <= 1",
+      "errors": [
+        "domain_error"
+      ],
+      "inputs": "numeric",
+      "kind": "composite",
+      "notes": "documented lossless delay-line model with load reflection",
+      "op": "transmission_line",
+      "output": "numeric",
+      "params": "segments: int >= 1; reflection: rational in [-1,1]; initial: rational",
+      "state": "delay cells",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "composite"
+    },
+    "wrap": {
+      "domain": "period > 0; exact scalar input",
+      "errors": [
+        "domain_error",
+        "unsupported"
+      ],
+      "inputs": "numeric",
+      "kind": "atomic",
+      "notes": "returns the representative in [0, period)",
+      "op": "wrap",
+      "output": "numeric",
+      "params": "period: positive rational",
+      "state": "none",
+      "status": "implemented_verified",
+      "theorem": null,
+      "tier": "classical"
+    }
+  },
+  "schema": "cent-capabilities/1",
+  "tiers": {
+    "classical": [
+      "sum",
+      "neg",
+      "mult",
+      "scale",
+      "accum",
+      "rate",
+      "wrap",
+      "spatial",
+      "exp",
+      "log",
+      "sat",
+      "hysteresis",
+      "delay"
+    ],
+    "conservative": [
+      "junction_0",
+      "junction_1",
+      "gyrator",
+      "transformer",
+      "dissipate",
+      "store_pot",
+      "store_kin",
+      "transduce"
+    ],
+    "continuum": [
+      "grad",
+      "div_spatial",
+      "curl",
+      "laplacian",
+      "boundary"
+    ],
+    "stochastic_topological": [
+      "noise",
+      "quantize",
+      "entropy"
+    ]
+  }
+}

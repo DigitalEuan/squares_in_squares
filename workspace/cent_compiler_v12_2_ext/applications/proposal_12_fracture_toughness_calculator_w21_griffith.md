@@ -17,7 +17,7 @@ W21, Griffith
 
 ## Pipeline (8 steps)
 
-Run `python3 tests/show_work.py` to see the full trace. The steps are:
+Run `python3 tools/compile_applications.py --strict` to see the full trace. The steps are:
 
 1. **¢ DAG decomposition** — formula parsed into atomic ¢ operations
 2. **∆ enumeration** — all valid physical implementations enumerated
@@ -48,6 +48,6 @@ Template: `opamp_sqrt` → `examples/proposal_12_opamp_sqrt.cir`
 ## How to Run
 
 ```bash
-cd cent_compiler_v1
-python3 tests/show_work.py                        # trace all 22 proposals
+cd cent_compiler_v12_2_ext
+python3 tools/compile_applications.py --strict                        # trace all 22 proposals
 python3 cent compile "stress_intensity_factor = stress * crack_length^(1/2)"                    # compile just this one

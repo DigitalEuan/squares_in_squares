@@ -2,36 +2,36 @@
   "id": "W35",
   "title": "Electrophysiology & Membrane Transport",
   "axioms": [
-    "membrane_voltage = temperature / valence",
-    "ion_flux = diffusion_coefficient * ion_concentration"
+    "membrane_voltage = gas_constant * temperature / (valence * faraday_constant)",
+    "ion_flux = diffusion_coefficient * ion_concentration / length_scale"
   ],
   "cases": [
     {
       "id": "W35-01",
-      "equation": "valence = temperature / membrane_voltage",
+      "equation": "valence = gas_constant * temperature / (membrane_voltage * faraday_constant)",
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "physically_supported",
-      "expected_dimensional_explicit": null,
-      "note": ""
+      "expected_dimensional_explicit": true,
+      "note": "Complete Nernst relation with gas constant and Faraday constant declared explicitly."
     },
     {
       "id": "W35-02",
-      "equation": "temperature = membrane_voltage * valence",
+      "equation": "temperature = membrane_voltage * valence * faraday_constant / gas_constant",
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "physically_supported",
-      "expected_dimensional_explicit": null,
-      "note": ""
+      "expected_dimensional_explicit": true,
+      "note": "Complete Nernst relation with gas constant and Faraday constant declared explicitly."
     },
     {
       "id": "W35-03",
-      "equation": "ion_concentration = ion_flux / diffusion_coefficient",
+      "equation": "ion_concentration = ion_flux * length_scale / diffusion_coefficient",
       "expected_dimensional": true,
       "expected_derivable": true,
       "physical_status": "physically_supported",
-      "expected_dimensional_explicit": null,
-      "note": ""
+      "expected_dimensional_explicit": true,
+      "note": "Fick flux rearranged with the required concentration-gradient length scale."
     },
     {
       "id": "W35-N1",
@@ -49,7 +49,10 @@
     "ion_flux",
     "membrane_voltage",
     "temperature",
-    "valence"
+    "valence",
+    "faraday_constant",
+    "gas_constant",
+    "length_scale"
   ],
   "dimensions": {
     "diffusion_coefficient": {
@@ -175,6 +178,72 @@
       ],
       "exponents": [
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "faraday_constant": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        0,
+        0,
+        1,
+        1,
+        0,
+        -1,
+        0,
+        0
+      ]
+    },
+    "gas_constant": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        2,
+        1,
+        -2,
+        0,
+        -1,
+        -1,
+        0,
+        0
+      ]
+    },
+    "length_scale": {
+      "axes": [
+        "L",
+        "M",
+        "T",
+        "I",
+        "H",
+        "N",
+        "J",
+        "A"
+      ],
+      "exponents": [
+        1,
         0,
         0,
         0,

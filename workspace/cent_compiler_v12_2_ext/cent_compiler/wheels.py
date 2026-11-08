@@ -6,7 +6,7 @@ This file reproduces the wheel definitions (W1..W10), the relation_vector
 machinery (with #p scalar prime tracking), the exact rational linear algebra
 (_rref, _solve, _null_space), and the case_table measurement.
 
-Run as:  python3 glm_wheels.py
+Run as:  python3 cent_compiler/wheels.py
 """
 from __future__ import annotations
 import ast
