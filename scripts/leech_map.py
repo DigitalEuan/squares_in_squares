@@ -309,6 +309,10 @@ def spearman(a, b):
     num = sum((p - ma) * (q - mb) for p, q in zip(ra, rb))
     da = math.sqrt(sum((p - ma) ** 2 for p in ra))
     db = math.sqrt(sum((q - mb) ** 2 for q in rb))
+    if da == 0 or db == 0:
+        # run 37: a constant series carries no ranks; the correlation
+        # is UNDEFINED, not zero. Report that instead of crashing.
+        return None
     return num / (da * db)
 
 
@@ -334,8 +338,10 @@ for lvl, st in lev_stat.items():
           f"improvement sum {st['improvement_sum']:.4f}, "
           f"waste mean {st['waste_mean']:.4f}, fields {st['fields']}")
 print(f"crosscheck cert-vs-fit: {cross_ok} agree, {cross_bad} differ")
-print(f"spearman(level, waste) = {rho_waste:+.4f}")
-print(f"spearman(level, improvement) = {rho_imp:+.4f}")
+print(f"spearman(level, waste) = "
+      f"{'UNDEFINED (constant series)' if rho_waste is None else f'{rho_waste:+.4f}'}")
+print(f"spearman(level, improvement) = "
+      f"{'UNDEFINED (constant series)' if rho_imp is None else f'{rho_imp:+.4f}'}")
 print("src x level:", json.dumps(cross_tab))
 unres = [r["n"] for r in rows if r["level"] == 0]
 print(f"unresolved (level 0): {len(unres)} -> {unres[:25]}")

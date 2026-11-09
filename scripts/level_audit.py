@@ -24,6 +24,7 @@ Output: /tmp/level_report.json + printed summary.
 """
 import json
 import math
+import os
 from collections import Counter
 from math import sqrt
 
@@ -106,12 +107,23 @@ def main():
     # 2. field fits
     print("\n=== 2. STAGED EXACT FIELD FITS ===")
     tab = json.load(open(TAB))
-    kb = json.load(open(KB))
     targets = {}
     for n in range(1, 1001):
         targets[f"table:{n}"] = tab[str(n)]["L"]
-    for k, v in kb.items():
-        targets[f"catalogue:{k}"] = float(v["s"])
+    if os.path.exists(KB):
+        kb = json.load(open(KB))
+        for k, v in kb.items():
+            targets[f"catalogue:{k}"] = float(v["s"])
+    else:
+        # run 37: kingbird.fracpi.com unreachable (curl http=000;
+        # reachable at runs 1-13) and no offline copy in the tree.
+        # The catalogue targets are SKIPPED WITH THIS NOTE, not
+        # silently: the table now dominates the catalogue at every n
+        # (atlas run 13 + Mishapolk run 30), so the census below is
+        # the table-only frontier — the form the audit must take to
+        # stay re-runnable offline (REPRODUCE §C).
+        print(f"[note] {KB} absent (kingbird mirror down at run 37); "
+              "census covers the 1000 table rows only")
     fields = Counter()
     fits = {}
     fails = []
