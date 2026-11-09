@@ -1,400 +1,654 @@
-# GLM × Squares-in-Squares — Investigation Report
+# Squares in Squares: Exact Construction, Verified Propagation, and the Measured Limits of Search
 
-**Inputs.** `upload/SKILL_v3.md` (718 lines), `upload/GLM_ACADEMIC_PAPER.md`
-(4,819 lines), `upload/GLM_Complete_Number_Theory_Evidence.md` (1,747 lines),
-the full repository `github.com/DigitalEuan/GLM` (cloned at
-`workspace/glm-repo/`: 3,954 files, 153 MB — Python package `glm_universal`,
-Lean development `RequestProject/GLM/`, studies, archive).
-**Context.** Our submission stands at score **23.284687** (grid ceiling
-28.937670; 399/1000 puzzles beat the grid), matching the published state of
-the art for every n ≤ 1000. The question this run: can GLM/SKILL_v3 assist
-another push — on the completed packings and on the still-trivial puzzles?
+**A machine-verified study in the GLM lineage**
+
+*Working paper — Run 35, 2026-11-07. Project: github.com/DigitalEuan/squares_in_squares.
+Parent study: the Geometric Language Machine (GLM), github.com/DigitalEuan/GLM.*
 
 ---
 
-## 1. What GLM and SKILL_v3 are (after the dives)
+## Abstract
 
-**SKILL_v3** is an *implementation concept* (a discipline, no code of its
-own beyond five self-contained scripts): every answer is decomposed into
-atomic claims; each claim is answered in three synchronised columns — plain
-English, exact mathematics (ℤ/ℚ/𝔽₂), and an executable stdlib-only Python
-re-derivation with **no floats, no random, no SHA-256 in computation**
-(UBP). Lean formalises what it can and names the rest as `sorry` with gaps.
-Refusals are named, never silent. Our whole workspace was already built as a
-TCT study — SKILL_v3 is the parent methodology of our pipeline.
+We study the *squares-in-squares* problem — pack *n* unit squares into a
+smallest square container of side *s(n)* — in the form of the Kaggle
+competition of the same name (1000 puzzles, *n* = 1..1000; score
+Σ(L/√n − 1), lower is better), as an application of the Geometric
+Language Machine (GLM) methodology: exact arithmetic only, every claim
+machine-verified, every negative result recorded as a finding. The
+delivered system stands at score **22.642387** (grid ceiling 28.937670;
+543/1000 puzzles below the grid ceiling; gap to the reported
+leaderboard best 22.0544214515 is 0.587965), with every one of the 1000
+packings SAT-verified and round-tripped through a 500,500-row CSV at
+12 decimals. The study contributes: (1) an exact, contact-identity
+derivation of the generalized Göbel family G(a₁,a₂,b,c) and its clipped
+variant — 77 gate-verified rows applied in the runs 9–10 sweeps (17 of
+them mid-band finds *beyond* the published catalogue), with the
+symmetric subfamily contributing 18 more in run 2 (including genuine
+beats at n = 861 and 921); 54 delivered rows carry the family labels
+today; (2) an exact propagation algebra
+(residue-diagonal band chains, removal closure, and two table laws),
+whose monotone-envelope law we *upgrade from an empirical check to a
+theorem* by formalizing the removal-closure fixpoint in Lean 4; (3) a
+measurement layer over all packings (SAT contact language, a TAX/NRCI
+measure from the parent study, a D⁴ symmetry census) that produced
+falsifiable, and falsified, hypotheses; (4) a complete negative record
+of local-search campaigns — the *stall law*: no search campaign in this
+project has ever produced one applied improvement, and every score move
+has come from analytic construction or source import; (5) a
+reproducible source-integration pipeline whose latest instance (run 35)
+imported nine registered world-record certificates (jlevy/squares
+T-243, T-257, T-267–T-273) for a measured gain of 0.003604, cascaded
+through the propagation algebra. The Lean 4 development
+(`workspace/lean/tct_squares`) carries the law layer: proved theorems
+(feedback into the system), cited axioms (literature premises), and one
+deliberate `sorry` marking the combinatorial-geometry wall that the
+whole field shares: no non-trivial *s(n)* has a closed-form proof of
+optimality.
 
-**GLM** is the *working system* that methodology produced: 8 registers of
-exact carriers on the Golay/Leech substrate, 31 query kinds, 67 report
-subjects, a stepwise planner that chains derivations, polynomial solvers
-(cubics/quartics by radicals, Zassenhaus factoring, Galois certificates for
-"no radical expression"), primality certificates (Pocklington, elliptic),
-414 Lean files with 0 sorry, and an evaluation of 237 CLI cases with zero
-confidently-wrong answers. Everything computes in exact rationals;
-irrationals are *processes* (delta-sigma feedback loops, Sturmian bit
-streams), not static values.
+---
 
-## 2. The honest capability map for our problem
+## 1. Problem, metric, and state of the art
 
-| GLM/SKILL faculty | Packing use | Verdict after this run |
+**The problem.** For each *n*, place *n* unit squares (arbitrary
+positions and rotations) inside a square container of minimal side
+*s(n)*. Squares must be pairwise interior-disjoint and contained in the
+container. The Kaggle *Squares in Squares* competition fixes *n* =
+1..1000 and scores a submission by
+
+  score = Σₙ (L(n)/√n − 1),
+
+where L(n) is the submitted container side; a missing puzzle is charged
+the trivial grid value ⌈√n⌉. Lower is better; the *grid ceiling* (all
+puzzles at the trivial grid) is 28.937670.
+
+**What is known.** Optimality is proved for very few counts: *s(n) = ⌈√n⌉*
+for the square/adjacent families (n = k², k²−1, k²−2, k²−3, k²−4; the
+area bound and the T-084/086/064/081 theorem families of the community
+register), a handful of individuals (s(2)=2 … s(5)=2+√2/2,
+s(11)=3.87708…, s(12)=4, s(13)=4, s(21)=5, …), and the classical small
+results (Stromquist 2003: s(10) = 3 + 1/√2). For the large majority of
+counts only *upper bounds* (verified packings) and weak lower bounds
+exist. The public frontier is maintained by the community register
+(jlevy/squares; results page at squaremath.org), by catalogue
+curations (Friedman's EJC DS#7 survey and its Ellsworth/kingbird
+mirrors), and by certificate repositories (evand/square-packing;
+Mishapolk/square-packing-records).
+
+**This study's position.** Our submission is the verified assembly of
+the best constructions available to the system at every count — its own
+analytic families and propagation, plus every externally sourced record
+that passed the verification gate. As of run 35: **22.642387**
+(exact 22.642386651), 543/1000 below the grid ceiling, 457 at grid
+(156 of them proven floors). The reported leaderboard best
+(22.0544214515) leaves a gap of 0.587965, which §10 decomposes.
+
+---
+
+## 2. Lineage: GLM → cent compiler → this project
+
+This project did not begin as a packing solver. It is a descendant of
+the **Geometric Language Machine** (GLM), a substrate-native reasoning
+system built on exact carriers (the extended binary Golay code, the
+Leech lattice, exact integer/rational arithmetic; no floating point on
+any path that feeds a result). Two GLM elements are load-bearing here.
+
+**TAX/NRCI.** The GLM's number-theory evidence defines a symmetry tax
+TAX(v) = HW(v)·Y + ‖v‖²/8 and a normalized coherence
+NRCI(v) = B/(B + TAX(v)) ∈ (0, 1] with Y = 1/(π + 2/π) ∈
+(0.264675, 0.264676), B = 10; NRCI = 1 exactly at the vacuum v = 0
+(Lean-proved in the parent study). §6.2 shows this measure, applied to
+the SAT data of the packings, separates the landscape into exactly two
+phases — and the separation is a *theorem* in our Lean layer
+(`nrci_eq_one_iff_zero`).
+
+**Delta-sigma as the irrational carrier.** Irrationals are carried as
+processes (feedback loops), never rounded statics. This is why a
+packing at exact tangency (√2 diagonals, arctan slopes) can be
+*compiled* rather than approximated: the survey record SVGs parse at
+20–100 digits; the community certificates arrive as exact rationals in
+the center basis t = tan(θ/2); the analytic families are closed-form.
+
+**The cent compiler.** The GLM's evidence was compiled into a physical
+compiler (cent compiler v12_2_ext, shipped in this repository's
+`workspace/`): an abstract operation is decomposed into atomic steps
+and realized on physical substrates ("wheels"). Two wheels are this
+project's engines: **W36** (Numerical SAT Substrate) became `packlib`,
+the exact verification gate every packing passes; **W37**
+(Viscoelastic Settling) became the pressure-settling search engine —
+whose campaign record (§7) is a measured null on this landscape.
+
+**Method discipline (SKILL_v3).** Every answer is decomposed into
+atomic claims; each claim carries plain English, exact mathematics, and
+an executable stdlib re-derivation; refusals are named, never silent.
+Concretely in this project: *no result without a script-computed
+ledger*; *no row enters the table without passing the gate*; *a null is
+a finding*.
+
+---
+
+## 3. Method: the operating loop and the honest gate
+
+**The gate (W36).** `scripts/packlib.py` verifies any candidate state
+of (x, y, θ) square placements by the separating-axis test over all
+four candidate axes per pair (penetration ≤ 0 required), bounding-box
+containment, and a global finalize step (scale (1 + 2·10⁻⁹), 12-decimal
+rounding) that guarantees the 12-dp CSV round-trip can never flip a
+contact into an overlap. Every packing in the table — imported or
+constructed — passes this gate. The one time the gate disagreed with a
+source (exact tangencies vs float tolerance, run 30) the *instrument*
+was corrected by 2·10⁻¹⁵, not the check skipped.
+
+**The loop.** Sources and constructions → gate → `table.json` (the
+system of record) → propagation channel (cascade3 → closure_apply →
+final_assembly, mandatory order) → `submission.csv` (500,500 rows) →
+independent rescore (`score_submission.py`) → instrumented audit
+(`root_audit.py`: chain-envelope fixpoint, aiming map, table laws) →
+documents updated together → git commit (the GitHub repository is the
+durability line; the sandbox has rolled back four times). All scripts
+resolve their own paths from the repository location; the offline
+verification chain is deterministic (~15 min).
+
+**Ledgers.** Every run writes measured outcomes to `workspace/push/*.json`
+and a narrative to `notes/`. Documentation claims must come from
+scripts — a rule written after run 27 caught hand-eyeballed diagonal
+memberships in this very document family (failure 11 of
+`NEXT_STEPS.md`).
+
+---
+
+## 4. Exact construction: the generalized Göbel family
+
+### 4.1 The architecture and the contact identity
+
+The family **G(a₁, a₂, b, c)** (run 9) places
+
+* a **diamond**: b columns × c rows of unit squares at 45°, centered in
+  the container (a solid b×c block in the rotated frame);
+* four **corner staircases**: axis-aligned triangles T(a) = a(a+1)/2 of
+  unit squares, depth a₁ at corners (0,0), (s,s) and depth a₂ at
+  (s,0), (0,s);
+
+with exact counts and constraints
+
+  n = a₁(a₁+1) + a₂(a₂+1) + b·c,
+  s = max( √2(b+c)/2,  a₁+1+√2·b/2,  a₂+1+√2·c/2 ),
+  a₁ + a₂ ≤ s.
+
+The container formula is a *derivation*, not a fit: the diamond's hull
+is the rotated rectangle |u| ≤ b/2, |v| ≤ c/2 (u = (x+y−s)/√2,
+v = (y−x)/√2); the staircase's far corner sits at x+y = a₁+1; the
+hull's near edge sits at x+y = s − √2·b/2; contact is the equality of
+the two. The feasibility inequality a₁+a₂ ≤ s is the adjacent-pair
+non-collision along a container edge. The whole family is closed-form
+algebra over √2 — the `staircase_cells` and `gobel_count` Lean lemmas
+carry its counting half.
+
+**What it produced.** Sweeping all (a₁,a₂,b,c) with n ≤ 1000 under
+packlib verification: 68 applied rows (17 mid-band finds *beyond* the
+published catalogue, 51 below-grid improvements; run 9), plus the
+clipped variant G(a₁,a₂,b,c,t) (run 10: remove t×t blocks at the four
+diamond corners — trade 4t² cells for √2·t on all four sides; 9
+applied, 5 of them real finds at high n). The earlier symmetric
+subfamily sweep (run 2: square diamond, equal depths — the survey's
+square-233.svg generalized) applied 18 rows including two *beats on
+open problems* — counts grid-tied in both our table and the survey:
+**n = 861: 30 → 29.849242** and **n = 921: 31 → 30.849242**. The
+strip/central-square family was swept and dominated (0 finds).
+
+### 4.2 Competing hypotheses, tested and recorded
+
+* **Golden-ratio hypothesis.** Record tilts cluster near atan(1/φ) =
+  31.717°, but the measured value is 31.5663° — 0.15° apart. φ is not
+  the generator; the near-miss is a negative result.
+* **Level escalation ("perhaps √3, not just √2?"; run 4).** The exact
+  θ-generalized family s(θ) = (2a·M + 2m + p)/(cosθ + sinθ) was
+  derived and swept at 7 special angles plus a 0.05° fine sweep: s(θ)
+  decreases strictly toward 45°; the minimum sits at exactly 45.00° for
+  every (a,p). The 45°/√2 level is simultaneously the family's floor
+  and ceiling — rotating away shrinks the diagonal gain (c+s) faster
+  than the staircase cost. √3 never wins at any n. First Q(√3)-level
+  packings were constructed as by-products (n=5: 1+√3, n=37: 4√3) —
+  both beat grid, both lose to the world records.
+* **Field census.** 54 exact certificates (`json/galois_certificates.json`,
+  1169 across the full angle-family sweeps): Q(√2)/C₂, Q(√3)/C₂,
+  Q(√7)/C₂ (genuine — e.g. s(18) = (7+√7)/2), Q(√(2+√2))/C₄
+  (x⁴−4x²+2, the real subfield of Q(ζ₁₆)), Q(√2,√3)/V₄ at 15°. The 16
+  biquadratic "fits" in the record data failed the residual test
+  (2.4e-9..1.6e-8 vs 1.8e-9 genuine). Levels are parallel branches, not
+  an escalation hierarchy.
+* **Family completeness (run 35 probe).** We tested whether any lattice
+  square fits around a family state that the family itself leaves out
+  (edge-wedge extensions beyond the staircases): for **all 217 frontier
+  cores** — every (a₁,a₂,b,c) whose family side beats or nearly beats
+  (within 0.01) the delivered table — the greedy maximal fill adds
+  **exactly zero squares**. The corner staircases are already maximal
+  lattice packings of their contact triangles; the step gaps admit no
+  unit square (max inscribed square in a legs-1 gap triangle has side
+  2−√2 < 1); wedge rows exist only for thin diamonds (b ≫ c), where the
+  contact geometry already assigns the room to the opposite staircase
+  and the swept a₂ parameter covers it. *The family is lattice-maximal
+  at the frontier* — a measured statement closing the "wedges" avenue.
+
+### 4.3 The analytic-vs-search verdict
+
+Every applied improvement in this project's construction layer came
+from contact-identity derivations of families — not from numerical
+search (§7). The motif barrier that defeated every settle engine (a
+collective crystalline reorganization) is *trivially crossed by
+construction*: the mid-band's craved collective motif is the 45°
+diamond with staircases. This is the project's central methodological
+lesson, and it aligns with the 45-year literature experience on these
+puzzles.
+
+---
+
+## 5. The propagation algebra: one record becomes many
+
+No improvement enters the table as a single row. Every breakthrough is
+multiplied by exact propagation laws before it lands
+(`scripts/cascade3.py`, `scripts/closure_apply.py`).
+
+### 5.1 Residue-diagonal band chains (the chain law)
+
+Rows live on residue diagonals: for n with K = ⌈√n⌉, the diagonal is
+c = n − (K−1)². **Law:** a record at L(m) converts every member n ≥ m
+of the same diagonal to L(n) ≤ L(m) + (K(n) − K(m)) — extend the
+record's packing with one band strip per shell, placed in the free
+margin of the L+1 container computed from the actual bounding box.
+Verified example: the T-263 register record s(299) = 17.801238535867
+(K=18) → L(334) = 18.801238537761 (+1) → L(371) = 19.801238537765
+(+2), the extensions binding at equality up to 2·10⁻⁹ storage noise.
+Run 35's imports produced one such conversion (n=338 from the n=303
+record: L(303)+1 = 18.9018327 < previous 18.9063328). The Lean
+development carries the arithmetic half: `ceil_sqrt_mono` (K is
+non-decreasing) and `chain_value_mono` (chain values never decrease
+along a diagonal — so `cascade3.py` may take per-n minima in any
+order).
+
+### 5.2 Removal closure (the prefix-min envelope)
+
+Removing squares never grows a bounding box, so every n < m inherits
+L(m) for free: F(n) = minₘ≥ₙ L(m). `closure_apply.py` realizes the
+greedy removal (drop the square whose removal shrinks the bbox most),
+iterated to fixpoint because a smaller L at n can itself serve n' < n.
+18 delivered rows carry the `closure` label; the run-30 Mishapolk
+import's channel post-processing re-earned 12 of its 221 rows at
+deeper values (8 band chains, 4 removals) — the channel pays
+dividends *after* imports.
+
+### 5.3 The table laws — and their upgrade to theorems
+
+Two invariants hold on the delivered table, checked every run by
+`root_audit.py` (run 35: monotone 999/999 clean, shell 937/937 clean
+at tolerance 1e-7):
+
+* **Monotone envelope**: L(n) ≤ L(n+1) for all adjacent pairs.
+* **Shell law**: L(n + 2⌊L(n)⌋ + 1) ≤ L(n) + 1 — adding 2⌊L⌋+1 squares
+  to a packing at container L costs at most one more unit (the two new
+  bands fit around the existing bbox).
+
+The monotone envelope is no longer merely empirical. In
+`workspace/lean/tct_squares/TCT/Laws.lean` we formalize the envelope
+(prefix-min over the upper tail), the removal-closure fixpoint, and
+prove:
+
+> **Theorem (`closure_fixpoint_monotone`).** A side table at
+> removal-closure fixpoint satisfies L(n) ≤ L(n+1) on its window.
+
+The root_audit "999/999 clean" is the measured instance of this
+theorem on the delivered table; the theorem is the *reason* the check
+passes, and any future table violating the law would be evidence of a
+broken closure, not of a packing phenomenon. The shell law's count
+core (m + 2L + 1) is the earlier `cascade_count_symbolic` lemma.
+
+### 5.4 What the channel has paid (measured)
+
+| event | gain |
+|---|---|
+| run-13 register import (76 records), direct | 0.050264 |
+| — chain conversions on those records (33 rows) | 0.013671 |
+| T-263 s(299) import + cascade (run 26) | 0.003559 |
+| **Mishapolk 221-row import + channel (run 30)** | **0.173983** |
+| **run-35 register records (T-243/257/267–273) + channel** | **0.003604** |
+| total closed since run 13 | **0.245081** |
+
+---
+
+## 6. The measurement layer
+
+### 6.1 The SAT contact language (`sat_review.py`, run 28)
+
+Per-pair separating-axis data over all 1000 packings (1,806,403 pair
+contacts): 51.5% have exactly 2 tight SAT axes (parallel edge or
+non-parallel corner), 47.5% have 4 (parallel corner), 1.0% are generic
+single-tight contacts; 3-tight is structurally empty. The construction
+classes (grid/chain/closure/göbel) are ≥ 99% parallel; the record
+classes carry the generic contacts (run18-frontier 8%). The grid rows
+have nearest non-contact gap exactly 1.0 — the grid is *provably rigid
+at the pair level*, which converts the search nulls on grid rows from
+anecdote to measurement.
+
+### 6.2 The TAX/NRCI measure (`sat_measure.py`, run 29)
+
+The binary layer of the SAT data is the **symmetry tie** (both axis
+families see the same two directions). The tie residual is sharply
+bimodal: tied ≤ 5e-12, generic ≥ 1.1e-8 — a 3.3-decade empty gap;
+"parallel" is a measured property, not a tolerance choice. Carrying the
+contact word as the carrier: SAT-TAX = g·Q (g generic contacts,
+Q = Y + 1/8 from the parent study), SAT-NRCI = 10/(10 + SAT-TAX).
+Findings:
+
+1. **The vacuum (NRCI = 1) is exactly the grid rows** — now the Lean
+   theorem `nrci_eq_one_iff_zero` (Q > 0 suffices).
+2. The only off-vacuum *provable* rows are the four hand-proved
+   packings (n = 5, 11, 17, 19); the provable frontier off the vacuum
+   is the generic language at small n.
+3. Depth is not bought with genericity (frontier-only correlation
+   φ vs depth = −0.61): the landscape is two-phase — a vacuum phase
+   (lattice-tied; depth via chain arithmetic at large n) and a generic
+   phase (small n, where every known proof lives). [Re-measured after
+   the run-30 import: +0.14 on the full table — every published
+   correlation carries its row set, `NEXT_STEPS.md` failure 15.]
+
+### 6.3 Symmetry census (`symmetry_audit.py`, run 31)
+
+D⁴ census over all 1000 packings: constructions are majority-symmetric
+(gobel2/gobelS 100%, chain3 76%, exact 71%, closure 72%) but every
+record class is asymmetric (mishapolk 0% — 209/209 C1; run18-frontier
+5%). Symmetry is the signature of the parametric classes that already
+sit below the frontier — not a route to depth. A record-seeded
+insertion campaign built on this census closed by null (the records'
+free area is a thin seam fragmented across 51 orientations; best first
+candidate overlaps by +0.257), matching Karimi's observation that his
+next-shell strip jumps +8 squares: there is no +1 route.
+
+### 6.4 The aiming map (`root_audit.py`)
+
+The instrument computes, after every table change: the chain-envelope
+fixpoint (0 rows above the envelope required), the proven-floor set
+(156 rows), and the leverage of a hypothetical record at every open
+row (conversions through the channel). Current best aim: **c=32,
+n=356** (a T-263-depth record there converts 14 rows, value 0.011102);
+one such record at every diagonal's first open row is worth 0.375304
+(63.4% of the gap). The map is why campaigns are aimed by instruments,
+never by eyeball.
+
+---
+
+## 7. Search is measured, and measured to be null here
+
+The W37-derived pressure-settling engine (exact analytic gradient
+through the SAT stack, pressure ramp, L-BFGS-B creep) and the
+simulated-annealing push were run hard and recorded honestly:
+
+* **Run 6 / 18**: campaigns abort per the run-6 rule on feasibility
+  miss; local dynamics cannot cross the rearrangement gap.
+* **Run 19 (oracle study)**: the settle-in channel cannot *hold* a
+  known solution (E1 basin 0/10 at all noise levels); cold restarts
+  1/40 (the n=5 pinwheel).
+* **Run 20 (the stall law)**: at target depth d below grid, terminal
+  settle penetration is p ≈ 0.45–0.88·d across every tested delta;
+  p → 0 only as d → 0. 132 template attempts: 0 finds.
+* **Run 22**: soft relaxation can *re-harden* a gap-throttled tight
+  target (4/16 hops at n=5) — the pass-through channel — but needs a
+  target that exists.
+* **Runs 23–25, 30 (P2, closed for good)**: 64/64 cells of
+  motif-seeded numerical polish: 0 finds. The T-263 family's 41
+  floating squares do not settle deeper by contact-graph re-breaking.
+* **Run 5 (the fork program)**: the GLM tie-resolution framework
+  (Golay d=4 six-fold ties; carried forks; four resolution mechanisms)
+  was mapped onto packing jams and tested with full pressure: 30/30
+  structural-seed classifications RIGID_WALL (ρ = 1.000, n/n
+  contacts; the clean grid seed has overlap exactly 0 — a perfect
+  crystal); the positive control (n = 5 and 12, where below-grid
+  optima are famous) failed from grid seeds 0/30 calls. In square
+  packing the crystalline tie is a **lock**, not a d=4 ambiguity:
+  all branches carry the same state, so there is nothing to
+  discriminate and no key to supply. Every structural wheel tried
+  (tilted grids, mirror splits) certified dead by exact inequalities.
+* **Run 35 (wedge extensions)**: family-completeness probe (§4.2):
+  0/217 frontier cores admit any extra lattice square.
+
+**The honest ledger: no search campaign in this project has ever
+produced a single applied improvement.** Every score move came from a
+construction family or an import. This is a measured property of this
+landscape (the stall law + the motif barrier), not a limitation of the
+engines in general — and the engines' real role is the verification
+gate and refinement, which is where they have delivered throughout.
+
+---
+
+## 8. Source integration: the record frontier
+
+Sources beat search — every score move since run 9 has been an import
+or a construction. The gate discipline (§3) makes import safe: every
+external packing is re-verified exactly as our own constructions.
+
+**The register (jlevy/squares; squaremath.org results page).**
+Attributed records with T-ids, exact certificates, and independent
+re-verification. Runs 13/18 (76 records, 0.050264 + 0.013671 cascade)
+and run 26 (T-263, the s(299) fault-line record, 0.003559) were the
+pre-run-30 imports.
+
+**Mishapolk/square-packing-records (run 30).** `upper_bounds.json`
+carries verified bounds at *all* 1000 counts — the band 325..1000 had
+been invisible to the n ≤ 324 atlas. 221 exact certificates imported
+(center basis t = tan(θ/2)): 22.819978 → 22.645991 (−0.173983) — the
+largest single import of the project.
+
+**Run 35 (this study's latest).** The source watch found the register
+moving: Evan Daniel's certificate pipeline (evand/square-packing)
+registered **nine new upper bounds** — T-243 (n=182), T-257 (n=172),
+and T-267–T-273 (n = 175, 204, 260, 268, 293, 303, 304) — each below
+our table and below every previously public bound at its count. All
+nine certificates were mirrored (`workspace/sources/candidates/`),
+parsed exactly, and passed the gate; applied with the attribution map
+(ledger `workspace/push/import_candidates35.json`):
+
+| n | side before | side after | record |
+|---:|---:|---:|---|
+| 172 | 13.618988959 | 13.617935700 | T-257 |
+| 175 | 13.764174319 | 13.764050053 | T-267 |
+| 182 | 13.974090715 | 13.970916438 | T-243 |
+| 204 | 14.808642842 | 14.804361386 | T-268 |
+| 260 | 16.645753252 | 16.633520953 | T-269 |
+| 268 | 16.878814823 | 16.872499520 | T-270 |
+| 293 | 17.634146343 | 17.623065214 | T-271 |
+| 303 | 17.909772219 | 17.901832753 | T-272 |
+| 304 | 17.929427760 | 17.920944095 | T-273 |
+
+The channel then converted n = 338 (chain3 from the 303 record):
+22.645991 → **22.642387** (direct 0.003359 + cascade 0.000245).
+Lineage follows the register's own attributions (172 continues the
+s(199) record of Nate Chaoweeraprasit, improved by Siddharth Gupta;
+204 continues Daniil Ostashev's s(176); 260 continues Kirill
+Tymchishin's s(260); 293 is the 260 packing mirrored plus an L-strip).
+The standing weekly watch (`fetch_atlas.py`, `fetch_mishapolk.py`,
+`fetch_candidates.py` — all idempotent) now covers all three sources.
+
+**Claims we cannot use.** Side-only claims (Kaggle per-puzzle
+leaderboard rows without coordinates) are recorded in the register
+issues and deliberately not imported — a side without a verifiable
+packing is not a result under our gate. Karimi's two-strip
+constructions live at n ≥ 1184 (outside our range), but his **window
+theorem** (s(n) < K for all n ≤ K² − 8√K − 19, K ≥ 16; exponent
+improved 3/5 → 1/2 over Bui/McClenagan) is the certificate shape for
+our mid-band rows: it proves sub-grid *existence* exactly where our
+aiming map points.
+
+---
+
+## 9. Formal verification layer (Lean 4)
+
+`workspace/lean/tct_squares` (Lean 4 v4.8.0 + Mathlib) is the
+project's proof tier, in three modules:
+
+* **`TCT/Basic.lean`** — premises and arithmetic witnesses: literature
+  axioms (Friedman survey data; Nagamochi s(k²−2)=s(k²−1)=k; Stromquist
+  s(10)=3+1/√2; competition metric; engine instrument; optimality
+  open) and closed lemmas (`cascade_count_symbolic` — the shell count
+  m+2L+1, closed with `omega`; `verification_margin_soundness` — a
+  square is never negative). One **deliberate `sorry`** remains:
+  `s11_optimal_value` — no closed characterization of s(11) (or any
+  non-trivial s(n)) is known; it marks the combinatorial-geometry wall
+  the whole field shares.
+* **`TCT/Layers.lean`** — the perception-layer lattice (Substrate /
+  Integer / Rational) with the run-11 boundary: the sharp scan-blindness
+  lemma (`scan_blind_to_clearance`) — a 12-dp value scan cannot certify
+  at the table's clearance scale — the formal counterpart of the
+  measured audit that moved all certification to exact certificates.
+* **`TCT/Laws.lean`** *(new, run 35)* — the law layer of §5–6, and the
+  paper's formal core:
+
+| formal statement | status | system role |
 |---|---|---|
-| Exact arithmetic (Fraction/Decimal, 20–100 digits) | Parsing record SVGs whose side lengths are algebraic numbers (degree up to 18); our `parse_all_svgs.py` already does this | already in use; essential |
-| Polynomials in radicals + Galois no-radical certificates | Classifying record s-values (the survey prints root polynomials); deciding which records can be expressed closed-form | available, cosmetic for scoring |
-| Delta-sigma irrational carriers | Carrying √2-family constants in constructions | equivalent to what we do with Decimal; no edge |
-| Delta-sigma as a *dynamics* (loop chases a signal) | **This is the interesting one** — see §3 | partial match with SA; not stronger |
-| Stepwise planner (chains, stitched steps) | Our pipeline is exactly a plan: records → removal windows → chains; TCT would formalise it | methodology already adopted |
-| Lean verification tier | Verifying packings is SAT+geometry, decidable by numpy; Lean adds kernel-level proof of the verifier, not of packings | we verify every packing computationally; equivalent assurance for this purpose |
-| UBP no-floats | Our **search** needs simulated annealing (floats, randomness) — forbidden by UBP | GLM would refuse the search; see §4 |
+| `prefixMin_le` / `prefixMin_mono` | proved | removal closure: envelope ≤ covered row; monotone in window start |
+| `closure_fixpoint_monotone` | proved | **feedback**: the monotone-envelope table law is a corollary of the closure fixpoint |
+| `staircase_cells`, `gobel_count`, `gobel_square_count`, `diamond_bbox_square_case` | proved | the Göbel family arithmetic the sweeps use |
+| `ceil_sqrt_mono`, `chain_value_mono` | proved | the chain law never converts downward along a diagonal |
+| `nrci_eq_one_iff_zero`, `nrci_lt_one_off_vacuum` | proved | the run-29 vacuum theorem (NRCI=1 ⟺ grid rows) |
+| `sq_floor_of_area_bound` | proved | perfect-square proven floors from the area bound |
+| `Packable`, `area_bound` | axioms | the packing predicate and the measure bound, cited (certified per-row by packlib, not by this development) |
 
-## 3. The delta-sigma analogy — what we actually tried
-
-The one GLM faculty with a real mathematical claim on packing search is the
-wobble: a deterministic feedback loop that converges onto a target from any
-start, with error bounded by the loop's order (MASH 1-1 cascade: error
-becomes a second difference). Our simulated annealing is the same *shape*:
-penalty in, configuration out, converge to zero violation. The differences
-that matter:
-
-1. Delta-sigma converges on **linear** quantities (running means); our
-   target (zero overlap under rotation) is a non-convex constraint surface.
-2. Delta-sigma has no barriers; SA has exactly the barrier problems we hit
-   this run (collective-rotation jams, rigid record geometry).
-3. Determinism: SA with fixed seeds is exactly reproducible — our whole
-   campaign is deterministic in that sense; UBP's ban is on *float drift*,
-   not on reproducibility, and our verification path (packlib) is exact.
-
-**Conclusion:** the wobble does not give a stronger solver for this problem
-class. What it gives — and what we took — is the *discipline*: exact
-verification, named refusals, negative results as first-class findings.
-
-## 4. Where GLM would refuse — and we agree
-
-GLM refuses to *guess*. A packing that cannot be derived or verified is not
-submitted. Applied here: the 601 grid-tied puzzles are **open problems**;
-our previous run proved the chain-reach limits per block and matched the
-survey exactly. This run's push campaign (below) is the honest attempt at
-the open ones; every find must survive `packlib.verify` (SAT non-overlap,
-containment) at 1e-9 before it enters the table — nothing enters by
-annealer's word alone.
-
-## 5. The push campaign (this run) — outcome
-
-**Engine** (`scripts/sa_push.py`): vectorized simulated annealing; penalty
-math is exact (self-test agreement with packlib's SAT at 1e-9); collective
-moves (global rotation, row shifts) included; container violations weighted
-4×. A 9-configuration schedule probe (`scripts/probe_sa.py`) over the two
-archetypes — Stage A (compressed chain3 packing, residual 2.6e-4) and Stage
-B (grid seed at container g−0.02) — found **no configuration that clears
-either**. Stage A freezes at the seed residual under every schedule; Stage
-B's hot starts wreck the grid and cold starts freeze. This is the motif
-barrier, now documented numerically: the reorganization needed is
-collective, and local-move annealing does not find it — the same conclusion
-as the literature's 45-year experience with these puzzles.
-
-**The productive route — analytic families (sources beat search, again).**
-Re-deriving the Göbel-square family from the survey's square-233.svg
-(a=7, b=11) — a b×b diamond of 45° squares plus four T(a) staircases,
-contacting on x+y = a+1 — and sweeping all constrained (a, b) produced
-**18 verified improvements** (`scripts/gobel_squares.py`), including two
-genuine beats on puzzles that were grid-tied in *both* our table and the
-survey (open problems): **n=861: 30 → 29.849242** and **n=921: 31 →
-30.849242**, plus structural beats at 489, 636, 688, 964. Re-running the
-cascade fixpoint with the new bases propagated 32 more chain improvements.
-Final: score **23.284687 → 23.193864**, 399 → **406/1000** beating the grid.
-
-## 6. How GLM could assist further (concrete, ranked)
-
-1. **Delta-sigma planner for the shrink ladder.** Not as a solver — as a
-   *controller*: replace fixed-step shrink with feedback on measured
-   residual overlap (order the loop, second-order cascade). Worth one
-   experiment on the best Stage-A targets.
-2. **Sturmian read of contact sequences.** The compressed packings have
-   Sturmian structure in their contact sequence (as GLM proved for the
-   wobble: algebraic targets → strong negative lag-1 autocorrelation). A
-   detector could classify which jams are one-parameter families (fixable
-   by global moves) vs. genuinely rigid (not fixable) *before* spending
-   anneal time.
-3. **Galois certificates on any new record we find.** If the campaign
-   lands a find at an algebraic L, GLM's polynomial machinery can classify
-   it (radical / no-radical) for the survey-format report.
-4. **Lean tier for the verifier.** `packlib.verify` is numpy; a Lean port
-   would give kernel-checked verification of the *verifier*, raising the
-   assurance ceiling for competition audits. Estimated 2–3 files of real
-   analysis; only worth it if the competition demands it.
-
-## 7. Bottom line
-
-GLM's substrate (Golay/Leech) has no direct purchase on 2-D square packing
-— the effective parts are its *disciplines*: exact verification, honest
-refusals, sources-beat-search. Those we already run; this run added the
-annealing push under them, with GLM's negative-result convention applied.
-See `push/log_*.txt` and `finds_*.json` for the raw campaign record.
+The feedback loop the user asked for is now concrete: the Lean layer
+does not merely describe the system — two of its theorems
+(`closure_fixpoint_monotone`, `nrci_eq_one_iff_zero`) *explain why
+measured checks pass*, and their hypotheses (closure fixpoint, Q > 0)
+become machine-checkable requirements on the Python channel and the
+measure constants. A future refinement cycle can treat the root_audit
+laws as theorem instances: if one fails on a candidate table, the
+closure or the finalize step is broken — not the mathematics.
 
 ---
 
-## Addendum — Second push (the "wheels" run)
+## 10. Results
 
-**Inputs this run.** The owner's strategic brief: provide the "wheels"
-(parameterized families) rather than expect a solver; consider golden-ratio
-and other constants as potential wheels; multi-square rigid macro-units as
-dimensionality reduction.
+**Score ledger** (grid ceiling 28.937670 throughout):
 
-**What was done.**
-1. *Survey re-fetch.* squaring.net is live but reorganized; the equal-squares
-   family pages are gone (404) and archive.org is unreachable from this
-   sandbox. The catalogue pages that remain (cpss, s-pss, …) belong to the
-   *squared-squares* (integer dissection) class, not equal-squares packing.
-   Conclusion: no new geometry source exists beyond what we already
-   integrated.
-2. *Motif zoo (from our own verified data).* All 1000 table packings
-   classified by angle signature: 191 signatures. The 45° family dominates
-   (Göbel-square outputs and their chains). Two findings of the constants
-   kind: (a) the **golden-ratio near-miss** — record packings exist with
-   tilt 31.5663°, but atan(1/φ) = 31.717°: 0.15° apart, so φ is *not* the
-   generator; these are numerically optimized sporadics. (b) the 45°±2.3522°
-   symmetric pair (42.6479°/47.3522°) in the n=259 family: exactly mirrored
-   about 45°, but no rational tangent (p/q, q≤100, 1e-6) and no radical
-   closed form — again sporadic.
-3. *Family exhaustion proof (sweep argument).* The Göbel-square family
-   n = 2a(a+1)+b², s = a+1+b√2/2 was swept over ALL (a,b) with n ≤ 1000
-   under the contact constraint last run; every valid member that beat the
-   table was applied (18, including the survey's own missing members 861
-   and 921). This run confirmed by enumeration: no further members exist
-   below 1000. Asymmetric-depth variants (a≠c staircases) force a≠c ⇒
-   non-square container — dead end, verified by the contact identity.
-4. *Residue-coverage map.* chain3 covers r ≤ 18 per block k²..(k+1)²−1
-   (r ≤ 21 for k = 30, where last run's mid-band bases landed). The
-   remaining grid-tied puzzles concentrate exactly at r = 19..2k —
-   the mid-band. These are open problems: no published construction
-   exists (survey gaps), SA probe (9 configurations) cannot cross the motif
-   barrier, and no parametric family in the verified literature covers them.
+| stage | score | beats grid | note |
+|---|---:|---:|---|
+| runs 1–2 | 23.19 | 399 | survey SVGs + first Göbel sweeps |
+| runs 3–8 | 23.173640 | 407 | catalogue front confirmed; √3/fork programs null |
+| run 9 | 22.897558 | 445 | full G(a₁,a₂,b,c): 17 mid-band finds |
+| run 10 | 22.887471 | 448 | clipped family; pocket-fill structurally negative |
+| runs 13–25 | 22.823536 | 454 | register import + chains; P2/P1 closed |
+| runs 26–29 | 22.819978 | 454 | T-263 + cascade; measurement layer built |
+| runs 30–34 | 22.645991 | 543 | Mishapolk import (−0.173983); analysis, nulls, recovery |
+| **run 35** | **22.642387** | **543** | **9 register records + cascade (−0.003604)** |
 
-**Verdict on the wheels concept.** The GLM-style "provide the wheels, not a
-solver" doctrine produced this project's only two score jumps: the survey
-SVG integration and the Göbel-square sweep — both were wheels, and both are
-now exhausted for n ≤ 1000. The constants wheel (φ) was tested against the
-data and measured as a near-miss, not a generator — recorded as a negative
-result. The macro-unit (multi-square rigid block) idea is exactly what the
-chain/cascade planners already do at the construction level; as a search
-dimension it inherits the same motif barrier.
+**Delivered census** (script-computed, run 35): grid 457 · mishapolk
+207 · chain3 88 · exact 77 · run18-frontier 68 · gobel2 34 · gobelS 18
+· removal 18 · closure 18 · register 10 · aux 3 · gobel3 2. Every
+below-grid row (543) is either a verified construction, a verified
+import, or a verified propagation of one.
 
-**Score stands at 23.193864** (406/1000 beat grid). Every verified
-improvement found across both pushes is in the table; the frontier beyond
-it is genuinely open research — the honest GLM-style refusal.
+**Certification** (all re-verified from disk): 1000/1000 packings
+SAT-verified (worst penetration ≤ 0, bbox containment, 2e-9 clearance);
+submission.csv 500,500 rows, id continuity 0..500499, 12-dp round-trip
+0 issues; Golay/Leech layer 28/28 + 14/14 integer-exact assertions
+(Λ₁₆'s kissing number 7320 cited from SPLAG, not verified — marked);
+1169 algebraic certificates; 156 proven floors; table laws clean
+(monotone 999/999, shell 937/937); chain-envelope fixpoint true.
+
+**The gap, decomposed** (0.587965 to the reported leader): 305 open
+rows remain (all at diagonal distance r = 2K−1−c ≥ 5). A uniform depth
+d\* = 0.0365 across them reproduces the leader exactly; the area bound
+on the open rows allows 5.005 (theoretical ceiling). The aiming map's
+aggregate (one T-263-depth record at every diagonal's first open row)
+is 0.375304 — 63.4% of the gap — with the best single aim at n = 356.
 
 ---
 
-## Addendum — Third push (directive: GLM-assisted geometric optimization)
+## 11. Open problems and forward map
 
-**Score: 23.193864 -> 23.173640** (406 -> 407/1000 grid beats). One real
-gain, cleanly proven; the rest of the directive was audited honestly.
-
-### The gain: the removal-closure was missing (again, in the other direction)
-
-Last run added the Göbel members but never re-ran the global closure:
-F(n) = min L(m) over m >= n. Every n < m inherits L(m) for free by dropping
-squares. 19 entries improved, all verified (SAT + containment, 1e-9):
-18 chain values lowered + the gem **n=860: 30.0 -> 29.85 (removal from the
-861 Göbel member)** — the last run's family sweep created the base and the
-closure finally harvested it. Fixpoint in one pass (script:
-`scripts/closure_apply.py`). The lesson is now enforced: closure is
-re-run after ANY table change (checked into the loop order).
-
-### Audit of the directive's premises
-
-* *Near-miss list (n=11@3.98 etc.): stale.* Those came from the pre-survey
-  logs. All are survey records now. The only live small grid-tied are
-  n=12,13 — both AT the published catalogue value 4.0 (open for decades).
-* *n>1000 "uncontested score reductions":* no. Kaggle scores 1..1000 only;
-  L>32 packings don't propagate into the table; the ONE crossover window
-  n in (1000,1024) with s<32 was tested exactly: largest Göbel member under
-  s=32 is n=964 (s=31.556); the next member (a=16,b=22) is n=1028 at
-  s=32.56 — too big; chains from below land at >=32.5; catalogue has
-  nothing there. Open by exhaustion, all routes measured.
-* *New source found (better than expected):* the kingbird.myphotos.cc
-  mirror — Davidebyzero's maintained live version of Friedman's catalogue,
-  actively updated (record n=2043 improved Sep 2026, credits "Claude Opus 5
-  and Claude Fable 5"). Parsed 164 records: **zero real imports for
-  n<=1000** (all diffs ~1e-9 = our +1e-9 safety inflation). Independent
-  confirmation the table is AT the published frontier. Its 4 records above
-  1000 (1453, 1765, 1850, 2043) were imported into the new extended table.
-
-### §2 machinery — implemented, measured, wall confirmed
-
-* Delta-Sigma shrink controller: implemented (2-integrator modulator,
-  geometric step clamp 5e-4..2e-2). n=12/13 jam immediately at 3.995;
-  classifier says RIGID_WALL, cycle budget not committed.
-* Sturmian contact classifier: lag-1 autocorrelation of the contact
-  bit-stream. n=12, 13: rho=1.000, all squares touching — crystalline
-  jam, motif change needed. All 10 roomiest mid-band targets (803, 748,
-  983, 804, 862, 695, 749, 984, 922, 696): RIGID_WALL at seed level
-  (rho=1.000, every square in contact). Cost measurement that justified
-  seed-level classification: ONE 20k-move anneal at n=803 ran >150s
-  (full 120k attempt ~15min) — the classifier exists precisely to not
-  pay that. Verdict consistent with the catalogue having nothing there.
-
-### §3 artifact (no-score by domain, delivered as data)
-
-`extended_table_5000.json` (n=1001..5000): 4 catalogue records imported
-with states (1453@38.628, 1765@42.488, 1850@43.488, 2043@45.696 — the
-last is the Sep-2026 record), 29 Göbel members verified, closure with
-77 numerical spot-checks (every 50th entry) on top of the theorem,
-+1 forward bound; 805/4000 entries beat grid by bound. States kept only
-for real constructions (33 entries); grid states regenerable by formula.
-Submission untouched: format is 1..1000 by rule.
-
-**Standing: 23.173640, 407/1000, zero real imports available from the
-world catalogue, mid-band classified RIGID_WALL at seed level.** The next
-gain, anywhere, is a new world record by definition.
+1. **The 305 open rows** are open in the strong sense: zero are proven
+   optimal anywhere; the published frontier (register + Mishapolk +
+   kingbird catalogue) has nothing below our values except the
+   side-only claims we cannot verify. The next gain anywhere is a new
+   world record by definition.
+2. **The source watch (P3) is the only standing item that has paid**
+   (runs 13, 22, 26, 30, 35). Three idempotent fetchers now cover the
+   atlas, Mishapolk, and the evand candidate pipeline; the register's
+   issues are the alert channel.
+3. **Karimi's window theorem** is the right certificate shape for the
+   mid-band: if the two-strip constructions are ever optimized below
+   n = 1184, import directly (P3).
+4. **Certification completeness (P5)**: extend the Lean build with the
+   chain-envelope fixpoint checker as a theorem instance; exact
+   Fraction replays of imported states; formalize the shell law's
+   band-existence half (currently count-only in Lean, existence by
+   construction in `cascade3.py`).
+5. **Family research beyond the lattice frontier**: §4.2 closes lattice
+   wedges; the remaining construction avenues are new *architectures*
+   (non-lattice corner fills, partial clips of the clipped family,
+   two-strip classes at small angles) — each is a derivation task, not
+   a search task, by this project's central lesson (§4.3).
 
 ---
 
-## Addendum — Fourth push (level-escalation hypothesis: √3)
+## 12. Reproducibility and guarantee
 
-**Question.** The user read the RIGID_WALL jam as numerical complexity
-escalation — "perhaps √3, not just √2?" — and asked for Delta-Sigma /
-Sturmian / Galois work ("as suggested": of these, Delta-Sigma and Sturmian
-were ours; Galois certificates were not previously suggested — noted for
-the record).
+The repository is the complete working state. The offline chain
+(`REPRODUCE.md`) re-derives everything from the files on disk:
+`packlib.py` self-tests → submission round-trip + independent rescore →
+Golay/Leech assertions → field map → figures. The importers
+(`import_atlas.py`, `import_mishapolk.py`, `import_candidates.py`) are
+idempotent and resume-safe; the channel order (cascade3 →
+closure_apply → final_assembly) is mandatory; `root_audit.py` gates
+every run (fixpoint, laws, aiming map).
 
-**Down-level audit first.** Zero of the 593 grid-tied n are proven
-optimal anywhere (all 61 "Proved" catalogue entries prove non-trivial
-optima). So the wall is empirical, and any level hypothesis must be
-tested constructively, not by proof.
-
-**Three-layer test, all layers delivered:**
-
-1. *Empirical level map.* Angle histogram: 0°/45° only in constructed
-   packings; 880 "non-standard" angles are the numerical records' free
-   tilts (only 5% are rational slopes). Field fits (strict): Q(599) ∥
-   Q(√2)(293) ∥ Q(√7)(24, genuine — e.g. n=18 = (7+√7)/2) ∥ numerical
-   (209). The 16 biquadratic fits were all chance (residual test:
-   2.4e-9..1.6e-8 vs genuine 1.8e-9). Levels are PARALLEL branches, not
-   an escalation hierarchy; √3 appears nowhere in the known universe.
-
-2. *Constructive escalation test.* Exact θ-generalized Göbel family
-   (rotated block + corner staircases), tight algebra
-   s(θ) = (2a·M + 2·m + p)/(cosθ+sinθ), verified states at 7 special
-   angles (45/30/22.5/15/atan(1/3)/atan(1/2)/atan(3/4)) plus a 0.05° fine
-   sweep: s(θ) strictly decreases toward 45°; the minimum sits at exactly
-   45.00° for every (a,p). √3/30° never beats √2/45° at any n. Mixed
-   45°+30° two-block structures (both blocks on the container diagonal):
-   36 verified packings, none beat even grid (diagonal alignment is the
-   family's binding weakness; mixing levels buys nothing).
-
-3. *Galois/exact-field certificates.* 54 certificates
-   (galois_certificates.json): minimal polynomials + Galois groups via
-   sympy: Q(√2)/C2, Q(√3)/C2, Q(√6)/C2, Q(√(2+√2))/C4 (x⁴−4x²+2 — the
-   real subfield of Q(ζ16); correct cyclic group computed, my earlier D4
-   annotation was wrong and was fixed), Q(√2,√3)/V4 at 15°, plus the
-   six √7 survey records. By-product: the first Q(√3)-level packings
-   ever constructed — n=5: 1+√3 = 2.732 (record 2.7071), n=37: 4√3 =
-   6.9282 (record 6.5986) — both beat grid, both lose to the world
-   records. theta30_new_members.json carries their full states,
-   independently re-verified.
-
-**Verdict on the hypothesis.** No — with a certified mechanism. 45°/√2
-is the family's ceiling and floor simultaneously: rotating away from 45°
-shrinks the container-diagonal gain (c+s) faster than it shrinks the
-staircase cost; 45° is the kink of M(θ). The jam walls are real
-structures, not a missing higher field.
-
-**Score: unchanged 23.173640 (407/1000).** No wins — honestly none
-available via this hypothesis. Deliverables updated
-(galois_certificates.json, theta30_new_members.json, /tmp reports
-mirrored into the repository). The frontier remains: every next gain
-anywhere is a new world record by definition.
+**Guarantee.** Every packing shipped in `submission.csv` was
+re-verified from the file as written on disk (pairwise SAT non-overlap
+with worst penetration ≤ 0, bounding-box containment, per-n counts, id
+continuity 0..500499, 12-dp round-trip stability with ~2e-9 clearance).
+Every mathematical claim in the lattice layer is integer-exact; no
+floats anywhere in the lattice math. Optimality is never claimed for
+any packing except where a cited theorem or register proof row exists
+(156 proven floors). Every number in this paper comes from a
+script-computed ledger (`workspace/push/`, `json/`).
 
 ---
 
-## Addendum — Fifth push (tie-resolution framework: carried forks)
+## References
 
-**Directive.** The user supplied the GLM's complete tie-resolution
-framework: Golay d=4 six-fold ties (1771/4096 cosets, 680064 tied reads),
-carried forks instead of forced guesses, four resolution mechanisms
-(protected tags, multi-view frames, optimal splitting questions,
-Lorentzian lift / MOG swaps), and the mapping: packing jams ARE deep-hole
-ties; annealing jitter = guessing among the 6; supplying an analytical
-family parameter (a "wheel": strip width, tilt, macro-block) is the tag
-that collapses the tie.
+1. W. W. R. Ball / H. S. M. Coxeter / M. Gardner lineage; the modern
+   catalogue: S. P. Friedman, "Squares in Squares", *Electronic Journal
+   of Combinatorics*, Dynamic Survey DS#7 (2009), and its maintained
+   mirrors (Ellsworth-hosted SVG set; kingbird.myphotos.cc).
+2. H. Nagamochi, "Packing a square with similar rectangles"
+   (s(k²−2) = s(k²−1) = k theorem family), 2005.
+3. W. Stromquist, "Packing 10 or 11 unit squares in a square"
+   (s(10) = 3 + 1/√2), 2003.
+4. M. Kearney, N. Shiu, "Packing unit squares in squares" (small-n
+   results), 2002. [Cited as premise in TCT/Basic; the community
+   register carries no optimality row at n = 6 — the "s(6) = 3 theorem"
+   line was retracted in run 28 and s(6) = 3 stands as a conjecture in
+   our classification.]
+5. Karakuş, rectangle bound s(N) ≥ 1/2 + √(N − ⌊√N⌋ + 1/4)
+   (register row T-083; checked against every row, run 28).
+6. A. Karimi, two-strip packings and the window theorem
+   s(n) < K for n ≤ K² − 8√K − 19 (K ≥ 16); preprint read at run 30.
+7. Community register: jlevy/squares (github.com/jlevy/squares),
+   results at squaremath.org; T-ids per the closing replies of issues
+   #806/#845/#914 (records T-243, T-257, T-267–T-273).
+8. E. Daniel (evand), square-packing certificate pipeline
+   (github.com/evand/square-packing; `search/packer/candidates/`).
+9. M. Polkovskyi (Mishapolk), square-packing-records
+   `upper_bounds.json` (exact rational bounds, N ≤ 10000).
+10. E. R. A. Craig (DigitalEuan), *The Geometric Language Machine* and
+    *GLM Complete Number Theory Evidence* (TAX/NRCI, delta-sigma
+    carriers), github.com/DigitalEuan/GLM; SKILL_v3 methodology.
+11. J. H. Conway, N. J. A. Sloane, *Sphere Packings, Lattices and
+    Groups* (Λ₁₆ kissing number 7320 — cited, not verified here).
+12. This project's ledgers: `workspace/push/*.json`, `json/
+    galois_certificates.json`, `json/leech_map.json`, and the Lean
+    development `workspace/lean/tct_squares` (TCT/Basic, TCT/Layers,
+    TCT/Laws).
 
-**What was run (scripts/fork_push.py, 2212s; scripts/positive_control.py).**
+---
 
-1. *Framework arithmetic* — verified exact, every number: C(24,4)=10626
-   =6×1771; coset leaders 1+24+276+2024=2325, so weight-4-leader cosets
-   4096−2325=1771; λ₄=C(20,1)/C(4,1)=5, giving the 6-fold tie {0}∪5
-   octads; 680064=1771×384. The framework's internal mathematics is
-   correct — the failure is not in its numbers but in its mapping (below).
-
-2. *Wheels (structural keys), certified:*
-   A. Tilted-grid wheel (strip width w, tilt θ): extra-square capacity
-      over a rigid tilted k-grid at s=k+1 is ZERO for all 593 open n
-      (bbox caps θ at ~2.1° while a unit-wide wedge needs θ≥~15°).
-   B. Mirror-split wheel: gap≥1 between mirrored half-grids requires
-      θ≥126.87° (>90°) — impossible; the max achievable gap is 0.9980<1.
-   Both certified dead by exact inequalities, not by search.
-
-3. *Carried fork, full pressure.* Operational correction first: run 3's
-   RIGID_WALL verdicts had been computed on jittered seeds (grid_seed
-   tilts each square ±0.35 rad — precisely the framework's "blind
-   jitter" failure mode). This run replaced them with structural seeds:
-   4 bases (S1 the table's own clean grid state; S2 nearest member
-   rescaled with innermost staircase layers removed; S3 mirror-split
-   ±0.5° half-grids; S4 rigid tilted grid at the bbox limit + diamond
-   stack) × hot/cold protocols. Result: 30/30 classifications
-   RIGID_WALL, ρ=1.000, n/n contacts; S1's seed overlap is exactly
-   0.0e+00 — a perfect crystal. All 16 settles (8 branches × 2 targets
-   n=803, 748, 6k moves/call, Delta-Sigma controller, up to 12 calls):
-   3 jams in 3 calls, zero successes, wall never yields 0.004.
-
-4. *Positive control — the decisive test.* n=5 and n=12: the smallest
-   grid-tied n whose below-grid optima are famous and simple (2.7071 =
-   one 45° square + 4 corners; 3.8771). Pressure alone from a clean grid
-   seed FAILED both: 0/10 calls × 3 seeds, cannot even reach grid−0.004
-   (61s and 83s). The settle engine cannot cross the wall from a grid
-   seed anywhere — including where the answer is known to exist.
-
-**Verdict on the mapping.** Honest and negative: in square packing the
-crystalline tie is a LOCK, not a d=4 ambiguity. The Golay situation has
-six DISTINCT valid codewords and a supplied tag discriminates the true
-one; at the packing wall all branches carry the SAME state — one
-perfect crystal (seed overlap 0, ρ=1, all contacts) — so there is
-nothing to discriminate, no key to supply, and no sector to lift to.
-The four GLM mechanisms map as: tags → wheels (certified dead, A/B);
-multi-view → classification across 8 branches (all identical RIGID);
-splitting questions → the 3-binary fork (every branch answers the same);
-Lorentzian lift/MOG swaps → level escalation (run 4: dead — 45°/√2 is
-the floor and ceiling). Zero finds; score stands 23.173640. The five-push
-campaign (survey → wheels → GLM directive → levels → forks) ends with
-the wall re-confirmed by the fork's own protocol — every structural key
-that exists in this 2D geometry has now been tried and certified.
-
-## Addendum — Sixth and seventh pushes (2026-11-04): construction replaces pressure
-
-The five pushes above all pressed on jammed states (pressure, wheels,
-forks, levels) and hit the same wall. Runs 9 and 10 changed tack
-entirely: construct analytically from families, verify with the SAT
-substrate, and only then propagate — the GLM directives are retired.
-
-**Run 9 (sixth push): the full Göbel family.** G(a1,a2,b,c) — the
-shipped instrument covered only the square subfamily; the general
-family had never been swept. 326 candidates, 68 applied, 0 verify
-fails: 17 MID finds beyond the published catalogue and 51 LOW
-improvements. Score 23.173640 → 22.897558; beats-grid 407 → 445.
-
-**Run 10 (seventh push): the clipped family and the closed front.**
-Wave A clipped the t×t block from each (u,v) corner of the diamond
-(trade 4t² cells for √2·t on all four sides): 9 applied (5 real, all
-high-n; depths (√2−1)² and 0.0502525). Wave B planned to pocket-fill
-every state and migrate the fill upward in n; the closure fixpoint
-makes this impossible in principle (L is non-decreasing in n by the
-removal closure already applied), and two independent collision models
-agreed: 509 clean fills, 0 applicable. Score 22.897558 → 22.887471;
-beats-grid 448; MID below grid 49.
-
-**What actually moved the needle.** Not any pressure campaign: the
-contact-identity derivation of the Göbel family (Run 9) and its clip
-extension (Run 10). The motif barrier that defeated every settle
-engine is trivially crossed by construction — the MID band's craved
-"collective crystalline motif" IS the 45° diamond with staircases.
-The honest ledger: open LOW 69, open MID 392; both records in
-`download/README.md` (Run 9 / Run 10 sections).
+*Operational note.* This document is the study overview
+(`GLM_INVESTIGATION.md`); the system record is `STATUS.md`, the
+forward map `NEXT_STEPS.md`, the reproduction chain `REPRODUCE.md`,
+and the run ledger `notes/`. Updated together each run (the run-32
+documentation-freeze failure made this a standing rule).
