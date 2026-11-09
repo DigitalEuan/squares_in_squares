@@ -770,3 +770,104 @@ as the transport
 
 Score 22.645990613 unchanged (documentation + accuracy run). Copies:
 NEXT_STEPS.md and download/NEXT_STEPS.md.
+
+---
+
+# Run 37 (2026-11-08): the mechanics run — the clear picture
+
+**User order.** Continue the project; start from the GitHub repo
+(updated); focus on the mechanics of the 2D packing system — the 24D
+lattice / Golay clue, the tower of layers, the exact float-free
+environment — with the score as sanity check.
+
+**Found at turn start:** the sandbox had rolled back again (run-27
+era, remote config missing — the 4th time). The user's updated remote
+carried the reconciled Run-36 documents + the imported run-36
+artifacts, but its *table* was run-34-era: the run-35 score move was
+missing (the reconciliation imported artifacts, not tree state).
+Re-executed a 3rd time: import 9 records (0.003359) + cascade n=338
+(0.000245) → **22.642386651**; the rebuilt csv is bit-identical (md5
+4bbc80de…) to the imported submission.run36.csv. Failure 18 amendment
+(d) recorded.
+
+**The study (no score change, by design):** 05-MECHANICS.md — the
+provenance picture (layer_settle37): cert-rational 674 (18.1% of
+improvement; grid 457 + imports 217), design-quadratic 134 (44.9%),
+derived 124 (23.0%), float-only 68 (14.1%). exact_replay37: 133/133
+import geometries verified in pure Fraction (both-squares SAT, exact
+container fit); drift 1.83e-9…1.35e-8 = the finalize clearance; 84
+side-only mishapolk rows = the honest exactness boundary. t-basis
+census: all 133 contain axis-aligned squares; the top 45° signature
+(20 rows) is the rational 225058681/543339720 = √2−1+O(1e-10); 22 in
+the arctan(1/2) bucket; the rest hand-polished rational angles (run
+31's asymmetry census agrees). chain3 inheritance exact integer:
+L(334)−L(299) = 1+2e-9, L(371)−L(334) = 1.000000000.
+
+**Instruments patched:** leech_map.py (constant-series Spearman now
+"UNDEFINED", not a crash — the run-5-era +0.79 was a property of the
+construction-era table; on the import frontier 991/1000 are level 0
+under the certified standard); level_audit.py (kingbird mirror down:
+table-only with a printed note). Mishapolk certs re-mirrored (337
+fetched, 8 upstream 404s). Exact chain regenerated: leech_core 28/28,
+octad_moves 14/14, galois_certs 280 (9 value-matched on the live
+table), level_audit Q 460 / Q(√2) 239 / biquad 19 / no-fit 274.
+
+**The answer to the 24D/Golay clue** (05-MECHANICS §5): the substrate
+logic is real, closed and verified; on the current frontier the
+empirical Λ-window mapping degenerates — the import frontier is
+exact-rational in the t-basis. The tower enforces the language
+(exactness), not the score. No isomorphism claimed, none needed.
+
+Score unchanged: **22.642386651** (543/1000; gap 0.587965).
+Deliverables: 05-MECHANICS.md; layer_settle37.py; exact_replay37.py;
+patched leech_map.py / level_audit.py; 6 ledgers under
+workspace/push/; download/run37/ + MANIFEST.
+
+---
+
+# Run 38 (2026-11-09): the score push — 22.642387 -> 22.218057
+
+**User order.** Continue the project; push the score.
+
+**The watch (all force-refreshed).** Mishapolk byte-identical to the
+run-30 copy (the ledger's 871 "beats" are our own finalize echo —
+failure 19: 'kept' never re-downloads; recorded). Register + atlas
+0 new. Imports DRY 0 rows.
+
+**The broader scan (failure 20 born).** Web search over the problem's
+name-space: Ostashev's 12 records (we win 8, 4 echo; his README points
+at Couzo), Couzo #561's 9 SHA-verified certs (we win 8, 1 echo — our
+Mishapolk rows are stronger than this entire 2026 GitHub network),
+jlevy/squares = squaremath (our atlas, flat). The tell was in the
+register itself: issue #914's Kaggle per-puzzle leaderboard sides sit
+below every public packing at 204/268/303/304. The live channel is
+Kaggle's public notebook network: busya PRIME's aggregator notebook
+(LB 22.2180568; 136 notebooks + 33 datasets, 68,269 packings merged
+shortest-first per puzzle, certified by the hosts' metric code as
+doubles). Its output is public — mirrored via browser + signed GCS
+URL (submission.csv 500,500 rows; provenance.csv per-puzzle 45-digit
+L + sources), saved under workspace/sources/busyaprime38/.
+
+**The import** (import_busyaprime38.py; the import_candidates gate
+verbatim: verify 1e-9, finalize +2e-9, MIN_GAIN 1e-7): 345 rows
+applied, direct gain 0.424330 — the largest single import in project
+history (2.4x Mishapolk's 0.173983). Zero verify failures. Channel
+flat: 0 chain conversions (the new roots' windows are saturated), 0
+closure. Round-trip 0 issues.
+
+**State after**: score **22.218056945** (rounded 22.218057), 553/1000
+beat grid, gap to leader **0.163635** (was 0.587965). Laws clean
+(monotone 999/999, shell 937/937); fixpoint 0 above envelope / 295
+open. Census: busyaprime 345 (the new dominant import class), grid
+447, exact 71, run18-frontier 64, chain3 23, mishapolk 13, gobelS 11,
+register 7, gobel2 6, closure 6, removal 4, aux 2, gobel3 1.
+
+**The honest reading**: the aggregator's own note says the remaining
+0.164 to the leader "is new packings, not a better merge" — the
+leader (Cats and boxes, 22.0544214515) holds private packings. The
+next moves are: (a) watch the aggregator weekly (it re-runs as public
+notebooks improve); (b) the 295 open rows are now mostly
+grid-floor/proven-floor territory — the aiming map says T-263-class
+records at first open rows would be 0.360798; (c) the proven-floor
+set grew with the merge (see root_audit38).
+

@@ -15,9 +15,9 @@ stale 0.7656 instead of 0.5916), `scripts/sat_review.py` (run 28),
 
 ---
 
-## 0. Execution status of this plan (updated Run 36, 2026-11-07)
+## 0. Execution status of this plan (updated Run 38, 2026-11-09)
 
-Runs 14–36 executed this plan. Measured outcomes, per item:
+Runs 14–38 executed this plan. Measured outcomes, per item:
 
 | item | status | measured result |
 |---|---|---|
@@ -34,14 +34,16 @@ Runs 14–36 executed this plan. Measured outcomes, per item:
 | **Run 32** (recovery + docs) | **DONE (user input)** | sandbox rollback found (HEAD back at run 27; runs 28–31 gone locally) — recovered from github.com/DigitalEuan/squares_in_squares (the remote had them; local lineage preserved on branch `sandbox-lineage-27`). Channel re-run on the recovered tree: cascade 0, closure fixpoint, assembly 0 issues, table bit-identical (score 22.645990613 unchanged). `root_audit.py` FIXED (hardcoded run-27 score/gap; now argv output/run + live score — the run-30 refresh had printed gap 0.7656 stale); root_audit32 reproduces the run-30 refresh exactly with the corrected 0.591569. README unfrozen (run-13 era → run-32 state); **STATUS.md rewritten: duplicates the README + system map + census** (new standing rule); 10 run-27-era download/ files the remote had dropped were restored from the lineage. Failure 16 below. |
 | **Run 35** (score move) | **DONE** | Nine Evan Daniel register records T-243/T-257/T-267–T-273 imported; direct gain 0.003359 plus n=338 chain conversion 0.000245; score 22.645991 → **22.642386651**. |
 | **Run 36** (re-establishment) | **DONE** | Run 35 reproduced from surviving records; independent rescore agrees; canonical latest state. |
+| **Run 37** (the mechanics run) | **DONE (user order: the clear picture)** | Score re-established a 3rd time (remote had run-34-era table; import+cascade re-executed; csv bit-identical). The study: `05-MECHANICS.md` + `layer_settle37.py` + `exact_replay37.py`: the frontier settles by provenance (cert-rational 674 / design-quadratic 134 / derived 124 / float-only 68); 133/133 import geometries verified in pure `Fraction` (drift 1.35e-8 = the finalize clearance); 84 side-only mishapolk rows = the exactness boundary; the t-basis census: the 45° rows are rational √2−1+O(1e-10), 26.565° = arctan(1/2) family; chain3 inheritance exact integer. leech_map patched: the run-5-era +0.79 Spearman is construction-era; on the import frontier the level series is constant → correlations UNDEFINED (the instrument now reports it instead of crashing). kingbird mirror down: level_audit table-only. No score change (by design). |
+| **Run 38** (the score push) | **DONE (user order: push the score)** | P3 watch flat (Mishapolk byte-identical; the ledger's "beats" are our finalize echo). Broader scan found the live channel: the public Kaggle notebook network, aggregated by busya PRIME (LB 22.2180568; 136 notebooks + 33 datasets, 68,269 packings). Imported 345 rows (+0.424330 direct; channel flat) -> **22.218056945, 553/1000, gap 0.163635**. Laws clean; fixpoint 0/295. |
 
 ## 1. The gap, decomposed
 
 | | score | note |
 |---|---|---|
-| our submission (Run 36) | 22.642386651 | 543/1000 beat grid |
+| our submission (Run 38) | 22.218056945 | 553/1000 beat grid |
 | leaderboard best (reported) | 22.0544214515 | |
-| gap | **0.587965** | |
+| gap | **0.163635** | |
 
 Closed since Run 13 (measured):
 
@@ -52,7 +54,8 @@ Closed since Run 13 (measured):
 | T-263 s(299) import + cascade (Run 26) | 0.003559 |
 | **Mishapolk 221-row import + channel (Run 30)** | **0.173983** |
 | **register records + n=338 chain (Runs 35–36)** | **0.003604** |
-| **total closed** | **0.245081** |
+| **run 38: public Kaggle network merge (busya PRIME), 345 rows** | **0.424330** |
+| **total closed** | **0.669411** |
 
 **The mid-band 325..1000 is no longer empty upstream.** The run-27
 statement "zero upper bounds exist above n = 324" was true of our
@@ -295,7 +298,7 @@ and status. Ledger `workspace/push/symmetry_audit31.json`.
    buy depth at the aims — it is the signature of the parametric
    classes that already sit below the frontier.**
 
-## 3. Failure → requirement (updated with runs 14–32)
+## 3. Failure → requirement (updated with runs 14–38)
 
 Items 1–13 stand (see run-26/27/28 revisions). Two additions:
 
@@ -355,8 +358,54 @@ discipline as failure 11, applied backwards in time.
     REPRODUCE and RUN_NOTES/notes together (the deliver script checks
     the STATUS-README-table sync; STATUS.md now duplicates the README
     per the standing rule).
+17. **The upload path has never delivered the README** (runs 32–33,
+    user-reported; verified against the GitHub remote): the remote
+    README froze at the run-13 era through six score moves.
+    Requirement (the transport rule): the front page rides at the
+    bottom of STATUS.md — a straight unedited copy, body zero-mention,
+    tail byte-identical, checked mechanically every run; (17c) run 34
+    amendment: `repository.zip` is RETIRED — the GitHub repository
+    itself is the bulk vehicle. Run 37 confirms the rule still pays:
+    the reconciled remote carried a Run-34-era README tail through a
+    score move.
+18. **A session can die with its whole tree** (run 35 → 36): the
+    elsewhere run-35 session stopped abruptly after updating the
+    documents — the docs crossed (attached), the tree did not.
+    Requirement: (a) commit + push every run — the GitHub remote is
+    the durability line; (b) the run ledger must carry every number
+    needed to re-execute the run from its record alone (run 36 proved
+    it: the import reproduced to the digit); (c) at turn start, trust
+    the documents + the remote, verify by re-execution, record what
+    was lost. Run 37 adds (d): a remote can be "up to date" per its
+    *documents* while its *table* is a run old — the reconciliation
+    imported the run-36 artifacts but not the run-36 tree state.
+    Always re-verify the table score against the docs' claim before
+    building on it.19. **A watch that never re-downloads is not a watch** (run 38): the
+    Mishapolk fetcher's "kept" semantics (skip the download if the
+    local file exists) meant the upstream file was never re-checked
+    since run 30 — every weekly "beat_table" figure since then was
+    computed against the run-30 copy (the current ledger showed 871
+    "beats" that were all our own finalize echo). Requirement: the
+    weekly watch must force-refresh (`--refresh`) and compare bytes
+    (the run-38 check: forced download, diff = 0 changed entries —
+    honestly flat, recorded as such). The register and atlas fetchers
+    already support --refresh; run them with it.
+20. **The score channel can be somewhere the watch is not looking**
+    (run 38): the three watched sources (atlas, register, Mishapolk)
+    were all flat, yet 0.424 was available the whole time on Kaggle —
+    in public notebook outputs our watch had never scanned. The
+    register itself had the tell (issue #914: Kaggle per-puzzle
+    leaderboard sides below every public packing at 204/268/303/304).
+    Requirement (the scan rule): when the watch is flat, run a web
+    search over the problem's name-space (record repos, dataset
+    hosts, the competition's own notebook/dataset listings), probe
+    every hit for machine-readable records, and compare before
+    dismissing (the run-38 probe script nearly missed Ostashev's
+    records: `.sqcert`/`.sqpk` were outside its extension list —
+    found only by reading the repo listing).
 
-## 4. Prioritized pushes (updated Run 32)
+
+## 4. Prioritized pushes (updated Run 37)
 
 ### P1' — CLOSED BY NULL (runs 30–31)
 
@@ -392,6 +441,20 @@ constructions or imports (P1', P3).
   its first run. Watch `upper_bounds.json` for rows that beat our new
   table; watch for certificates at the 528 construction-only entries
   (only n=261 has gain > 1e-5: 16.678780 vs our 16.682927).
+- **NEW (run 38) — the Kaggle public network is now a watched
+  source**: `busyaprime`'s aggregator notebook merges every public
+  notebook + dataset (1299 CSVs, 68,269 packings) shortest-first per
+  puzzle. Weekly: re-fetch its newest version (browser + signed GCS
+  URL from the public output page; mirror under
+  `workspace/sources/busyaprime38/`), re-run
+  `import_busyaprime38.py` (idempotent). Also scan the register's
+  recent issues for registration requests (the #914 pattern:
+  per-puzzle leaderboard sides below every public packing are the
+  tell that better packings exist somewhere).
+- Ostashev/Couzo records (run 38 read): we win 8/12 and 8/9, the rest
+  echo-scale; re-check on future visits
+  (`dostashev/square-packing`, `franciscouzo/square-packing` issue
+  #561 pin 0fa0e0de; both mirrored under workspace/sources/couzo38/).
 - Karimi (read run 30): two-strip packings live at n ≥ 1184 —
   outside our range — but the **window theorem** (for every integer
   K ≥ 16, s(n) < K whenever n ≤ K² − 8√K − 19; exponent 3/5 → 1/2
@@ -420,7 +483,7 @@ Unchanged: Lean `lake build` (close `cascade_count_symbolic`,
 states (T-263 already exact-rational); the run-12 Q(√2) family
 certificate.
 
-## 5. Value ladder (re-measured Run 32; values unchanged from run 30)
+## 5. Value ladder (re-measured Run 37; values unchanged from run 30)
 
 | action | score value |
 |---|---|
@@ -431,7 +494,7 @@ certificate.
 | uniform depth matching the leader over the 305 open rows | **0.591569 (the whole gap; d\* = 0.0365)** |
 | all open rows at the area bound | 5.005 (theoretical ceiling) |
 
-## 6. What was executed (runs 14–32), measured
+## 6. What was executed (runs 14–38), measured
 
 1. **Runs 14–25**: P2 finished; P1(a) closed by domination; the
    deliverable-name fix (run 25).
@@ -536,6 +599,31 @@ certificate.
    script-computed source census**; RUN_NOTES/notes ported for runs
    28–31 (the ledger was itself at the run-27 state). Failure 16
    records the standing rules.
+
+11. **Run 37 (user order: the mechanics study)**: the clear picture
+    of the packing system — `05-MECHANICS.md`. The frontier settles by
+    provenance: cert-rational 674 (18.1% of improvement; grid 457 +
+    imports 217 with exact rational sides), design-quadratic 134
+    (44.9%; the construction families at exact Q(√2)/Q(√7) sides),
+    derived 124 (23.0%; chain3 = exact integer arithmetic on the
+    T-263 parent), float-only 68 (14.1%; run18-frontier, no exact
+    material). 133/133 import geometries replayed in pure `Fraction`
+    (exact_replay37.py; 84 side-only rows recorded as the boundary).
+    The t-basis census: all 133 contain axis-aligned squares; the 45°
+    signature is the rational 225058681/543339720 = √2−1+O(1e-10); the
+    import records are hand-polished rational angles, not family
+    constructions. The lossy operations are named and bounded: SAT
+    gate 1e-9 (float64; backed by the Fraction replays wherever exact
+    material exists), finalize +2e-9 (measured drift 1.35e-8), 12-dp
+    storage (the Scan layer — why the run-5-era field-fit census
+    degenerates; the provenance census replaces it). The 24D/Golay
+    clue, answered: the substrate logic is verified and closed
+    (28/28 + 14/14 + the projection law, defect locus = the 759
+    octads), but the *empirical* tower map is construction-era — the
+    import frontier is exact-rational in the t-basis, and the tower
+    now enforces the language (exactness), not the score (Λ-window
+    prediction). Follow-ups: 84 side-only rows (upstream geometry
+    certs), 68 float-only rows (the only no-exact-material class).
 
 Score 22.823536149 → 22.819977568 (runs 26–27) → **22.645990613**
 (run 30); beats-grid 543; runs 31–32 unchanged (analysis, campaign
