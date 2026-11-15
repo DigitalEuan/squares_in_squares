@@ -2,10 +2,10 @@
 """Verify current workspace state: packing validity (SAT penetration, bbox)
 and exact score of submission.csv. Independent re-implementation (no engine import).
 """
-import csv, json, math, sys
+import csv, json, math, os, sys
 from math import ceil, sqrt
 
-WS = "/home/z/my-project/workspace"
+WS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "workspace")
 
 def half_extent(theta):
     return 0.5 * (abs(math.cos(theta)) + abs(math.sin(theta)))

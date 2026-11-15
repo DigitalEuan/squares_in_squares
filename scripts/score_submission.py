@@ -5,7 +5,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import packlib as P
 
 def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else "/home/z/my-project/workspace/submission/submission.csv"
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
+        root, "workspace", "submission", "submission.csv")
     by_n = P.read_csv(path)
     # convert to store of verified states
     detail = {}
